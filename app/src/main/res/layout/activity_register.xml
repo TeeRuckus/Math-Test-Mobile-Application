@@ -31,16 +31,17 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="#55000000"
+        android:background="@color/paleNight_background"
         android:src="@mipmap/ic_launcher" />
 
     <ImageButton
         android:id="@+id/importIcon"
         android:layout_below="@id/studentPictureView"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="#55000000"
+        android:background="@color/paleNight_background"
         app:srcCompat="@android:drawable/ic_menu_set_as" />
 
     <LinearLayout

@@ -51,22 +51,23 @@ public class Register extends AppCompatActivity {
     private Button registerBttn;
     private Graph mathTestGraph;
     private Student currStdnt;
-    private int importCheck;
-    private Boolean onToggleFirst;
-    private Boolean onToggleLast;
+    //private int importCheck;
+    //private Boolean onToggleFirst;
+    //private Boolean onToggleLast;
+    private int contactId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         loadGraph();
-        onToggleFirst = true;
-        onToggleLast = true;
+        //onToggleFirst = true;
+        //onToggleLast = true;
 
         loadUIElements();
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
         currStdnt = new Student();
-        importCheck = 0;
+        //importCheck = 0;
 
 
         //adding text watchers to the first name and the last name, so callback checks can be done to
@@ -85,9 +86,10 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME");
+                Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME: ");
+                searchContactList();
 
-                if (studentFirstName.getText().toString().length() > 0)
+                /*if (studentFirstName.getText().toString().length() > 0)
                 {
                     //techincally any name more than one character is a vaild name therefore back calls
                     //into the data base will be made
@@ -101,6 +103,7 @@ public class Register extends AppCompatActivity {
                     {
                         onToggleFirst = true;
                         onToggleLast = true;
+                        importCheck = 0;
                         //if last name has being changed as well
                         searchContactList();
                     }
@@ -109,7 +112,7 @@ public class Register extends AppCompatActivity {
                 else
                 {
                     importCheck--;
-                }
+                }*/
             }
         });
 
@@ -126,9 +129,10 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME");
+                Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME: ");
+                searchContactList();
 
-                if (studentFirstName.getText().toString().length() > 0)
+                /*if (studentFirstName.getText().toString().length() > 0)
                 {
                     //technically a name greater than 0 is valid contact
                     if(onToggleLast)
@@ -140,13 +144,14 @@ public class Register extends AppCompatActivity {
                     {
                         onToggleFirst = true;
                         onToggleLast = true;
+                        importCheck = 0;
                         searchContactList();
                     }
                 }
                 else
                 {
                     importCheck--;
-                }
+                }*/
             }
         });
 
@@ -228,6 +233,8 @@ public class Register extends AppCompatActivity {
     {
         String firstName = studentFirstName.getText().toString();
         String lastName = studentLastName.getText().toString();
+        firstName = myUtils.cleanString(firstName);
+        lastName = myUtils.cleanString(lastName);
 
         /*
         Code: was adapted from the following stack over flow post:
@@ -253,12 +260,21 @@ public class Register extends AppCompatActivity {
             {
                 @SuppressLint("Range") String given = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
                 @SuppressLint("Range") String family = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
-                @SuppressLint("Range") String display = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
+
+                //make the search case insensintive
+                given = myUtils.cleanString(given);
+                family = myUtils.cleanString(family);
+                if(given.equals(firstName) && family.equals(lastName))
+                {
+                    importFromContactsBttn.setVisibility(View.VISIBLE);
+                    importFromContactsBttn.setClickable(true);
+
+                }
+
+                //@SuppressLint("Range") String display = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
 
                 Log.i(TAG, "GIVEN NAME: " + given);
                 Log.i(TAG, "FAMILY NAME: " + family);
-                Log.i(TAG, "DISPLAY NAME: " + display);
-
             }while(c.moveToNext());
         }
         finally
