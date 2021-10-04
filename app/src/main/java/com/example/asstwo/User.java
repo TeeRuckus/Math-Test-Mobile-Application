@@ -8,6 +8,7 @@ package com.example.asstwo;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -15,21 +16,19 @@ import java.util.regex.Matcher;
 import java.lang.String;
 import java.io.Serializable;
 
-public abstract class User implements Serializable
-{
+public abstract class User implements Serializable {
 
     //PRIVATE CLASS FIELDS
     private String firstName;
     private String lastName;
     protected ArrayList<Integer> phoneNumbers;
     protected ArrayList<String> emailAddresses;
-    protected TestHistory history;
+    protected ArrayList<TestHistory> history;
     private Avatar avatar;
 
     private static final String TAG = "user.";
 
-    public User()
-    {
+    public User() {
         firstName = "John";
         lastName = "Doe";
         avatar = new Avatar();
@@ -38,10 +37,8 @@ public abstract class User implements Serializable
         emailAddresses = new ArrayList();
     }
 
-    public User(String inFirstName, String  inLastName)
-    {
-        if(validateName(inFirstName) && validateName(inLastName))
-        {
+    public User(String inFirstName, String inLastName) {
+        if (validateName(inFirstName) && validateName(inLastName)) {
             firstName = inFirstName;
             lastName = inLastName;
 
@@ -54,83 +51,69 @@ public abstract class User implements Serializable
     }
 
     //ACCESSOR METHODS
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return new String(firstName);
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return new String(lastName);
     }
 
-    public List<String> getEmails()
-    {
+    public List<String> getEmails() {
         return emailAddresses;
     }
 
-    public List<Integer> getNumbers()
-    {
+    public List<Integer> getNumbers() {
         return phoneNumbers;
     }
 
-    public TestHistory getHistory()
+    public ArrayList<TestHistory> getHistory()
     {
+        /*TODO: you will need to make a function which is going to sort the history entries */
         return history;
     }
 
-    public Avatar getAvatar()
-    {
+
+    public Avatar getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Avatar inAvatar)
-    {
+    public void setAvatar(Avatar inAvatar) {
         avatar = inAvatar;
     }
 
 
-    public void addHistoryEntry(String inHistory)
-    {
+    public void addHistoryEntry(String inHistory) {
         //TODO: come back and actually implement this method when you get to that part of the functionality
     }
 
-    public void setLastName(String inLastName)
-    {
+    public void setLastName(String inLastName) {
 
-        if(validateName(inLastName))
-        {
+        if (validateName(inLastName)) {
             lastName = inLastName;
         }
     }
 
-    public void setFirstName(String inFirstName)
-    {
+    public void setFirstName(String inFirstName) {
 
-        if(validateName(inFirstName))
-        {
+        if (validateName(inFirstName)) {
             firstName = inFirstName;
         }
     }
 
-    public void addEmail(String inEmail)
-    {
-        if(validateEmail(inEmail))
-        {
-            if(validateEmailLength())
-            {
+    public void addEmail(String inEmail) {
+        if (validateEmail(inEmail)) {
+            if (validateEmailLength()) {
                 emailAddresses.add(inEmail);
             }
         }
     }
 
-    public void setAvatar(String avatarName, int drawableID)
-    {
+    public void setAvatar(String avatarName, int drawableID) {
         avatar = new Avatar(avatarName, drawableID);
     }
 
-    public String getType()
-    {
+    public String getType() {
         return "USER";
     }
 
@@ -138,12 +121,10 @@ public abstract class User implements Serializable
     /***********************************************************************************************
      * ASSERTION: the function is going to break if an empty string is given as its input
      ***********************************************************************************************/
-    protected boolean validateName(String inName)
-    {
+    protected boolean validateName(String inName) {
         boolean valid = true;
 
-        if(inName.length() == 0)
-        {
+        if (inName.length() == 0) {
             throw new IllegalArgumentException("ERROR: invalid name: " + inName);
         }
         return valid;
@@ -155,8 +136,7 @@ public abstract class User implements Serializable
      * ASSERTION: function will break if the email is not in the format of string followed by the
      * "@" symbol another string followed by .com
      ***********************************************************************************************/
-    protected boolean validateEmail(String inEmail)
-    {
+    protected boolean validateEmail(String inEmail) {
 
         /*this code is going to be adapted from the following
             source: https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
@@ -168,25 +148,29 @@ public abstract class User implements Serializable
         //the string must match this following pattern otherwise, the string is not valid
         boolean valid = true;
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        Pattern  pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inEmail);
 
-        if(!(matcher.matches()))
-        {
+        if (!(matcher.matches())) {
             throw new IllegalArgumentException("ERROR: invalid email: " + inEmail);
         }
 
         return valid;
     }
 
-    protected boolean validateEmailLength()
-    {
+    protected boolean validateEmailLength() {
         boolean valid = true;
-        if (emailAddresses.size() > 10)
-        {
+        if (emailAddresses.size() > 10) {
             throw new IllegalArgumentException("ERROR: Only 10 email address are allowed for the user");
         }
 
         return valid;
+    }
+
+    protected void sortHistory()
+    {
+        for (TestHistory currHist : history)
+        {
+        }
     }
 }
