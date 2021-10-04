@@ -65,31 +65,12 @@ public class MainActivity extends AppCompatActivity {
     public void loadGraph()
     {
         mathTestGraph = new Graph();
+        mathTestGraph = mathTestGraph.load(MainActivity.this);
+
         try
         {
-            mathTestGraph = mathTestGraph.load(MainActivity.this);
-        }
-        catch(NullPointerException err)
-        {
-            Log.i(TAG, "Creating a brand new graph...");
-        }
-        catch (IOException e)
-        {
-            Log.i(TAG, "No last save found new graph being created... " + e.getMessage());
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
-        {
-            Log.e(TAG, "Class not fond " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
             mathTestGraph.addVertex(new Admin("Current", "Admin"));
             mathTestGraph.setAdmin("currentAdmin");
-            mathTestGraph.addVertex(new Student("Tawana", "Kwaramba"));
-            Log.i(TAG, "Current Graph Object: " + mathTestGraph);
-            Log.i(TAG, "Current Admin node: " + mathTestGraph.getVertex().getKey());
         }
         catch (IllegalArgumentException err)
         {

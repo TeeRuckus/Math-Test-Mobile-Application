@@ -46,25 +46,7 @@ public class Register extends AppCompatActivity {
     {
         Log.i(TAG, "YOU HAVE CREATED ME YOUR LORD");
         mathTestGraph = new Graph();
-        try
-        {
-            mathTestGraph = mathTestGraph.load(Register.this);
-        }
-        catch(NullPointerException err)
-        {
-            Log.e(TAG, err.getMessage());
-        }
-        catch (IOException e)
-        {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
-        {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
+        mathTestGraph = mathTestGraph.load(Register.this);
     }
 
     public void loadUIElements()

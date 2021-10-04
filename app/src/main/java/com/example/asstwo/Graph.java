@@ -404,23 +404,34 @@ public class Graph extends AppCompatActivity implements Serializable
         }
     }
 
-    public Graph load(Context cntx) throws IOException, ClassNotFoundException {
+    public Graph load(Context cntx) {
         FileInputStream fis = null;
         ObjectInputStream is = null;
         Graph retGraph = null;
-        fis = cntx.openFileInput(SAVE);
-        is = new ObjectInputStream(fis);
-        retGraph = (Graph) is.readObject();
 
-        try
-        {
-            is.close();
-            fis.close();
-        } catch (IOException e)
-        {
-            Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
+        try {
+            fis = cntx.openFileInput(SAVE);
+            is = new ObjectInputStream(fis);
+            retGraph = (Graph) is.readObject();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally
+        {
+            try
+            {
+                is.close();
+                fis.close();
+            } catch (IOException e)
+            {
+                Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
+
 
         return retGraph;
     }
