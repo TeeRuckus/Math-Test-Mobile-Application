@@ -1,6 +1,6 @@
 package com.example.asstwo;
 
-import static com.example.assone.myUtils.cleanString;
+import static com.example.asstwo.myUtils.cleanString;
 
 import android.util.Log;
 
@@ -13,6 +13,10 @@ import java.util.Set;
 
 public class Graph implements Serializable
 {
+    private static final String TAG = "Graph.";
+    private HashMap<String, Vertex> vertices;
+    private String currentAdmin = "ADMIN";
+
     public class Vertex implements Serializable
     {
         private String key;
@@ -37,16 +41,6 @@ public class Graph implements Serializable
             }
         }
 
-        public Vertex(String inKey, Instructor inUser)
-        {
-            if( validateKey(inKey) && validateUser(inUser))
-            {
-                key = inKey;
-                value = inUser;
-                connections = new HashMap<String, Vertex>();
-            }
-        }
-
         public Vertex(String inKey, Student inUser)
         {
             if( validateKey(inKey) && validateUser(inUser))
@@ -57,14 +51,10 @@ public class Graph implements Serializable
             }
         }
 
+        //TODO: you will need to double check if this is ever userd otherwise, you will need to delete it
         public Vertex(Vertex inVert)
         {
             key = new String(inVert.key);
-            /*
-            TODO:
-                - I don't know how you're going to have a copy of this maybe what you could have
-                is a clone method in user
-             */
             value = inVert.value;
             connections = new HashMap<String, Vertex>(inVert.connections);
         }
@@ -104,11 +94,6 @@ public class Graph implements Serializable
             value = inUser;
         }
 
-        public void setValue(Instructor inUser)
-        {
-            value = inUser;
-        }
-
         public void setValue(Student inUser)
         {
             value = inUser;
@@ -131,6 +116,7 @@ public class Graph implements Serializable
             {
                 throw new IllegalArgumentException("ERROR: can't have an empty string as a key: " + inKey);
             }
+
             return valid;
         }
 
@@ -138,16 +124,6 @@ public class Graph implements Serializable
         {
             boolean valid = true;
             if( !(inUser instanceof Admin))
-            {
-                throw new IllegalArgumentException("ERROR: object must doesn't meet required type: " + inUser);
-            }
-            return valid;
-        }
-
-        private boolean validateUser(Instructor inUser)
-        {
-            boolean valid = true;
-            if( !(inUser instanceof Instructor))
             {
                 throw new IllegalArgumentException("ERROR: object must doesn't meet required type: " + inUser);
             }
@@ -166,9 +142,6 @@ public class Graph implements Serializable
 
     }
 
-    private static final String TAG = "Graph.";
-    private HashMap<String, Vertex> vertices;
-    private String currentAdmin = "ADMIN";
 
     //DEFAULT CONSTRUCTOR
     public Graph()
@@ -205,25 +178,6 @@ public class Graph implements Serializable
             currentAdmin = inAdmin;
 
             vertices.put(inAdmin, copyAdmin);
-
-        }
-    }
-
-    //TODO: you will need to add more addVertex method for the other of vertex types which you can use in the programme
-    public void addVertex(Instructor inInstrucor)
-    {
-        //can't add a vertex if they is not root node in the programme
-        if(validateRootNode())
-        {
-            if (doesNotExist(inInstrucor.getName())) {
-                String key = myUtils.cleanString(inInstrucor.getName());
-                Vertex newVert = new Vertex(key, inInstrucor);
-                vertices.put(key, newVert);
-
-                //the instructor node is always going to be connected to the admin node
-                Vertex adminNode = vertices.get(currentAdmin);
-                adminNode.connections.put(myUtils.cleanString(inInstrucor.getName()), newVert);
-            }
         }
     }
 
@@ -241,24 +195,6 @@ public class Graph implements Serializable
                 Vertex adminNode = vertices.get(currentAdmin);
                 adminNode.connections.put(myUtils.cleanString(inStudent.getName()), newVert);
             }
-        }
-    }
-
-    //if we know the instructor we can connect the student to the instructor instead of making the
-    //default connection
-    public void addVertex(Student inStudent, String inInstructor)
-    {
-        //finding the vertex in the current vertices
-        inInstructor = myUtils.cleanString(inInstructor);
-        Vertex currInstructor = vertices.get(inInstructor);
-
-        if (validateInstructor(currInstructor))
-        {
-            String studentName = myUtils.cleanString(inStudent.getName());
-            Vertex currStudent = new Vertex(studentName, inStudent);
-            currInstructor.connections.put(studentName, currStudent);
-            //putting the student vertex on the main graph data structure
-            vertices.put(studentName, currStudent);
         }
     }
 
@@ -412,103 +348,6 @@ public class Graph implements Serializable
         return retList;
     }
 
-    public ArrayList<Vertex> adminInstructorLoad()
-    {
-        ArrayList<Vertex> retList = new ArrayList<>();
-        Set<String> keys = vertices.keySet();
-        //creating an arrayLIst as it's mutable data structure and can actaully sort over them
-        List<String> keysOrdered = new ArrayList<>();
-
-        // ttranferrin keys to keysOrdered
-        for (String currKey : keys)
-        {
-            keysOrdered.add(currKey);
-        }
-
-        //actually sorting the keys so that they will appear in alphabetical order
-        Collections.sort(keysOrdered);
-
-        for(String currKey : keysOrdered)
-        {
-            if(vertices.get(currKey).getValue().getType().equals("INSTRUCTOR"))
-            {
-                //grabbing the isntructor vertices in sorted order
-                retList.add(vertices.get(currKey));
-            }
-        }
-
-        return retList;
-    }
-
-    public ArrayList<Vertex> instructorLoad(String inInstructor)
-    {
-        ArrayList<Vertex> retList = new ArrayList<>();
-        //this method is going to be used for viewing purposes hence we want to return a copy of the hash map
-        //the instructor can only view the students which are connected to him
-        Vertex currInstructor = getVertex(inInstructor);
-
-        //double checking if the retrieved vertex is actually going to be an instructor
-        if(!(currInstructor.value.getType().equals("INSTRUCTOR")))
-        {
-            throw new IllegalArgumentException("ERROR: can only load instructor vertexs");
-        }
-
-        Set<String> keys = currInstructor.connections.keySet();
-        //creating an arrayList as it's a mutable data structure and we can sort over teh data structure
-        List<String> keysOrdered = new ArrayList<>();
-
-        //transferring keys to keysOrdered
-        for (String currKey : keys)
-        {
-            Log.e(TAG, "Current Key: " + currKey);
-            keysOrdered.add(currKey);
-        }
-
-        //we want to sort the keys before we retrieve tehm from teh graph
-        Collections.sort(keysOrdered);
-
-        for(String currKey  : keysOrdered)
-        {
-            //grabbing the vertices in sorted order
-            retList.add(currInstructor.connections.get(currKey));
-        }
-
-        //once we're confident that an instructor has being loaded we can get all the instructors students and return them as a copy as they
-        //should be only for viewing purposes and nothing more
-        //return new HashMap<>(currInstructor.connections);
-        return retList;
-    }
-
-    // adding the current practical to the students whcih are on the current network
-    public void sendPracticals(TestHistory inPrac)
-    {
-        // adding the practicals to the admin, so if a new student is added by the admin, the admin can
-        // give the practicals which the amdin has
-
-        Vertex adminVert = getVertex();
-        adminVert.getValue().addPrac(inPrac);
-
-        Set<String > allVertices = vertices.keySet();
-
-        for (String currVertKey : allVertices)
-        {
-            Log.e(TAG, "Current vert: " + currVertKey);
-            // making sure that a practical copy is going to be returned, so all practical objects
-            // don't reference each otehr when changes are being made
-            TestHistory tempPrac = new TestHistory(inPrac);
-
-            Vertex  currVert = getVertex(currVertKey);
-            User currUser = currVert.getValue();
-
-            //if the current user is going to be a student add teh practical object onto the user
-            if (currUser.getType().equals("INSTRUCTOR"))
-            {
-                currUser.addPrac(tempPrac);
-            }
-
-        }
-    }
-
     public boolean isEmpty()
     {
         boolean valid = false;
@@ -521,59 +360,6 @@ public class Graph implements Serializable
         return valid;
     }
 
-    public void moveStudent(String studentName, String newInsructor)
-    {
-        //TODO: I don't think you will need this here, but if you need it come back and implement this
-    }
-    //TODO: you can honestly delete all these functions which are going to be below here
-    /***********************************************************************************************
-     * PUPROSE: to add a directed edge from one node to another node. Otherwise, if this relationship
-     * doesn't exist fail
-     ***********************************************************************************************/
-    public void addEdge(String fromEdge, String toEdge)
-    {
-        fromEdge = myUtils.cleanString(fromEdge);
-        toEdge = myUtils.cleanString(toEdge);
-        //if the vertex doesn't exist, these operations will fail
-        Vertex fromVertex = vertices.get(fromEdge);
-        Vertex toVertex = vertices.get(toEdge);
-
-        //getting all the connections from the fromVertex, and the putting the to vertex in the connections
-        fromVertex.connections.put(toEdge, toVertex);
-    }
-
-    /***********************************************************************************************
-     * PUPROSE: to delete a directed edge from one node to another node. Otherwise, if this
-     * relationship doesn't excist fail
-     ***********************************************************************************************/
-    public void delEdge(String fromEdge, String toEdge)
-    {
-        fromEdge = myUtils.cleanString(fromEdge);
-        toEdge = myUtils.cleanString(toEdge);
-        //if the vertex doesn't exist, these operations will fail
-        Vertex fromVertex = vertices.get(fromEdge);
-        Vertex toVertex = vertices.get(toEdge);
-        fromVertex.connections.remove(toEdge);
-    }
-
-    public HashMap<String, Vertex> getEdges(String nodeName)
-    {
-        nodeName = myUtils.cleanString(nodeName);
-        Vertex currVertex = vertices.get(nodeName);
-        return currVertex.connections;
-    }
-
-    private boolean validateInstructor(Vertex inVert)
-    {
-        boolean valid = true;
-        String type = inVert.value.getType();
-
-        if (!(type.equals("INSTRUCTOR")))
-        {
-            throw new IllegalArgumentException("ERROR: students can only be added to an instructor");
-        }
-        return valid;
-    }
     private boolean validateRootNode()
     {
         boolean valid = true;
@@ -633,19 +419,6 @@ public class Graph implements Serializable
         return valid;
     }
 
-    public boolean UserDoesNotExist(String inUser)
-    {
-        boolean valid = true;
-        inUser = myUtils.cleanString(inUser);
-
-        // if they is someone they, the programme should complain
-        if(vertices.get(inUser) != null)
-        {
-            valid = false;
-        }
-
-        return valid;
-    }
 
     public String toString()
     {

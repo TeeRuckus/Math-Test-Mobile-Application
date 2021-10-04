@@ -67,6 +67,11 @@ public abstract class User implements Serializable {
         return phoneNumbers;
     }
 
+    public String getName()
+    {
+        return firstName + " " + lastName;
+    }
+
     public ArrayList<TestHistory> getHistory()
     {
         /*TODO: you will need to make a function which is going to sort the history entries */
@@ -115,6 +120,11 @@ public abstract class User implements Serializable {
 
     public String getType() {
         return "USER";
+    }
+
+    public String toString()
+    {
+        throw new IllegalArgumentException("Error: to be implemented");
     }
 
 

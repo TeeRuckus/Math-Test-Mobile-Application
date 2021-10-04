@@ -22,6 +22,16 @@ public class Student extends User implements Serializable
         currInstructor = "Admin";
     }
 
+    public String getInstructor()
+    {
+        return new String(currInstructor);
+    }
+
+    public void setInstructor(String inInstructor)
+    {
+        throw new IllegalArgumentException("ERROR: functionality is not in use for this application");
+    }
+
     //we will need an alternate constructor when the admin will create student
     public Student(String inFirstName, String inLastName)
     {
