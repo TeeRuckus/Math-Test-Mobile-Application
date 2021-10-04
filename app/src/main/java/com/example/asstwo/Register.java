@@ -1,6 +1,13 @@
 package com.example.asstwo;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.ContentResolver.*;
 
 import org.w3c.dom.Text;
 
@@ -23,6 +31,9 @@ public class Register extends AppCompatActivity {
 
 
     private static final String TAG = "Register.";
+    private static final int REQUEST_READ_CONTACT_PERMISSION = 4;
+
+
     private ImageButton studentPicture;
     private ImageButton importFromContactsBttn;
     private EditText studentFirstName;
@@ -40,16 +51,22 @@ public class Register extends AppCompatActivity {
     private Button registerBttn;
     private Graph mathTestGraph;
     private Student currStdnt;
+    private int importCheck;
+    private Boolean onToggleFirst;
+    private Boolean onToggleLast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         loadGraph();
+        onToggleFirst = true;
+        onToggleLast = true;
 
         loadUIElements();
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
         currStdnt = new Student();
+        importCheck = 0;
 
 
         //adding text watchers to the first name and the last name, so callback checks can be done to
@@ -68,7 +85,31 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME");
+                Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME");
+
+                if (studentFirstName.getText().toString().length() > 0)
+                {
+                    //techincally any name more than one character is a vaild name therefore back calls
+                    //into the data base will be made
+                    if(onToggleFirst)
+                    {
+                        importCheck++;
+                        onToggleFirst = false;
+                    }
+
+                    if (importCheck == 2)
+                    {
+                        onToggleFirst = true;
+                        onToggleLast = true;
+                        //if last name has being changed as well
+                        searchContactList();
+                    }
+
+                }
+                else
+                {
+                    importCheck--;
+                }
             }
         });
 
@@ -85,7 +126,27 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i(TAG, "HEY YOU HAVE CHANGED THE LAST NAME");
+                Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME");
+
+                if (studentFirstName.getText().toString().length() > 0)
+                {
+                    //technically a name greater than 0 is valid contact
+                    if(onToggleLast)
+                    {
+                        importCheck++;
+                        onToggleLast = false;
+                    }
+                    if (importCheck == 2)
+                    {
+                        onToggleFirst = true;
+                        onToggleLast = true;
+                        searchContactList();
+                    }
+                }
+                else
+                {
+                    importCheck--;
+                }
             }
         });
 
@@ -161,6 +222,50 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void searchContactList()
+    {
+        String firstName = studentFirstName.getText().toString();
+        String lastName = studentLastName.getText().toString();
+
+        /*
+        Code: was adapted from the following stack over flow post:
+        https://stackoverflow.com/questions/4301064/how-to-get-the-first-name-and-last-name-from-android-contacts
+        DATA ACCESSED: 5/10/21 @ 00:41
+         */
+
+        //need to give android studio permissions to search the contacts list
+        if(ContextCompat.checkSelfPermission(Register.this, Manifest.permission.READ_CONTACTS)
+            != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(Register.this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACT_PERMISSION);
+        }
+
+        String whereClause = ContactsContract.Data.MIMETYPE + " = ?";
+        String[] whereValues = new String[] { ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE };
+        Cursor c = getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, whereClause, whereValues, ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
+
+        try
+        {
+            c.moveToFirst();
+            do
+            {
+                @SuppressLint("Range") String given = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+                @SuppressLint("Range") String family = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+                @SuppressLint("Range") String display = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
+
+                Log.i(TAG, "GIVEN NAME: " + given);
+                Log.i(TAG, "FAMILY NAME: " + family);
+                Log.i(TAG, "DISPLAY NAME: " + display);
+
+            }while(c.moveToNext());
+        }
+        finally
+        {
+            c.close();
+        }
+
     }
 
     public boolean registerUser(User inUser)
