@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+
+    <!--basic Pale night color scheme palette -->
+    <color name="paleNight_background">#292D3E</color>
+    <color name="dark_second">#242837</color>
+    <color name="paleNight_foreground">#A6ACCD</color>
+    <color name="paleNight_text">#676E95</color>
+    <color name="paleNight_buttons">#303348</color>
+    <color name="paleNight_secondary_background">#34324a</color>
+    <color name="paleNight_contrast">#090B10</color>
+    <color name="paleNight_ascent_color">#ab47bc</color>
+    <color name="paleNight_disabled">#515772</color>
+    <color name="paleNight_yellow">#ffcb6b</color>
+    <color name="paleNight_white">#eeffff</color>
+    <color name="paleNight_error">#ff5370</color>
+
+</resources>

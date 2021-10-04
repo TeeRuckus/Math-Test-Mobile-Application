@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/bannerMainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Math Test"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+
+    <ImageView
+        android:id="@+id/mathTestLogo"
+        android:layout_below="@id/bannerMainActivity"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <Button
+        android:id="@+id/studentListBttn"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="View Studnets"
+        android:layout_margin="100dp"
+        android:background="@color/paleNight_ascent_color"
+        android:textColor="@color/paleNight_white"
+        />
+
+    <Button
+        android:id="@+id/registerStudentView"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/studentListBttn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Register Student"
+        android:textColor="@color/paleNight_white"
+        android:background="@color/paleNight_ascent_color"
+        />
+</RelativeLayout>
