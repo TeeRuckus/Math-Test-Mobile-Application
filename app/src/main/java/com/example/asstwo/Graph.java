@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import static com.example.asstwo.myUtils.cleanString;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -370,12 +371,13 @@ public class Graph extends AppCompatActivity implements Serializable
         return valid;
     }
 
-    public void save()
+    public void save(Context cntx)
     {
         ObjectOutputStream os = null;
         FileOutputStream fos = null;
-        try {
-            fos = getApplicationContext().openFileOutput(SAVE, getApplicationContext().MODE_PRIVATE);
+        try
+        {
+            fos = cntx.openFileOutput(SAVE, cntx.MODE_PRIVATE);
             os = new ObjectOutputStream(fos);
             os.writeObject(this);
         } catch (FileNotFoundException e) {
@@ -401,14 +403,14 @@ public class Graph extends AppCompatActivity implements Serializable
         }
     }
 
-    public Graph load()
+    public Graph load(Context cntx)
     {
         FileInputStream fis = null;
         ObjectInputStream is = null;
         Graph retGraph = null;
         try
         {
-            fis = getApplicationContext().openFileInput(SAVE);
+            fis = cntx.openFileInput(SAVE);
             is = new ObjectInputStream(fis);
             retGraph = (Graph) is.readObject();
         } catch (FileNotFoundException e)
@@ -498,8 +500,6 @@ public class Graph extends AppCompatActivity implements Serializable
 
         return valid;
     }
-
-
 
     public String toString()
     {

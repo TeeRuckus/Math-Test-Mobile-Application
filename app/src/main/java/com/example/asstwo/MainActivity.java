@@ -18,26 +18,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        //Log.i(TAG, "THEY IS NOTHING TO DO MATE");
-        super.onBackPressed();
+        //they is nothing beyond the back screen so we should do nothing
+        //super.onBackPressed();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "SAVING YOUR DATA BEFORE YOU COMPLETELY DESTROY ME....");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "YOU HAVE PAUSE ME YOUR LORD");
+        Log.i(TAG, "YOU HAVE DESTROYED ME MATE AND I HATE YOU");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "YOU HAVE STOPPED ME YOUR LORD");
+        mathTestGraph.save(MainActivity.this);
     }
 
     @Override
@@ -53,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mathTestGraph = new Graph();
         try
         {
-            mathTestGraph.load();
+            mathTestGraph.load(MainActivity.this);
         }
         catch(NullPointerException err)
         {
