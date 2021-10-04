@@ -11,7 +11,56 @@ public class MainActivity extends AppCompatActivity {
 
     private Button viewStdntBttn;
     private Button registerStdntBttn;
+    private Graph mathTestGraph;
     private static final String TAG = "MainActivity.";
+
+
+    @Override
+    public void onBackPressed()
+    {
+        //Log.i(TAG, "THEY IS NOTHING TO DO MATE");
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "SAVING YOUR DATA BEFORE YOU COMPLETELY DESTROY ME....");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "YOU HAVE PAUSE ME YOUR LORD");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "YOU HAVE STOPPED ME YOUR LORD");
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Log.i(TAG, "YOU HAVE STARTED ME YOUR LORD");
+        loadGraph();
+    }
+
+    public void loadGraph()
+    {
+        mathTestGraph = new Graph();
+        try
+        {
+            mathTestGraph.load();
+        }
+        catch(NullPointerException err)
+        {
+            Log.i(TAG, "Creating a brand new graph...");
+        }
+        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

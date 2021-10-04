@@ -500,8 +500,9 @@ public class Graph extends AppCompatActivity implements Serializable
     }
 
 
+
     public String toString()
     {
-        throw new IllegalArgumentException("ERROR: to be implemented");
+        return  "this is a graph object with the size of: " + size();
     }
 }

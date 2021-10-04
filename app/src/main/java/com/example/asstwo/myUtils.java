@@ -8,6 +8,7 @@ package com.example.asstwo;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -20,6 +21,7 @@ import java.util.Set;
 //public final class myUtils
 public class myUtils extends AppCompatActivity
 {
+    private static final String TAG = "myUtils.";
 
     //a look up table which we can use to find what the file code is for the current flag
     public static final HashMap<String, String> countryLookUp = new HashMap<String, String>() {{
@@ -74,11 +76,6 @@ public class myUtils extends AppCompatActivity
         //we want it to load with nothing in it
     }
 
-
-    public Graph loadGraph()
-    {
-        return null;
-    }
 
     public static String[] getCountryNames()
     {
