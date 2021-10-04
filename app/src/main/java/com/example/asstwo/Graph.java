@@ -23,7 +23,7 @@ import android.content.Context.*;
 public class Graph extends AppCompatActivity implements Serializable
 {
     //a public static method
-    private static final String SAVE = "math_Test_Data";
+    private static final String SAVE = "MathTest_appData.ser";
     private static final String TAG = "Graph.";
     private HashMap<String, Vertex> vertices;
     private String currentAdmin = "ADMIN";
@@ -415,16 +415,23 @@ public class Graph extends AppCompatActivity implements Serializable
             retGraph = (Graph) is.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            retGraph = new Graph();
         } catch (IOException e) {
             e.printStackTrace();
+            retGraph = new Graph();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally
         {
             try
             {
-                is.close();
-                fis.close();
+                if (is != null) {
+                    is.close();
+                }
+
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (IOException e)
             {
                 Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());

@@ -21,7 +21,7 @@ public abstract class User implements Serializable {
     //PRIVATE CLASS FIELDS
     private String firstName;
     private String lastName;
-    protected ArrayList<Integer> phoneNumbers;
+    protected ArrayList<String> phoneNumbers;
     protected ArrayList<String> emailAddresses;
     protected ArrayList<TestHistory> history;
     private Avatar avatar;
@@ -45,7 +45,7 @@ public abstract class User implements Serializable {
             //all these  class fields should be changed through mutators as the original values should be always nothing
             phoneNumbers = new ArrayList<>();
             emailAddresses = new ArrayList<>();
-            history = new ArrayList<TestHistory>();
+            history = new ArrayList<>();
             avatar = new Avatar();
         }
     }
@@ -63,7 +63,7 @@ public abstract class User implements Serializable {
         return emailAddresses;
     }
 
-    public List<Integer> getNumbers() {
+    public List<String> getNumbers() {
         return phoneNumbers;
     }
 
@@ -106,11 +106,24 @@ public abstract class User implements Serializable {
         }
     }
 
-    public void addEmail(String inEmail) {
+    public void addEmail(String inEmail)
+    {
         if (validateEmail(inEmail)) {
             if (validateEmailLength()) {
                 emailAddresses.add(inEmail);
             }
+        }
+    }
+
+    public void addPhoneNum(String inNum)
+    {
+        if (validatePhoneNumber(inNum))
+        {
+            if(validatePhoneNumberLength())
+            {
+                phoneNumbers.add(inNum);
+            }
+
         }
     }
 
@@ -170,10 +183,33 @@ public abstract class User implements Serializable {
 
     protected boolean validateEmailLength() {
         boolean valid = true;
-        if (emailAddresses.size() > 10) {
-            throw new IllegalArgumentException("ERROR: Only 10 email address are allowed for the user");
+        if (emailAddresses.size() == 10) {
+            throw new IndexOutOfBoundsException("ERROR: Only 10 email address are allowed for the user");
         }
 
+        return valid;
+    }
+
+    protected boolean validatePhoneNumber(String inNum)
+    {
+        boolean valid = true;
+        int currLength = inNum.length();
+        if(!(currLength >= 10 && currLength <= 15))
+        {
+            throw new IllegalArgumentException("ERROR: the phone number must be between 10 and 15 digits long");
+        }
+
+        return valid;
+    }
+
+    protected boolean validatePhoneNumberLength()
+    {
+        boolean valid = true;
+
+        if(phoneNumbers.size() ==  10)
+        {
+            throw new IndexOutOfBoundsException("Error: you're alllowed a maximum of 10 phone numbers per person");
+        }
         return valid;
     }
 

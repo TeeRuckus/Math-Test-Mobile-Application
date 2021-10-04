@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "YOU HAVE CREATED ME MY LORD");
         loadGraph();
 
         loadUIElements();
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         {
             mathTestGraph.addVertex(new Admin("Current", "Admin"));
             mathTestGraph.setAdmin("currentAdmin");
+            Log.i(TAG, "Created new Graph");
         }
         catch (IllegalArgumentException err)
         {
