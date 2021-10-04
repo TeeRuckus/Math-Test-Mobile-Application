@@ -5,11 +5,9 @@ TODO:
  */
 package com.example.asstwo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.assone.PasswordSchema.PassWordTable;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -152,16 +150,6 @@ public class myUtils extends AppCompatActivity
         return valid;
     }
 
-    public static boolean validatePassword(Instructor inInstructor, int inPassword)
-    {
-        boolean valid = false;
-        int actualPassword = getPassword(inInstructor);
-        if ( actualPassword == inPassword)
-        {
-            valid = true;
-        }
-        return valid;
-    }
 
     public static boolean validatePassword(Student inStudent, int inPassword)
     {
@@ -181,10 +169,6 @@ public class myUtils extends AppCompatActivity
 
     }
 
-    public void createPassword(Instructor inInstructor, int inPassword)
-    {
-    }
-
     public void createPassword(Student inStudent, int inPassword)
     {
     }
@@ -198,12 +182,6 @@ public class myUtils extends AppCompatActivity
         return  password;
     }
 
-    public static int getPassword(Instructor inInstructor)
-    {
-        int password = 0;
-
-        return  password;
-    }
 
     public static int getPassword(Student inStudent)
     {
@@ -212,54 +190,6 @@ public class myUtils extends AppCompatActivity
         return  password;
     }
 
-    //this will be passed in from the remove method when you delete a user from the graph
-    public void removePassword(Admin inAdmin)
-    {
-        String[] whereValue = {inAdmin.getName()};
-        db.delete(PassWordTable.NAME,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValue);
-    }
-
-    public void removePassword(Instructor inInstructor)
-    {
-        String[] whereValue = {inInstructor.getName()};
-        db.delete(PassWordTable.NAME,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValue);
-    }
-
-    public void removePassword(Student inStudent)
-    {
-        String[] whereValue = {inStudent.getName()};
-        db.delete(PassWordTable.NAME,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValue);
-    }
-
-    //this will be responsible for updating the password given a user
-    public void updatePassword(Admin inAdmin, int newPassword)
-    {
-        ContentValues cv = accessDb(inAdmin, newPassword);
-        String userName = cleanString(inAdmin.getName());
-        String[] whereValues ={userName};
-        db.update(PassWordTable.NAME, cv,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValues);
-    }
-    public void updatePassword(Instructor inInstructor, int newPassword)
-    {
-        ContentValues cv = accessDb(inInstructor, newPassword);
-        String userName = cleanString(inInstructor.getName());
-        String[] whereValues ={userName};
-        db.update(PassWordTable.NAME, cv,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValues);
-    }
-
-    public void updatePassword(Student inStudent, int newPassword)
-    {
-        ContentValues cv = accessDb(inStudent, newPassword);
-        String userName = cleanString(inStudent.getName());
-        String[] whereValues ={userName};
-        db.update(PassWordTable.NAME, cv,
-                PassWordTable.Cols.USER_NAME + " = ?", whereValues);
-    }
 
     //only the methods which this class needs to kow about
     private static boolean validateRetrival(Object inObj, String lookUpKey)
@@ -269,42 +199,5 @@ public class myUtils extends AppCompatActivity
             throw new IllegalArgumentException("ERROR: " + lookUpKey + " is not a registerd country");
         }
         return valid;
-    }
-
-    //method which is going to help this class to access data from the data base
-    private ContentValues accessDb(Admin inAdmin, int inPassword)
-    {
-        //adding the data into the database whcih was created
-        ContentValues cv = new ContentValues();
-
-        //TODO: you will need to add some type of encryption before you actually store your password inside the database
-        String userName = cleanString(inAdmin.getName());
-        cv.put(PassWordTable.Cols.USER_NAME, userName);
-        cv.put(PassWordTable.Cols.PASSWORD, inPassword);
-        return cv;
-    }
-
-    private ContentValues accessDb(Instructor inInstructor, int inPassword)
-    {
-        //adding the data into the database whcih was created
-        ContentValues cv = new ContentValues();
-
-        //TODO: you will need to add some type of encryption before you actually store your password inside the database
-        String userName = cleanString(inInstructor.getName());
-        cv.put(PassWordTable.Cols.USER_NAME, userName);
-        cv.put(PassWordTable.Cols.PASSWORD, inPassword);
-        return cv;
-    }
-
-    private ContentValues accessDb(Student inStudent, int inPassword)
-    {
-        //adding the data into the database whcih was created
-        ContentValues cv = new ContentValues();
-
-        //TODO: you will need to add some type of encryption before you actually store your password inside the database
-        String userName = cleanString(inStudent.getName());
-        cv.put(PassWordTable.Cols.USER_NAME, userName);
-        cv.put(PassWordTable.Cols.PASSWORD, inPassword);
-        return cv;
     }
 }
