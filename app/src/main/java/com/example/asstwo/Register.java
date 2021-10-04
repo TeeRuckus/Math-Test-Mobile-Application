@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -227,8 +228,22 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
+
+        importFromContactsBttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context cntx = getApplicationContext();
+                CharSequence text = "Importing Contact";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(cntx, text, duration);
+                toast.show();
+                importPhoneNumber();
+                importEmailAddress();
+            }
+        });
     }
 
+    @SuppressLint("Range")
     public void searchContactList()
     {
         String firstName = studentFirstName.getText().toString();
@@ -258,8 +273,9 @@ public class Register extends AppCompatActivity {
             c.moveToFirst();
             do
             {
-                @SuppressLint("Range") String given = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
-                @SuppressLint("Range") String family = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+                String given = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+                String family = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+                contactId = c.getInt(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.CONTACT_ID));
 
                 //make the search case insensintive
                 given = myUtils.cleanString(given);
@@ -268,7 +284,7 @@ public class Register extends AppCompatActivity {
                 {
                     importFromContactsBttn.setVisibility(View.VISIBLE);
                     importFromContactsBttn.setClickable(true);
-
+                    Log.e(TAG, "found contact ID: " + contactId);
                 }
 
                 //@SuppressLint("Range") String display = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
@@ -282,6 +298,74 @@ public class Register extends AppCompatActivity {
             c.close();
         }
 
+    }
+
+    public void importPhoneNumber()
+    {
+        String result = "";
+        Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] querryFieldsPhone = new String[] {
+                ContactsContract.CommonDataKinds.Phone.NUMBER
+        };
+
+        String whereClausePhone = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?";
+        String [] whereValuesPhone  = new String[]{
+                String.valueOf(this.contactId)
+        };
+        Cursor c = getContentResolver().query(
+                phoneUri, querryFieldsPhone, whereClausePhone, whereValuesPhone, null);
+
+        try
+        {
+            c.moveToFirst();
+            do
+            {
+                String phoneNum = c.getString(0);
+                result = result + phoneNum + " ";
+            }
+            while (c.moveToNext());
+        }
+        finally
+        {
+            //we always need to make sure that we close our cursor no matter what
+            c.close();
+        }
+
+        phNumInput.setText(result);
+    }
+    public void importEmailAddress()
+    {
+        String result = "";
+        Uri emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+        String[] querryFields = new String[] {
+                ContactsContract.CommonDataKinds.Email.ADDRESS
+        };
+
+        String whereClause = ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?";
+        String [] whereValues  = new String[]{
+                String.valueOf(this.contactId)
+        };
+
+        Cursor c = getContentResolver().query(
+                emailUri, querryFields, whereClause, whereValues, null);
+        try
+        {
+            c.moveToFirst();
+            do
+            {
+                String emailAddress = c.getString(0);
+                Log.e(TAG, "current email address: "+emailAddress);
+                result = result + emailAddress + " ";
+            }
+            while (c.moveToNext());
+        }
+        finally
+        {
+            //we always need to make sure that we close our cursor no matter what
+            c.close();
+        }
+
+        emailInput.setText(result);
     }
 
     public boolean registerUser(User inUser)
