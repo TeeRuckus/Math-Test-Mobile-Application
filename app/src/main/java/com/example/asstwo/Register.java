@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -54,6 +55,8 @@ public class Register extends AppCompatActivity {
         registerBttn = findViewById(R.id.registerBttn);
 
         //the import icon should only show up when we're imporing a contact into teh programme
+        importFromContactsBttn.setVisibility(View.INVISIBLE);
+        importFromContactsBttn.setClickable(false);
 
     }
 }
