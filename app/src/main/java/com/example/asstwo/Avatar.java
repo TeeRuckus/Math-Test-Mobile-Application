@@ -10,7 +10,7 @@ public class Avatar implements Serializable
     public Avatar()
     {
         name = "unknown";
-        image = 0000;
+        image = 0;
     }
 
     public Avatar(String inName, int inInt)
@@ -42,5 +42,4 @@ public class Avatar implements Serializable
     {
         this.image = image;
     }
-
 }
