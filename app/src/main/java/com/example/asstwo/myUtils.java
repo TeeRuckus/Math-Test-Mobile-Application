@@ -75,6 +75,11 @@ public class myUtils extends AppCompatActivity
     }
 
 
+    public Graph loadGraph()
+    {
+        return null;
+    }
+
     public static String[] getCountryNames()
     {
         int amountNames = countryLookUp.size();

@@ -2,17 +2,27 @@ package com.example.asstwo;
 
 import static com.example.asstwo.myUtils.cleanString;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import android.content.Context.*;
 
-public class Graph implements Serializable
+public class Graph extends AppCompatActivity implements Serializable
 {
+    //a public static method
+    private static final String SAVE = "math_Test_Data";
     private static final String TAG = "Graph.";
     private HashMap<String, Vertex> vertices;
     private String currentAdmin = "ADMIN";
@@ -358,6 +368,76 @@ public class Graph implements Serializable
             valid = true;
         }
         return valid;
+    }
+
+    public void save()
+    {
+        ObjectOutputStream os = null;
+        FileOutputStream fos = null;
+        try {
+            fos = getApplicationContext().openFileOutput(SAVE, getApplicationContext().MODE_PRIVATE);
+            os = new ObjectOutputStream(fos);
+            os.writeObject(this);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "ERROR: the file doesn't exist: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, "ERROR: something went wrong while reading the file: " + e.getMessage());
+            e.printStackTrace();
+        }
+        finally
+        {
+            //regardless if the files reading was succesfull or not we must clost the streams
+            try
+            {
+                os.close();
+                fos.close();
+            }
+            catch(IOException e)
+            {
+                Log.e(TAG, "ERROR: they was nothing to close: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Graph load()
+    {
+        FileInputStream fis = null;
+        ObjectInputStream is = null;
+        Graph retGraph = null;
+        try
+        {
+            fis = getApplicationContext().openFileInput(SAVE);
+            is = new ObjectInputStream(fis);
+            retGraph = (Graph) is.readObject();
+        } catch (FileNotFoundException e)
+        {
+            Log.e(TAG, "The file was not found in memory: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            Log.e(TAG, "Something went wrong while opening the file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            Log.e(TAG, "This class doesn't exist at all: " + e.getMessage());
+            e.printStackTrace();
+        } finally
+        {
+            //no matter what we should always close the stream which we have opened
+            try
+            {
+                is.close();
+                fis.close();
+            } catch (IOException e)
+            {
+                Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        return retGraph;
     }
 
     private boolean validateRootNode()
