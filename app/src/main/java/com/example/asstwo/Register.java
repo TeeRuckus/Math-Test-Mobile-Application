@@ -21,7 +21,7 @@ public class Register extends AppCompatActivity {
 
 
     private static final String TAG = "Register.";
-    private ImageView studentPicture;
+    private ImageButton studentPicture;
     private ImageButton importFromContactsBttn;
     private EditText studentFirstName;
     private TextView studentFirstNameError;
@@ -37,6 +37,7 @@ public class Register extends AppCompatActivity {
     private Spinner emailSpinner;
     private Button registerBttn;
     private Graph mathTestGraph;
+    private Student currStdnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class Register extends AppCompatActivity {
 
         loadUIElements();
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
+        currStdnt = new Student();
 
 
         //adding text watchers to the first name and the last name, so callback checks can be done to
@@ -89,12 +91,61 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //getting all the elements from the UI, and adding them into the current graph which we have created
-                Student currStdnt = new Student();
                 boolean valid = registerUser(currStdnt);
 
                 if (valid)
                 {
                     Log.e(TAG, "Register user and add another user to the network");
+
+                    //once a new student has being created resetting everything else
+                    currStdnt = new Student();
+                }
+            }
+        });
+
+        addMoreEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try
+                {
+                    currStdnt.addEmail(emailInput.getText().toString());
+                    //if an error had occur set the error dialogue to blank after correct input
+                    emailError.setText("");
+                }
+                catch(IllegalArgumentException err)
+                {
+                    Log.e(TAG, err.getMessage());
+                    emailError.setText("Invalid email format");
+                }
+                catch(IndexOutOfBoundsException err)
+                {
+                    Log.e(TAG, err.getMessage());
+                    emailError.setText("maxium of 10 emails reached");
+                }
+
+            }
+        });
+
+        addMorePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                try
+                {
+                    currStdnt.addPhoneNum(phNumInput.getText().toString());
+                    //if an error had occurred set the error dialogue to blank after correct input
+                    phoneNumError.setText("");
+                }
+                catch (IllegalArgumentException err)
+                {
+                    Log.e(TAG, err.getMessage());
+                    phoneNumError.setText("Invalid Number format");
+                }
+
+                catch (IndexOutOfBoundsException err)
+                {
+                    Log.e(TAG, "Maximum of 10 numbers reached");
+                    phoneNumError.setText("maximum of 10 numbers reached");
                 }
             }
         });
@@ -149,10 +200,9 @@ public class Register extends AppCompatActivity {
 
         try
         {
-            //TODO: this is going to be pretty interesting how you're going to handle this actually
             inUser.addEmail(emailInput.getText().toString());
             checks++;
-            //if an error has occurred set the error  dialogue to bank after correct input
+            //if an error has occurred set the error dialogue to blank after correct input
             emailError.setText("");
         }
         catch (IllegalArgumentException err)
@@ -204,13 +254,15 @@ public class Register extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "YOU HAVE DESTROYED ME");
-        mathTestGraph.save(Register.this);
+        //TODO: you will need to uncomment this, just doing this so I can play with without messing me up
+        //mathTestGraph.save(Register.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "YOU HAVE STOPPED ME");
-        mathTestGraph.save(Register.this);
+        //TODO: you will need to uncomment this out, I am just doing this so I can play wiht it
+        //mathTestGraph.save(Register.this);
     }
 }
