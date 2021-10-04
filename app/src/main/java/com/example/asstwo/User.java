@@ -32,7 +32,7 @@ public abstract class User implements Serializable {
         firstName = "John";
         lastName = "Doe";
         avatar = new Avatar();
-        history = new TestHistory();
+        history = new ArrayList<TestHistory>();
         phoneNumbers = new ArrayList<>();
         emailAddresses = new ArrayList();
     }
@@ -45,7 +45,7 @@ public abstract class User implements Serializable {
             //all these  class fields should be changed through mutators as the original values should be always nothing
             phoneNumbers = new ArrayList<>();
             emailAddresses = new ArrayList<>();
-            history = new TestHistory();
+            history = new ArrayList<TestHistory>();
             avatar = new Avatar();
         }
     }
