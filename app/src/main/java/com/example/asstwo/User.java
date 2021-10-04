@@ -7,7 +7,9 @@ TODO:
 package com.example.asstwo;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.lang.String;
@@ -17,162 +19,114 @@ public abstract class User implements Serializable
 {
 
     //PRIVATE CLASS FIELDS
-    private String name;
-    //assuming username is going to be the staff id or student id
-    private String userName;
-    private String email;
-    private String country;
-    protected HashMap<String, TestHistory> practicals;
-    private int password;
+    private String firstName;
+    private String lastName;
+    protected ArrayList<Integer> phoneNumbers;
+    protected ArrayList<String> emailAddresses;
+    protected TestHistory history;
     private Avatar avatar;
 
     private static final String TAG = "user.";
 
     public User()
     {
-        name = "John Doe";
-        userName = "12345678";
-        email = "johnDoe@curtin.edu.au";
-        country = "AUSTRALIA";
-        password = 1234;
-        practicals = new HashMap<String, TestHistory>();
+        firstName = "John";
+        lastName = "Doe";
+        avatar = new Avatar();
+        history = new TestHistory();
+        phoneNumbers = new ArrayList<>();
+        emailAddresses = new ArrayList();
     }
 
-    public User(String inName, String inUserName, String inEmail, String inCountry)
+    public User(String inFirstName, String  inLastName)
     {
-        if(validateName(inName) && validateUserName(inUserName) && validateEmail(inEmail) &&
-            validateCountry(inCountry))
+        if(validateName(inFirstName) && validateName(inLastName))
         {
-            name = inName;
-            userName = inUserName;
-            email = inEmail;
-            country = inCountry;
-            password = 1234;
-            practicals = new HashMap<String, TestHistory>();
+            firstName = inFirstName;
+            lastName = inLastName;
+
+            //all these  class fields should be changed through mutators as the original values should be always nothing
+            phoneNumbers = new ArrayList<>();
+            emailAddresses = new ArrayList<>();
+            history = new TestHistory();
+            avatar = new Avatar();
         }
     }
 
     //ACCESSOR METHODS
-    public String getName()
+    public String getFirstName()
     {
-        return new String(name);
+        return new String(firstName);
     }
 
-    public String getUserName()
+    public String getLastName()
     {
-        return new String(userName);
+        return new String(lastName);
     }
 
-    public String getEmail()
+    public List<String> getEmails()
     {
-        return new String(email);
+        return emailAddresses;
     }
 
-    public String getCountry()
+    public List<Integer> getNumbers()
     {
-        return new String(country);
+        return phoneNumbers;
     }
 
-    public Avatar getFlag()
+    public TestHistory getHistory()
+    {
+        return history;
+    }
+
+    public Avatar getAvatar()
     {
         return avatar;
     }
 
-    public void setFlag(Avatar inAvatar)
+    public void setAvatar(Avatar inAvatar)
     {
         avatar = inAvatar;
     }
 
-    public TestHistory getPrac(String inTitle)
-    {
-        String titleKey = myUtils.cleanString(inTitle);
-        //if this doesn't exist it should be picked up the dictonary object
-        return practicals.get(titleKey);
 
+    public void addHistoryEntry(String inHistory)
+    {
+        //TODO: come back and actually implement this method when you get to that part of the functionality
     }
 
-    public HashMap<String, TestHistory> getPracticals()
+    public void setLastName(String inLastName)
     {
-        return new HashMap<>(practicals);
-    }
 
-    public String dispPrac(String title)
-    {
-        String pracDetails = "";
-        if(validateName(title))
+        if(validateName(inLastName))
         {
-            if (practicals.isEmpty())
-            {
-                throw new IllegalArgumentException("Error: no practicals added for current student: " + practicals.size());
-            }
-            else
-            {
-                //cleaning any white spaves, and making the title case insensitive
-                title = myUtils.cleanString(title);
-                TestHistory currPrac = practicals.get(title);
-                pracDetails = currPrac.toString();
-            }
-        }
-
-        return pracDetails;
-    }
-
-    public void addPrac(TestHistory inPrac)
-    {
-        String pracName = myUtils.cleanString(inPrac.getTitle());
-        Log.e(TAG, "Practical added to user: " + inPrac.getTitle());
-        Log.e(TAG, "the added practical object: " + inPrac);
-        practicals.put(pracName, inPrac);
-    }
-
-    public int getPassword()
-    {
-        return password;
-    }
-
-    //MUTATOR METHODS
-    public void setName(String inName)
-    {
-        if(validateName(inName))
-        {
-            name = inName;
+            lastName = inLastName;
         }
     }
 
-    public void setUserName(String inUserName)
+    public void setFirstName(String inFirstName)
     {
 
-        if(validateUserName(inUserName))
+        if(validateName(inFirstName))
         {
-            userName = inUserName;
+            firstName = inFirstName;
         }
-
     }
 
-    public void setEmail(String inEmail)
+    public void addEmail(String inEmail)
     {
         if(validateEmail(inEmail))
         {
-            email = inEmail;
+            if(validateEmailLength())
+            {
+                emailAddresses.add(inEmail);
+            }
         }
     }
 
-    public void setCountry(String inCountry)
+    public void setAvatar(String avatarName, int drawableID)
     {
-        if (validateCountry(inCountry))
-        {
-            country = inCountry;
-        }
-    }
-
-    public void setPracticals(HashMap<String, TestHistory> inPracs)
-    {
-        practicals = inPracs;
-    }
-
-    public void setPassword(int inPassword)
-    {
-        password = inPassword;
+        avatar = new Avatar(avatarName, drawableID);
     }
 
     public String getType()
@@ -180,15 +134,6 @@ public abstract class User implements Serializable
         return "USER";
     }
 
-
-    /***********************************************************************************************
-     * ASSERTION: always return a string which is going to be in the following format
-     * [name user], [user id], [user email], [country]
-     ***********************************************************************************************/
-    public String toString()
-    {
-        return  name +","+ userName +","+ email +","+ country;
-    }
 
     /***********************************************************************************************
      * ASSERTION: the function is going to break if an empty string is given as its input
@@ -234,63 +179,14 @@ public abstract class User implements Serializable
         return valid;
     }
 
-
-    /***********************************************************************************************
-     * ASSERTION: a valid user name is going to have 6 numbers, followed by a captial letter for the
-     * staff id
-     ***********************************************************************************************/
-    protected boolean validateUserName(String inUserName)
+    protected boolean validateEmailLength()
     {
         boolean valid = true;
-        //what we will want to match
-        String regex = "[0-9]{6}[A-Z]{1}";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(inUserName);
-
-        if(!(matcher.matches()))
+        if (emailAddresses.size() > 10)
         {
-            throw new IllegalArgumentException("ERROR: invalid staff id: " + inUserName);
+            throw new IllegalArgumentException("ERROR: Only 10 email address are allowed for the user");
         }
 
-        return valid;
-
-    }
-
-    protected boolean validateCountry(String inCountry)
-    {
-        boolean valid = true;
-
-        if (inCountry.length() == 0)
-        {
-            throw new IllegalArgumentException("Error: country can't be an empty string" + inCountry);
-        }
-        return valid;
-    }
-
-    protected boolean managePassWord(int inPassword)
-    {
-        boolean valid = true;
-        if (validatePassword(inPassword))
-        {
-            //if the password is going to be valid
-
-            //TODO: you will need to add code to hash your password so it's more secure to store your password
-
-            //adding the password into my database
-
-        }
-
-        return valid;
-    }
-
-    protected boolean validatePassword(int inPassword)
-    {
-        boolean valid = true;
-        int numDigits = String.valueOf(inPassword).length();
-        if (numDigits != 4)
-        {
-            throw new IllegalArgumentException("ERROR: you must have four digits for your pin");
-        }
         return valid;
     }
 }
