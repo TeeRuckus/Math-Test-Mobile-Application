@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -96,6 +98,14 @@ public class Register extends AppCompatActivity {
                 if (valid)
                 {
                     Log.e(TAG, "Register user and add another user to the network");
+                    //TODO: come back and actually add the student to the graph structure
+
+                    Context cntx = getApplicationContext();
+                    CharSequence text = "student created";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(cntx, text, duration);
+                    toast.show();
+                    clearText();
 
                     //once a new student has being created resetting everything else
                     currStdnt = new Student();
@@ -109,6 +119,7 @@ public class Register extends AppCompatActivity {
                 try
                 {
                     currStdnt.addEmail(emailInput.getText().toString());
+                    emailInput.setText("");
                     //if an error had occur set the error dialogue to blank after correct input
                     emailError.setText("");
                 }
@@ -133,6 +144,7 @@ public class Register extends AppCompatActivity {
                 try
                 {
                     currStdnt.addPhoneNum(phNumInput.getText().toString());
+                    phNumInput.setText("");
                     //if an error had occurred set the error dialogue to blank after correct input
                     phoneNumError.setText("");
                 }
@@ -196,6 +208,11 @@ public class Register extends AppCompatActivity {
             Log.e(TAG, err.getMessage());
             phoneNumError.setText("Invalid Phone Number");
         }
+        catch (IndexOutOfBoundsException err)
+        {
+            Log.e(TAG, err.getMessage());
+            //do nothing as they have reached the maximum amount of numbers
+        }
 
 
         try
@@ -209,6 +226,11 @@ public class Register extends AppCompatActivity {
         {
             Log.e(TAG, err.getMessage());
             emailError.setText("Invalid email format");
+        }
+        catch(IndexOutOfBoundsException err)
+        {
+            Log.e(TAG, err.getMessage());
+            //do nothing as they have reached the maximum amount of emails
         }
 
         if(checks == 4)
@@ -247,7 +269,14 @@ public class Register extends AppCompatActivity {
         //the import icon should only show up when we're imporing a contact into teh programme
         importFromContactsBttn.setVisibility(View.INVISIBLE);
         importFromContactsBttn.setClickable(false);
+    }
 
+    public void clearText()
+    {
+        studentFirstName.setText("");
+        studentLastName.setText("");
+        phNumInput.setText("");
+        emailInput.setText("");
     }
 
     @Override
