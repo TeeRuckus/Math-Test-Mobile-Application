@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button viewStdntBttn;
@@ -14,53 +16,12 @@ public class MainActivity extends AppCompatActivity {
     private Graph mathTestGraph;
     private static final String TAG = "MainActivity.";
 
-
-    @Override
-    public void onBackPressed()
-    {
-        //they is nothing beyond the back screen so we should do nothing
-        //super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "YOU HAVE DESTROYED ME MATE AND I HATE YOU");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "YOU HAVE STOPPED ME YOUR LORD");
-        mathTestGraph.save(MainActivity.this);
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-        Log.i(TAG, "YOU HAVE STARTED ME YOUR LORD");
-        loadGraph();
-    }
-
-    public void loadGraph()
-    {
-        mathTestGraph = new Graph();
-        try
-        {
-            mathTestGraph.load(MainActivity.this);
-        }
-        catch(NullPointerException err)
-        {
-            Log.i(TAG, "Creating a brand new graph...");
-        }
-        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.i(TAG, "YOU HAVE CREATED ME MY LORD");
+        loadGraph();
 
         loadUIElements();
 
@@ -80,6 +41,62 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        //they is nothing beyond the back screen so we should do nothing
+        //super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "YOU HAVE DESTROYED ME MATE AND I HATE YOU");
+        mathTestGraph.save(MainActivity.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "YOU HAVE STOPPED ME YOUR LORD");
+        mathTestGraph.save(MainActivity.this);
+    }
+
+    public void loadGraph()
+    {
+        mathTestGraph = new Graph();
+        try
+        {
+            mathTestGraph = mathTestGraph.load(MainActivity.this);
+        }
+        catch(NullPointerException err)
+        {
+            Log.i(TAG, "Creating a brand new graph...");
+        }
+        catch (IOException e)
+        {
+            Log.i(TAG, "No last save found new graph being created... " + e.getMessage());
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            Log.e(TAG, "Class not fond " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            mathTestGraph.addVertex(new Admin("Current", "Admin"));
+            mathTestGraph.setAdmin("currentAdmin");
+            mathTestGraph.addVertex(new Student("Tawana", "Kwaramba"));
+            Log.i(TAG, "Current Graph Object: " + mathTestGraph);
+            Log.i(TAG, "Current Admin node: " + mathTestGraph.getVertex().getKey());
+        }
+        catch (IllegalArgumentException err)
+        {
+            Log.i(TAG, "Admin already exist in the programme");
+        }
+    }
+
     protected void loadUIElements()
     {
         viewStdntBttn = findViewById(R.id.studentListBttn);
@@ -88,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
     protected void startRequiredActivity(Class toActivity)
     {
+        mathTestGraph.save(MainActivity.this);
         Intent intent= new Intent(MainActivity.this, toActivity);
+        //we should save the graph before we start the next activity
         startActivity(intent);
     }
 

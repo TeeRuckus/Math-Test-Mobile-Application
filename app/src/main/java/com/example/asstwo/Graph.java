@@ -373,6 +373,7 @@ public class Graph extends AppCompatActivity implements Serializable
 
     public void save(Context cntx)
     {
+        //TODO: I don't know if I should keep the exception handling here or pass it to the context which is calling it
         ObjectOutputStream os = null;
         FileOutputStream fos = null;
         try
@@ -403,40 +404,22 @@ public class Graph extends AppCompatActivity implements Serializable
         }
     }
 
-    public Graph load(Context cntx)
-    {
+    public Graph load(Context cntx) throws IOException, ClassNotFoundException {
         FileInputStream fis = null;
         ObjectInputStream is = null;
         Graph retGraph = null;
+        fis = cntx.openFileInput(SAVE);
+        is = new ObjectInputStream(fis);
+        retGraph = (Graph) is.readObject();
+
         try
         {
-            fis = cntx.openFileInput(SAVE);
-            is = new ObjectInputStream(fis);
-            retGraph = (Graph) is.readObject();
-        } catch (FileNotFoundException e)
-        {
-            Log.e(TAG, "The file was not found in memory: " + e.getMessage());
-            e.printStackTrace();
+            is.close();
+            fis.close();
         } catch (IOException e)
         {
-            Log.e(TAG, "Something went wrong while opening the file: " + e.getMessage());
+            Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
             e.printStackTrace();
-        } catch (ClassNotFoundException e)
-        {
-            Log.e(TAG, "This class doesn't exist at all: " + e.getMessage());
-            e.printStackTrace();
-        } finally
-        {
-            //no matter what we should always close the stream which we have opened
-            try
-            {
-                is.close();
-                fis.close();
-            } catch (IOException e)
-            {
-                Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
-                e.printStackTrace();
-            }
         }
 
         return retGraph;
@@ -449,7 +432,7 @@ public class Graph extends AppCompatActivity implements Serializable
         Vertex rootNode = vertices.get(currentAdmin);
         if(rootNode == null)
         {
-            throw new IllegalArgumentException("ERROR: they is admin, must create admin first");
+            throw new IllegalArgumentException("ERROR: they is no admin, must create admin first");
         }
         return valid;
     }

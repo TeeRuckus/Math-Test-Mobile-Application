@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 public class Register extends AppCompatActivity {
 
@@ -27,16 +30,42 @@ public class Register extends AppCompatActivity {
     private TextView emailError;
     private Spinner emailSpinner;
     private Button registerBttn;
-
+    private Graph mathTestGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        loadGraph();
 
         loadUIElements();
+        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
     }
 
+    public void loadGraph()
+    {
+        Log.i(TAG, "YOU HAVE CREATED ME YOUR LORD");
+        mathTestGraph = new Graph();
+        try
+        {
+            mathTestGraph = mathTestGraph.load(Register.this);
+        }
+        catch(NullPointerException err)
+        {
+            Log.e(TAG, err.getMessage());
+        }
+        catch (IOException e)
+        {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
+    }
 
     public void loadUIElements()
     {
@@ -58,5 +87,19 @@ public class Register extends AppCompatActivity {
         importFromContactsBttn.setVisibility(View.INVISIBLE);
         importFromContactsBttn.setClickable(false);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "YOU HAVE DESTROYED ME");
+        mathTestGraph.save(Register.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "YOU HAVE STOPPED ME");
+        mathTestGraph.save(Register.this);
     }
 }
