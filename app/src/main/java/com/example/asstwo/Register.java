@@ -124,7 +124,7 @@ public class Register extends AppCompatActivity {
             inUser.setLastName(studentLastName.getText().toString());
             checks++;
             //if an error has occurred set the error dialogue to blank after correct input
-            studentFirstNameError.setText("");
+            studentLastNameError.setText("");
         }
         catch (IllegalArgumentException err)
         {
@@ -137,6 +137,7 @@ public class Register extends AppCompatActivity {
             inUser.addPhoneNum(phNumInput.getText().toString());
             // if an error has occured set the error dialogue to balnk after correct input
             phoneNumError.setText("");
+            checks++;
 
         }
         catch (IllegalArgumentException err)
@@ -160,7 +161,7 @@ public class Register extends AppCompatActivity {
             emailError.setText("Invalid email format");
         }
 
-        if(checks == 3) //testing for matching passwords
+        if(checks == 4)
         {
             valid = true;
         }
