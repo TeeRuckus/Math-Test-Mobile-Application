@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -217,7 +219,9 @@ public class Register extends AppCompatActivity {
         {
             //put the  image on the image Button
             currUserImage = getImageStorage(imagePath);
-            studentPicture.setImageBitmap(currUserImage);
+            //studentPicture.setImageBitmap(currUserImage);
+            Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
+            studentPicture.setBackground(dImage);
         }
 
     }
