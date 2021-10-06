@@ -89,31 +89,6 @@ public class Register extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME: ");
                 searchContactList();
-
-                /*if (studentFirstName.getText().toString().length() > 0)
-                {
-                    //techincally any name more than one character is a vaild name therefore back calls
-                    //into the data base will be made
-                    if(onToggleFirst)
-                    {
-                        importCheck++;
-                        onToggleFirst = false;
-                    }
-
-                    if (importCheck == 2)
-                    {
-                        onToggleFirst = true;
-                        onToggleLast = true;
-                        importCheck = 0;
-                        //if last name has being changed as well
-                        searchContactList();
-                    }
-
-                }
-                else
-                {
-                    importCheck--;
-                }*/
             }
         });
 
@@ -132,27 +107,6 @@ public class Register extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME: ");
                 searchContactList();
-
-                /*if (studentFirstName.getText().toString().length() > 0)
-                {
-                    //technically a name greater than 0 is valid contact
-                    if(onToggleLast)
-                    {
-                        importCheck++;
-                        onToggleLast = false;
-                    }
-                    if (importCheck == 2)
-                    {
-                        onToggleFirst = true;
-                        onToggleLast = true;
-                        importCheck = 0;
-                        searchContactList();
-                    }
-                }
-                else
-                {
-                    importCheck--;
-                }*/
             }
         });
 

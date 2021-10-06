@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".UserPhoto">
+
+    <TextView
+        android:id="@+id/bannerPhoto"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Choose Photo Source"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+    <ImageButton
+        android:id="@+id/livePhotoBttn"
+        android:layout_marginTop="100dp"
+        android:background="@color/paleNight_ascent_color"
+        android:layout_below="@id/bannerPhoto"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageButton
+        android:id="@+id/libraryPhotoBttn"
+        android:layout_marginTop="50dp"
+        android:background="@color/paleNight_ascent_color"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/livePhotoBttn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@android:drawable/stat_notify_sdcard" />
+
+    <ImageButton
+        android:id="@+id/internetBttn"
+        android:layout_marginTop="50dp"
+        android:background="@color/paleNight_ascent_color"
+        android:layout_below="@id/libraryPhotoBttn"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@android:drawable/ic_search_category_default" />
+</RelativeLayout>
