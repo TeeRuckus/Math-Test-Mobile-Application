@@ -3,8 +3,11 @@ package com.example.asstwo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +29,9 @@ import android.content.ContentResolver.*;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Register extends AppCompatActivity {
@@ -52,10 +58,9 @@ public class Register extends AppCompatActivity {
     private Button registerBttn;
     private Graph mathTestGraph;
     private Student currStdnt;
-    //private int importCheck;
-    //private Boolean onToggleFirst;
-    //private Boolean onToggleLast;
     private int contactId;
+    private String imagePath;
+    private Bitmap currUserImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +188,7 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        //TODO: you might need to refactor this so you can actually choose a contact from the contact list
         importFromContactsBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,6 +201,47 @@ public class Register extends AppCompatActivity {
                 importEmailAddress();
             }
         });
+
+
+        studentPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Register.this, UserPhoto.class);
+                startActivity(intent);
+            }
+        });
+
+        imagePath = getIntent().getStringExtra("imagePath");
+
+        if (imagePath != null)
+        {
+            //put the  image on the image Button
+            currUserImage = getImageStorage(imagePath);
+            studentPicture.setImageBitmap(currUserImage);
+        }
+
+    }
+
+    /*
+    code was adapted from the following source: https://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+    Date accessed : 7/10/21 @ 1:00
+     */
+    protected Bitmap getImageStorage(String path)
+    {
+        Bitmap image = null;
+
+        try
+        {
+            File file=new File(path, "profile.jpg");
+            image = BitmapFactory.decodeStream(new FileInputStream(file));
+        }
+        catch (FileNotFoundException e)
+        {
+            Log.e(TAG, "File Not found: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return image;
     }
 
     @SuppressLint("Range")

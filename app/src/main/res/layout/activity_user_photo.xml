@@ -21,7 +21,7 @@
         android:textSize="30dp" />
 
     <ImageButton
-        android:id="@+id/livePhotoBttn"
+        android:id="@+id/takePictureBttn"
         android:layout_marginTop="100dp"
         android:background="@color/paleNight_ascent_color"
         android:layout_below="@id/bannerPhoto"
@@ -35,18 +35,18 @@
         android:layout_marginTop="50dp"
         android:background="@color/paleNight_ascent_color"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/livePhotoBttn"
+        android:layout_below="@id/takePictureBttn"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@android:drawable/stat_notify_sdcard" />
 
     <ImageButton
         android:id="@+id/internetBttn"
-        android:layout_marginTop="50dp"
-        android:background="@color/paleNight_ascent_color"
-        android:layout_below="@id/libraryPhotoBttn"
-        android:layout_centerHorizontal="true"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_below="@id/libraryPhotoBttn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@color/paleNight_ascent_color"
         app:srcCompat="@android:drawable/ic_search_category_default" />
 </RelativeLayout>
