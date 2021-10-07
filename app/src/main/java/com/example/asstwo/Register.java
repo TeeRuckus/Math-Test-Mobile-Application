@@ -64,15 +64,42 @@ public class Register extends AppCompatActivity {
     private String imagePath;
     private Bitmap currUserImage;
 
+    //class fields to hold the information which wsa in the register form just in case the user
+    //switches activities
+    private static String firstNameSave;
+    private static String lastNameSave;
+    private static String phNumSave;
+    private static String emailSave;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         loadGraph();
-        //onToggleFirst = true;
-        //onToggleLast = true;
-
         loadUIElements();
+
+        if (firstNameSave != null)
+        {
+            studentFirstName.setText(firstNameSave);
+        }
+
+        if(lastNameSave != null)
+        {
+            studentLastName.setText(lastNameSave);
+        }
+
+        if(phNumSave != null)
+        {
+            phNumInput.setText(phNumSave);
+        }
+
+        if(emailSave != null)
+        {
+            //TODO: you will need to find out how you can make all the email addressed which they
+            //have inputted into the app actually persistent
+            emailInput.setText(emailSave);
+        }
+
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
         currStdnt = new Student();
         //importCheck = 0;
@@ -83,12 +110,12 @@ public class Register extends AppCompatActivity {
         studentFirstName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //don't really care about this one or need it
+                //don't really care about this one or need it but we're required to have this any ways
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //don't really care about this one as well
+                //don't really care about this one as well but we're required to have it any ways
 
             }
 
@@ -96,26 +123,60 @@ public class Register extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME: ");
                 searchContactList();
+                firstNameSave = studentFirstName.getText().toString();
             }
         });
 
         studentLastName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // don't really care about this one as well
+                // don't really care about this one as well but it's required
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //I don't really care about this one as well
+                //I don't really care about this one as well but it's required
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME: ");
                 searchContactList();
+                lastNameSave = studentLastName.getText().toString();
             }
         });
+
+        phNumInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                phNumSave = phNumInput.getText().toString();
+
+            }
+        });
+
+        emailInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                emailSave =  emailInput.getText().toString();
+            }
+        });
+
 
         registerBttn.setOnClickListener(new View.OnClickListener() {
             @Override

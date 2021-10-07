@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -57,12 +58,18 @@ public class UserPhoto extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_THUMBNAIL);
             }
         });
-
-        // if they is going to be a photo saved in this activity grab it, and start the
-        // registration activity again
-        if(savedInstanceState != null)
-        {
+    libraryImportBttn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //TODO: you will also need to watch the rest of his video so you will know how to make the other parts of the code
         }
+    });
+    }
+
+    protected void choosePhoto()
+    {
+
+
     }
 
     /*
