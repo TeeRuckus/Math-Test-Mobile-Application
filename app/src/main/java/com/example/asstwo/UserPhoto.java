@@ -147,7 +147,7 @@ public class UserPhoto extends AppCompatActivity {
     this code is adapted from the following source: https://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
     Date accessed: 7/10/21 @ 00:50
      */
-    protected String saveToMemory(Bitmap image)
+    private String saveToMemory(Bitmap image)
     {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir

@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -51,7 +56,7 @@ public class InternetPhotos extends AppCompatActivity {
     ProgressBar progressBar;
 
     private String[] names;
-    private Drawable[] images;
+    private Bitmap[] images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +86,60 @@ public class InternetPhotos extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String selectedName = names[i];
-                    Drawable selectedImage = images[i];
+                    Bitmap selectedImage = images[i];
 
+                    String path = saveToMemory(selectedImage);
                     //packaging the selected image and sending it back to the registration activity
-
+                    Intent intent = new Intent(InternetPhotos.this, Register.class);
+                    intent.putExtra("imagePath", path);
+                    startActivity(intent);
                 }
             });
         }
+    }
+
+    private String saveToMemory(Bitmap image)
+    {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File dir = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File path=new File(dir,"profile.jpg");
+
+        FileOutputStream fos = null;
+        try
+        {
+            fos = new FileOutputStream(path);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "File not found in the system: " + e.getMessage());
+            e.printStackTrace();
+        } finally
+        {
+            try
+            {
+                fos.close();
+            }
+            catch (IOException e)
+            {
+                Log.e(TAG, "Something went wrong in reading the file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        return dir.getAbsolutePath();
+    }
+
+    protected void loadUIElements()
+    {
+        gridview = findViewById(R.id.photosGridView);
+        search = findViewById(R.id.searchInterntBttn);
+        searchItem = findViewById(R.id.searchInternetInput);
+        progressBar = findViewById(R.id.progressBarGridImages);
+
+        progressBar.setVisibility(View.INVISIBLE);
+        gridview.setVisibility(View.INVISIBLE);
     }
 
     private class MyTask extends AsyncTask<Void, Integer, String> {
@@ -117,7 +169,7 @@ public class InternetPhotos extends AppCompatActivity {
         private void getImages(String searchItem) {
             String data = connectAPI(searchItem);
             String[] imageUrl = getImageCollectoin(data);
-            images = new Drawable[stop_images];
+            images = new Bitmap[stop_images];
             names = new String[stop_images];
             if (data != null) {
                 if (imageUrl != null) {
@@ -127,11 +179,11 @@ public class InternetPhotos extends AppCompatActivity {
                         Bitmap image = getImageFromUrl(imageUrl[ii]);
                         if (image != null)
                         {
-                            Drawable currDrawable = new BitmapDrawable(getResources(), image);
+                            //Drawable currDrawable = new BitmapDrawable(getResources(), image);
                             //int currImage  = Integer.parseInt(currDrawable.toString());
                             Log.e(TAG, "End parameter: " + RETURNED_IMAGES);
                             Log.e(TAG, "Current index: " + ii);
-                            images[ii] = currDrawable;
+                            images[ii] = image;
                             names[ii] = searchItem + " " + Integer.toString(ii + 1);
                         }
                     }
@@ -347,25 +399,15 @@ public class InternetPhotos extends AppCompatActivity {
     }
 
 
-    protected void loadUIElements()
-    {
-        gridview = findViewById(R.id.photosGridView);
-        search = findViewById(R.id.searchInterntBttn);
-        searchItem = findViewById(R.id.searchInternetInput);
-        progressBar = findViewById(R.id.progressBarGridImages);
-
-        progressBar.setVisibility(View.INVISIBLE);
-        gridview.setVisibility(View.INVISIBLE);
-    }
 
     //the adapter which this class is going to have
     public class imageAdapters extends BaseAdapter{
         private String[] imageNames;
-        private Drawable[] imagePhotos;
+        private Bitmap[] imagePhotos;
         private Context cntx;
         private LayoutInflater li;
 
-        public imageAdapters(String[] imageNames, Drawable[] imagePhotos, Context cntx) {
+        public imageAdapters(String[] imageNames, Bitmap[] imagePhotos, Context cntx) {
             this.imageNames = imageNames;
             this.imagePhotos = imagePhotos;
             this.cntx = cntx;
@@ -398,7 +440,7 @@ public class InternetPhotos extends AppCompatActivity {
             ImageView viewImage = view.findViewById(R.id.internetImageView);
 
             viewName.setText(imageNames[i]);
-            viewImage.setImageDrawable(imagePhotos[i]);
+            viewImage.setImageBitmap(imagePhotos[i]);
 
             return view;
         }
