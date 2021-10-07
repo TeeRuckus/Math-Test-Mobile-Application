@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="1dp"
-    android:padding="2dp"
+    android:padding="1dp"
+    android:background="@color/black"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="4dp"
     android:layout_height="wrap_content">
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:background="@color/paleNight_foreground"
+        android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/internetImageView"
@@ -20,7 +29,6 @@
         android:text="search key #"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/internetImageView"
-        android:background="@color/paleNight_secondary_background"
-        android:textColor="@color/paleNight_white"
-        android:layout_margin="5dp"/>
-</RelativeLayout>
+        android:textColor="@color/paleNight_text"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

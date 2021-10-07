@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -35,6 +36,16 @@ public class InternetPhotos extends AppCompatActivity {
         imageAdapters adapter = new imageAdapters(names, images,this);
         gridview.setAdapter(adapter);
 
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedName = names[i];
+                int selectedImage = images[i];
+
+                //saving the selected image, and starting the regitration form and displaying the image
+                //as the avatar on the form
+            }
+        });
     }
 
     protected void loadUIElements()

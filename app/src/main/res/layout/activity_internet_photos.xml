@@ -52,7 +52,7 @@
 
     <GridView
         android:id="@+id/photosGridView"
-        android:background="@color/paleNight_foreground"
+        android:background="@color/paleNight_text"
         android:layout_below="@id/llOneInternet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
