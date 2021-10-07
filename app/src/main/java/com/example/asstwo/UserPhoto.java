@@ -108,12 +108,21 @@ public class UserPhoto extends AppCompatActivity {
                 takePicture();
             }
         });
-    libraryImportBttn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            choosePhotoSD();
-        }
-    });
+
+        libraryImportBttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePhotoSD();
+            }
+        });
+
+        internetImageBttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserPhoto.this, InternetPhotos.class);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void takePicture()

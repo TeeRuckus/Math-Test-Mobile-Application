@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".InternetPhotos">
+
+
+    <TextView
+        android:id="@+id/bannerInternet"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Search Photos"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:id="@+id/llOneInternet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bannerInternet"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <EditText
+            android:id="@+id/searchInternetInput"
+            android:background="@color/paleNight_foreground"
+            android:gravity="center"
+            android:hint="Enter image to search"
+            android:textColor="@color/dark_second"
+            android:textColorHint="@color/paleNight_text"
+            android:textSize="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"/>
+
+        <ImageButton
+            android:id="@+id/searchInterntBttn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/paleNight_foreground"
+            app:srcCompat="@android:drawable/ic_search_category_default" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/photosGridView"
+        android:background="@color/paleNight_foreground"
+        android:layout_below="@id/llOneInternet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:numColumns="3"
+        android:horizontalSpacing="4dp"
+        android:verticalSpacing="4dp"
+        />
+</RelativeLayout>
