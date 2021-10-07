@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_margin="1dp"
+    android:padding="2dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/internetImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/internetImageName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="search key #"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/internetImageView"
+        android:background="@color/paleNight_secondary_background"
+        android:textColor="@color/paleNight_white"
+        android:layout_margin="5dp"/>
+</RelativeLayout>
