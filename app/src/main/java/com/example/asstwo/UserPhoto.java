@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +25,8 @@ import java.io.IOException;
 public class UserPhoto extends AppCompatActivity {
 
     private static final String TAG = "UserPhoto.";
-    static final int REQUEST_THUMBNAIL = 1;
+    private static final int REQUEST_THUMBNAIL = 1234;
+    private static final int REQUEST_SD_CARD = 5678;
 
     private ImageButton takePictureBttn;
     private ImageButton libraryImportBttn;
@@ -31,17 +35,65 @@ public class UserPhoto extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        String path = null;
+
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_THUMBNAIL)
         {
             Bitmap image = (Bitmap) data.getExtras().get("data");
-            String path = saveToMemory(image);
+            path = saveToMemory(image);
+            showText(path);
+
             if (image != null) {
-                Intent intent = new Intent(UserPhoto.this, Register.class);
-                intent.putExtra("imagePath", path);
-                startActivity(intent);
+                startActivityWithPicture(path);
+            }
+        }
+        else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_SD_CARD)
+        {
+            if (data != null) {
+                Uri uri = data.getData();
+                Bitmap imageSD = null;
+
+                //displaying the path which was opened on the phone
+                showText(uri.getPath());
+
+                //getting the image which was taken sending it to the activity which started it, and
+                //displaying it as the avatar for the current character
+                try
+                {
+                    imageSD = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+
+                } catch (IOException e) {
+                    Log.e(TAG, "couldn't find the requrested image");
+                    e.printStackTrace();
+                }
+
+                //if we actually succesfully get an image we should go back to the previous activity
+                //otherwise, this should re-prompt the user to select another image
+                if (imageSD != null)
+                {
+                    path = saveToMemory(imageSD);
+                    startActivityWithPicture(path);
+                }
             }
         }
     }
+
+    protected void startActivityWithPicture(String path)
+    {
+        Intent intent = new Intent(UserPhoto.this, Register.class);
+        intent.putExtra("imagePath", path);
+        startActivity(intent);
+    }
+
+    protected void showText(CharSequence text)
+    {
+        Context cntx = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(cntx, text, duration);
+        toast.show();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +105,33 @@ public class UserPhoto extends AppCompatActivity {
         takePictureBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_THUMBNAIL);
+                takePicture();
             }
         });
     libraryImportBttn.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //TODO: you will also need to watch the rest of his video so you will know how to make the other parts of the code
+            choosePhotoSD();
         }
     });
     }
 
-    protected void choosePhoto()
+    protected void takePicture()
     {
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_THUMBNAIL);
+    }
 
-
+    protected void choosePhotoSD()
+    {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //TODO: you will need make this exclusive to image files which are currently on your external
+        //storagte
+        //allowing it to get everything which is in our phone right now
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_SD_CARD);
     }
 
     /*

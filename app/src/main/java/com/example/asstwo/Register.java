@@ -100,6 +100,18 @@ public class Register extends AppCompatActivity {
             emailInput.setText(emailSave);
         }
 
+        imagePath = getIntent().getStringExtra("imagePath");
+
+        if (imagePath != null)
+        {
+            Log.e(TAG, "the path I received: " + imagePath);
+            //put the  image on the image Button
+            currUserImage = getImageStorage(imagePath);
+            //studentPicture.setImageBitmap(currUserImage);
+            Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
+            studentPicture.setBackground(dImage);
+        }
+
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
         currStdnt = new Student();
         //importCheck = 0;
@@ -274,16 +286,6 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        imagePath = getIntent().getStringExtra("imagePath");
-
-        if (imagePath != null)
-        {
-            //put the  image on the image Button
-            currUserImage = getImageStorage(imagePath);
-            //studentPicture.setImageBitmap(currUserImage);
-            Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
-            studentPicture.setBackground(dImage);
-        }
 
     }
 

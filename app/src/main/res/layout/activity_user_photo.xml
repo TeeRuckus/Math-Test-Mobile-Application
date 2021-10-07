@@ -49,4 +49,5 @@
         android:layout_marginTop="50dp"
         android:background="@color/paleNight_ascent_color"
         app:srcCompat="@android:drawable/ic_search_category_default" />
+
 </RelativeLayout>
