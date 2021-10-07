@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class InternetPhotos extends AppCompatActivity {
@@ -19,13 +20,11 @@ public class InternetPhotos extends AppCompatActivity {
     private GridView gridview;
     private ImageButton search;
     private EditText searchItem;
+    ProgressBar progressBar;
 
-    private String[] names = {"test name", "test name 2", "3", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4"};
-    private int[] images = {R.drawable.ic_launcher_background, R.drawable.ic_launcher_foreground,
-    R.drawable.flag_ad, R.drawable.flag_ae, R.drawable.flag_af, R.drawable.flag_ag, R.drawable.flag_ai,
-    R.drawable.flag_au, R.drawable.flag_al, R.drawable.flag_am, R.drawable.flag_ba, R.drawable.flag_az
-    , R.drawable.flag_mx, R.drawable.flag_lt, R.drawable.flag_kr, R.drawable.flag_jp, R.drawable.flag_it
-    , R.drawable.flag_hk, R.drawable.flag_gr, R.drawable.flag_ge, R.drawable.flag_ge, R.drawable.flag_gb};
+    private String[] names;
+    private int[] images;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,19 +32,22 @@ public class InternetPhotos extends AppCompatActivity {
 
         loadUIElements();
 
-        imageAdapters adapter = new imageAdapters(names, images,this);
-        gridview.setAdapter(adapter);
+        if (images != null)
+        {
+            imageAdapters adapter = new imageAdapters(names, images,this);
+            gridview.setAdapter(adapter);
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedName = names[i];
-                int selectedImage = images[i];
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    String selectedName = names[i];
+                    int selectedImage = images[i];
 
-                //saving the selected image, and starting the regitration form and displaying the image
-                //as the avatar on the form
-            }
-        });
+                    //saving the selected image, and starting the regitration form and displaying the image
+                    //as the avatar on the form
+                }
+            });
+        }
     }
 
     protected void loadUIElements()
@@ -53,6 +55,10 @@ public class InternetPhotos extends AppCompatActivity {
         gridview = findViewById(R.id.photosGridView);
         search = findViewById(R.id.searchInterntBttn);
         searchItem = findViewById(R.id.searchInternetInput);
+        progressBar = findViewById(R.id.progressBarGridImages);
+
+        progressBar.setVisibility(View.INVISIBLE);
+        gridview.setVisibility(View.INVISIBLE);
     }
 
     //the adapter which this class is going to have
