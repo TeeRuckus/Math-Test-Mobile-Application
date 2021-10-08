@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/dark_second"
         android:gravity="center"
-        android:text="Users"
+        android:text="Students"
         android:textAllCaps="true"
         android:textColor="@color/paleNight_white"
         android:textSize="30dp" />
@@ -25,7 +25,5 @@
         android:layout_margin="20dp"
         android:background="@color/paleNight_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
+        android:layout_height="match_parent"/>
 </RelativeLayout>
