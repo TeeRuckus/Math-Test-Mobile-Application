@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".StudentViewing">
+
+    <TextView
+        android:id="@+id/bannerStudentViewing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Users"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+
+    <FrameLayout
+        android:id="@+id/viewingContainer"
+        android:layout_below="@id/bannerStudentViewing"
+        android:layout_margin="20dp"
+        android:background="@color/paleNight_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</RelativeLayout>
