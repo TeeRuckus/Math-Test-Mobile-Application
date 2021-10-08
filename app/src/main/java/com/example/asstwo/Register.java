@@ -200,18 +200,28 @@ public class Register extends AppCompatActivity {
 
                 if (valid)
                 {
-                    Log.e(TAG, "Register user and add another user to the network");
-                    //TODO: come back and actually add the student to the graph structure
-
-                    Context cntx = getApplicationContext();
-                    CharSequence text = "student created";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(cntx, text, duration);
-                    toast.show();
-                    clearText();
-
                     //once a new student has being created resetting everything else
-                    currStdnt = new Student();
+                    try{
+                        mathTestGraph.addVertex(currStdnt);
+                        Log.e(TAG, "Register user and add another user to the network");
+                        //TODO: come back and actually add the student to the graph structure
+
+                        Context cntx = getApplicationContext();
+                        CharSequence text = "student created";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(cntx, text, duration);
+                        toast.show();
+                        clearText();
+                        currStdnt = new Student();
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                        Log.e(TAG, e.getMessage());
+                        // the user already exists in the system
+                        studentFirstNameError.setText("User already Exists");
+                        studentLastNameError.setText("User already Exists");
+                    }
+
                 }
             }
         });
