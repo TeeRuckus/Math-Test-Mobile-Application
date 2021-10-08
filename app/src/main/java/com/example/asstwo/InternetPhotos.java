@@ -187,15 +187,15 @@ public class InternetPhotos extends AppCompatActivity {
                             names[ii] = searchItem + " " + Integer.toString(ii + 1);
                         }
                     }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                                                          }
+                    });
                 }
-            });
+            }
         }
-    }
-}
 
         //this is to get one single image from a given url
         private Bitmap getImageFromUrl(String imageUrl) {
@@ -278,7 +278,12 @@ public class InternetPhotos extends AppCompatActivity {
                         imageUrl[ii] = jHitsItem.getString("largeImageURL");
                     }
                 } else {
-                    Toast.makeText(InternetPhotos.this, "No results", Toast.LENGTH_LONG).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(InternetPhotos.this, "No search results", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             } catch (JSONException e) {
                 //once this exception has happened, they're no more images to search so we should
@@ -288,7 +293,6 @@ public class InternetPhotos extends AppCompatActivity {
 
             return imageUrl;
         }
-
 
         private String connectAPI(String searchItem) {
             String data = null;
