@@ -167,7 +167,7 @@ public abstract class User implements Serializable {
 
     //TODO: you will need to refactor this so it's going to be a bitmap because all the images which
     //you have saved are going to be a bit map
-    public void setAvatar(String avatarName, Drawable image) {
+    public void setAvatar(String avatarName, Bitmap image) {
         avatar = new Avatar(avatarName, image);
     }
 

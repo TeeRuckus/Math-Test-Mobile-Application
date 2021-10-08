@@ -1,14 +1,16 @@
 package com.example.asstwo;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 public class Avatar implements Serializable
 {
     private String name;
-    private Drawable image;
+    private byte[] image;
 
     public Avatar()
     {
@@ -16,10 +18,10 @@ public class Avatar implements Serializable
         image = null;
     }
 
-    public Avatar(String inName, Drawable inImage)
+    public Avatar(String inName, Bitmap inImage)
     {
         this.name = inName;
-        this.image = inImage;
+        this.image = convertToBytes(inImage);
     }
 
     public String getName()
@@ -27,9 +29,9 @@ public class Avatar implements Serializable
         return new String(name);
     }
 
-    public Drawable getImage()
+    public Bitmap getImage()
     {
-        return image;
+        return convertToImage(image);
     }
 
     /*
@@ -41,8 +43,20 @@ public class Avatar implements Serializable
         this.name = inName;
     }
 
-    public void setImage(Drawable image)
+    public void setImage(Bitmap image)
     {
-        this.image = image;
+        this.image = convertToBytes(image);
+    }
+
+    private Bitmap convertToImage(byte[] image)
+    {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+    private byte[] convertToBytes(Bitmap inImage)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return  stream.toByteArray();
+
     }
 }

@@ -72,6 +72,19 @@ public class Register extends AppCompatActivity {
     private static String phNumSave;
     private static String emailSave;
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        //when the back press button is clicked in this activity we should go back to the main activity
+        Intent intent = new Intent(Register.this, MainActivity.class);
+        //setting them up for deleting with java's garbage collection
+        firstNameSave = null;
+        lastNameSave = null;
+        phNumSave = null;
+        emailSave = null;
+        startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +148,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME: ");
-                searchContactList();
+                //searchContactList();
                 firstNameSave = studentFirstName.getText().toString();
             }
         });
@@ -154,7 +167,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME: ");
-                searchContactList();
+                //searchContactList();
                 lastNameSave = studentLastName.getText().toString();
             }
         });
@@ -202,9 +215,14 @@ public class Register extends AppCompatActivity {
                     //once a new student has being created resetting everything else
                     try
                     {
-                        Avatar tempAvatar = new Avatar("profile picture", studentPicture.getBackground());
+                        //TODO: you will need ask sajib on how you're going to go on with this
+                        studentPicture.buildDrawingCache();
+                        Bitmap image = studentPicture.getDrawingCache();
+                        Avatar tempAvatar = new Avatar("profile picture", image);
                         currStdnt.setAvatar(tempAvatar);
                         mathTestGraph.addVertex(currStdnt);
+                        //making sure whenever a user is saved we're going to save it to the graph
+                        mathTestGraph.save(Register.this);
                         Log.e(TAG, "Register user and add another user to the network");
                         //TODO: come back and actually add the student to the graph structure
 
@@ -582,22 +600,21 @@ public class Register extends AppCompatActivity {
         phNumInput.setText("");
         emailInput.setText("");
         importFromContactsBttn.setVisibility(View.INVISIBLE);
-
+        studentPicture.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));
+        studentPicture.setForeground(getResources().getDrawable(R.drawable.ic_launcher_foreground));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "YOU HAVE DESTROYED ME");
-        //TODO: you will need to uncomment this, just doing this so I can play with without messing me up
-        //mathTestGraph.save(Register.this);
+        mathTestGraph.save(Register.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "YOU HAVE STOPPED ME");
-        //TODO: you will need to uncomment this out, I am just doing this so I can play wiht it
-        //mathTestGraph.save(Register.this);
+        mathTestGraph.save(Register.this);
     }
 }
