@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         viewStdntBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "yet to be implemented");
+                Intent intent = new Intent(MainActivity.this, StudentViewing.class);
+                startActivity(intent);
             }
         });
 

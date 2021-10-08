@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -24,6 +25,18 @@ public class StudentViewing extends AppCompatActivity {
         //loading the graph when this is created
         mathTestGraph = new Graph();
         mathTestGraph = mathTestGraph.load(StudentViewing.this);
+
+        FragmentManager fm = getSupportFragmentManager();
+        ItemViewRecycler frag = (ItemViewRecycler) fm.findFragmentById(R.id.viewingContainer);
+
+        if (frag == null)
+        {
+            frag = new ItemViewRecycler();
+            fm.beginTransaction()
+                    .add(R.id.viewingContainer, frag)
+                    .commit();
+
+        }
 
     }
 
