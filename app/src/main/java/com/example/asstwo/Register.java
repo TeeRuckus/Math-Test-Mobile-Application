@@ -109,7 +109,6 @@ public class Register extends AppCompatActivity {
             Log.e(TAG, "the path I received: " + imagePath);
             //put the  image on the image Button
             currUserImage = getImageStorage(imagePath);
-            //studentPicture.setImageBitmap(currUserImage);
             Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
             studentPicture.setBackground(dImage);
         }
@@ -201,7 +200,10 @@ public class Register extends AppCompatActivity {
                 if (valid)
                 {
                     //once a new student has being created resetting everything else
-                    try{
+                    try
+                    {
+                        Avatar tempAvatar = new Avatar("profile picture", studentPicture.getBackground());
+                        currStdnt.setAvatar(tempAvatar);
                         mathTestGraph.addVertex(currStdnt);
                         Log.e(TAG, "Register user and add another user to the network");
                         //TODO: come back and actually add the student to the graph structure
@@ -221,7 +223,6 @@ public class Register extends AppCompatActivity {
                         studentFirstNameError.setText("User already Exists");
                         studentLastNameError.setText("User already Exists");
                     }
-
                 }
             }
         });

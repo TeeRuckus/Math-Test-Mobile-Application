@@ -1,22 +1,25 @@
 package com.example.asstwo;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+
 import java.io.Serializable;
 
 public class Avatar implements Serializable
 {
     private String name;
-    private int image;
+    private Drawable image;
 
     public Avatar()
     {
-        name = "unknown";
-        image = 0;
+        name = "user profile";
+        image = null;
     }
 
-    public Avatar(String inName, int inInt)
+    public Avatar(String inName, Drawable inImage)
     {
         this.name = inName;
-        this.image = inInt;
+        this.image = inImage;
     }
 
     public String getName()
@@ -24,7 +27,7 @@ public class Avatar implements Serializable
         return new String(name);
     }
 
-    public int getImage()
+    public Drawable getImage()
     {
         return image;
     }
@@ -35,10 +38,10 @@ public class Avatar implements Serializable
      */
     public void setName(String inName)
     {
-        this.name = name;
+        this.name = inName;
     }
 
-    public void setImage(int Image)
+    public void setImage(Drawable image)
     {
         this.image = image;
     }

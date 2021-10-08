@@ -5,6 +5,8 @@ TODO:
     respoinsbility of the application which is going to be the graph data structure
  */
 package com.example.asstwo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -165,8 +167,8 @@ public abstract class User implements Serializable {
 
     //TODO: you will need to refactor this so it's going to be a bitmap because all the images which
     //you have saved are going to be a bit map
-    public void setAvatar(String avatarName, int drawableID) {
-        avatar = new Avatar(avatarName, drawableID);
+    public void setAvatar(String avatarName, Drawable image) {
+        avatar = new Avatar(avatarName, image);
     }
 
     public String getType() {
