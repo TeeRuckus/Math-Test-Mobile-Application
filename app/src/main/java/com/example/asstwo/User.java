@@ -127,6 +127,44 @@ public abstract class User implements Serializable {
         }
     }
 
+    public void setEmails(ArrayList<String> inEmails)
+    {
+        emailAddresses = new ArrayList<>(inEmails);
+    }
+
+    public void setPhoneNumbers(ArrayList<String> inPhoneNums)
+    {
+        phoneNumbers = new ArrayList<>(inPhoneNums);
+    }
+
+    //to check if the current user has at least more than one phone number available
+    public boolean checkPhoneNumbers()
+    {
+        boolean valid = false;
+
+        if(phoneNumbers.size() > 0)
+        {
+            valid = true;
+        }
+
+        return  valid;
+    }
+
+    //checking if the user has more at least more than one email address available to use
+    public boolean checkEmailAddresses()
+    {
+        boolean valid = false;
+
+        if(emailAddresses.size() > 0)
+        {
+            valid = true;
+        }
+
+        return valid;
+    }
+
+    //TODO: you will need to refactor this so it's going to be a bitmap because all the images which
+    //you have saved are going to be a bit map
     public void setAvatar(String avatarName, int drawableID) {
         avatar = new Avatar(avatarName, drawableID);
     }

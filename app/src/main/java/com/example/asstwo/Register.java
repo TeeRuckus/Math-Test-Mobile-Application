@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Register extends AppCompatActivity {
 
@@ -70,6 +71,7 @@ public class Register extends AppCompatActivity {
     private static String lastNameSave;
     private static String phNumSave;
     private static String emailSave;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -470,6 +472,7 @@ public class Register extends AppCompatActivity {
 
         try
         {
+            //TODO: you will need to add code to check how many emails they have
             inUser.addPhoneNum(phNumInput.getText().toString());
             // if an error has occured set the error dialogue to balnk after correct input
             phoneNumError.setText("");
@@ -479,7 +482,16 @@ public class Register extends AppCompatActivity {
         catch (IllegalArgumentException err)
         {
             Log.e(TAG, err.getMessage());
-            phoneNumError.setText("Invalid Phone Number");
+
+            //checking if they have more than one phone number available because everything will be fine
+            if(inUser.checkPhoneNumbers())
+            {
+                checks++;
+            }
+            else
+            {
+                phoneNumError.setText("Invalid Phone Number");
+            }
         }
         catch (IndexOutOfBoundsException err)
         {
@@ -490,6 +502,7 @@ public class Register extends AppCompatActivity {
 
         try
         {
+            //TODO: you will need to add code to check how many emails they have
             inUser.addEmail(emailInput.getText().toString());
             checks++;
             //if an error has occurred set the error dialogue to blank after correct input
@@ -498,7 +511,14 @@ public class Register extends AppCompatActivity {
         catch (IllegalArgumentException err)
         {
             Log.e(TAG, err.getMessage());
-            emailError.setText("Invalid email format");
+            if(inUser.checkEmailAddresses())
+            {
+                checks++;
+            }
+            else
+            {
+                emailError.setText("Invalid email format");
+            }
         }
         catch(IndexOutOfBoundsException err)
         {
@@ -550,6 +570,8 @@ public class Register extends AppCompatActivity {
         studentLastName.setText("");
         phNumInput.setText("");
         emailInput.setText("");
+        importFromContactsBttn.setVisibility(View.INVISIBLE);
+
     }
 
     @Override

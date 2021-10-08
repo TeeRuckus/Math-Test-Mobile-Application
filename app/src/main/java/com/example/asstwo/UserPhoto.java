@@ -31,6 +31,7 @@ public class UserPhoto extends AppCompatActivity {
     private ImageButton takePictureBttn;
     private ImageButton libraryImportBttn;
     private ImageButton internetImageBttn;
+    private Graph mathTestGraph;
 
 
     @Override
@@ -99,7 +100,6 @@ public class UserPhoto extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_photo);
-
         loadUI();
 
         takePictureBttn.setOnClickListener(new View.OnClickListener() {

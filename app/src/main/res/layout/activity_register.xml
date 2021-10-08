@@ -24,7 +24,8 @@
     <ImageButton
         android:id="@+id/studentPictureView"
         android:layout_width="128dp"
-        android:layout_height="150dp"
+        android:layout_height="128dp"
+        android:scaleType="fitXY"
         android:layout_below="@+id/bannerRegister"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
