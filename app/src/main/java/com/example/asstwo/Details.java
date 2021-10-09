@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,6 +33,12 @@ public class Details extends AppCompatActivity {
     private TextView studentFirstnameError;
     private TextView studentLastNameError;
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(Details.this, StudentViewing.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +109,36 @@ public class Details extends AppCompatActivity {
                                 .add(R.id.framePhoneNumbers, fragNew)
                                 .commit();
                     }
+                }
+            });
+
+            updateBttn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String currEnteredFirstName = firstNameBox.getText().toString();
+                    String currEnteredLastName = lastNameBox.getText().toString();
+                    Graph.Vertex currVert = mathTestGraph.getVertex(name);
+                    User currUser = currVert.getValue();
+
+                    try
+                    {
+                        currUser.setFirstName(currEnteredFirstName);
+                        currUser.setLastName(currEnteredLastName);
+                        mathTestGraph.delVertex(name);
+                        //in this application the user is almost going to be always a student
+                        mathTestGraph.addVertex((Student) currUser);
+                        name = currUser.getName();
+                        firstNameBox.setText("");
+                        lastNameBox.setText("");
+                        firstNameBox.setHint(currEnteredFirstName);
+                        lastNameBox.setHint(currEnteredLastName);
+                        mathTestGraph.save(Details.this);
+                        Toast.makeText(Details.this, "Student Update", Toast.LENGTH_SHORT).show();
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                    }
+
                 }
             });
 

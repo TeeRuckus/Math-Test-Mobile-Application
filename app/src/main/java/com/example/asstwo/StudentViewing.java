@@ -36,6 +36,5 @@ public class StudentViewing extends AppCompatActivity {
                     .commit();
 
         }
-
     }
 }
