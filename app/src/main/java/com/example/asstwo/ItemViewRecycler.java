@@ -119,34 +119,26 @@ public class ItemViewRecycler extends Fragment {
                 }
 
                 break;
-            case addresses:
+            case addresses: case numbers:
                 //TODO: you will need to get the students name here so you can view teh addresses
                 //which they will have saved under them
+
                 currUser = Details.getName();
+                //addresses and numbers are going to be loaded at teh same time as the oncreate
+                //method is only created once
 
                 if(currUser != null)
                 {
                     Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
                     emailAddress = currVert.getValue().getEmails();
-                    break;
-                }
-                else
-                {
-                    Log.e(TAG, "can't load student contact information at the moment");
-                }
-                break;
-            case numbers:
-                currUser = Details.getName();
-                if(currUser != null)
-                {
-                    Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
                     phoneNumbers = currVert.getValue().phoneNumbers;
                     break;
                 }
                 else
                 {
-                    Log.e(TAG, "can't load student contact information at the moment");
+                    Log.e(TAG, "can't load student contact emails at the moment");
                 }
+                break;
         }
 
     }

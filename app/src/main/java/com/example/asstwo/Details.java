@@ -1,5 +1,8 @@
 package com.example.asstwo;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +50,7 @@ public class Details extends AppCompatActivity {
             loadUI();
 
             //getting the current details of the user, and displaying them on the screen
+            //TODO: set this as the background
             studentPicture.setImageBitmap(currUser.getValue().getAvatar().getImage());
             firstNameBox.setHint(currUser.getValue().getFirstName());
             lastNameBox.setHint(currUser.getValue().getLastName());
@@ -66,7 +70,6 @@ public class Details extends AppCompatActivity {
                         .commit();
             }
 
-
             emailToggleBttn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -74,30 +77,30 @@ public class Details extends AppCompatActivity {
                     String currentButton = emailToggleBttn.getText().toString();
                     currentButton = myUtils.cleanString(currentButton);
                     FragmentManager fm = getSupportFragmentManager();
-                    ItemViewRecycler frag = (ItemViewRecycler)  fm.findFragmentById(R.id.framePhoneNumbers);
+                    ItemViewRecycler fragNew = (ItemViewRecycler)  fm.findFragmentById(R.id.framePhoneNumbers);
 
                     Log.e(TAG, "The current text of the button: " + currentButton);
                     if (currentButton.equals("EMAIL"))
                     {
                         emailNumberBanner.setText("Email Addresses");
                         emailToggleBttn.setText("Numbers");
+                        fragNew = new ItemViewRecycler();
                         ItemViewRecycler.addressesViewing();
-                        frag = new ItemViewRecycler();
                         fm.beginTransaction()
-                                .add(R.id.framePhoneNumbers, frag)
+                                .add(R.id.framePhoneNumbers, fragNew)
                                 .commit();
+
 
                     }
                     else
                     {
                         emailNumberBanner.setText("Phone Numbers");
                         emailToggleBttn.setText("Email");
+                        fragNew = new ItemViewRecycler();
                         ItemViewRecycler.numbersViewing();
-                        frag = new ItemViewRecycler();
                         fm.beginTransaction()
-                                .add(R.id.framePhoneNumbers, frag)
+                                .add(R.id.framePhoneNumbers, fragNew)
                                 .commit();
-
                     }
                 }
             });

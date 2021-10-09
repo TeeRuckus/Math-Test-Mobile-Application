@@ -11,7 +11,7 @@
         android:id="@+id/bannerDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="4dp"
         android:background="@color/dark_second"
         android:gravity="center"
         android:text="Student details"
@@ -25,27 +25,29 @@
         android:layout_height="100dp"
         android:layout_below="@+id/bannerDetails"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:src="@drawable/ic_launcher_background" />
 
     <EditText
         android:id="@+id/firstNameDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/userImageDetails"
         android:background="@color/dark_second"
         android:gravity="center"
         android:hint="First Name"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:inputType="textPersonName"
         android:textColor="@color/paleNight_white"
         android:textColorHint="@color/paleNight_yellow"
-        android:textSize="20dp"
-        android:layout_below="@+id/userImageDetails"/>
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/firstNameDetailsError"
         android:layout_below="@id/firstNameDetails"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -59,6 +61,8 @@
         android:layout_height="wrap_content"
         android:background="@color/dark_second"
         android:gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:hint="Last Name"
         android:inputType="textPersonName"
         android:textColor="@color/paleNight_white"
@@ -70,6 +74,8 @@
         android:id="@+id/lastNameDetailsError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_below="@id/lastNameDetails"
         android:gravity="center"
         android:textAllCaps="true"
@@ -82,7 +88,9 @@
         android:layout_height="match_parent"
         android:layout_below="@id/lastNameDetailsError"
         android:layout_above="@+id/updateDetails"
-        android:layout_margin="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical">
 
         <TextView
