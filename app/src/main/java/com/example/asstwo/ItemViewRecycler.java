@@ -85,6 +85,20 @@ public class ItemViewRecycler extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mathTestGraph.save(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mathTestGraph.save(getActivity());
+    }
+
+
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         students = new ArrayList<>();
@@ -92,7 +106,7 @@ public class ItemViewRecycler extends Fragment {
         mathTestGraph = new Graph();
         //TODO: you will need to double check if this is the correct way to get the current context
         //of the application
-        mathTestGraph = mathTestGraph.load(getContext());
+        mathTestGraph = mathTestGraph.load(getActivity());
         //TODO: you will need to make different states for laoding different things depending on
         //where you're in the application
 
@@ -230,7 +244,9 @@ public class ItemViewRecycler extends Fragment {
                     deleteStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            mathTestGraph.delVertex(studentName.getText().toString());
+                            mathTestGraph.save(getActivity());
+                            getActivity().recreate();
                         }
                     });
                     break;

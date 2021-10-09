@@ -19,7 +19,7 @@ public class Student extends User implements Serializable
     public Student()
     {
         super();
-        currInstructor = "Admin";
+        currInstructor = "Current Admin";
     }
 
     public String getInstructor()

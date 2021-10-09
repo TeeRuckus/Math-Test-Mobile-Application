@@ -273,6 +273,7 @@ public class Graph extends AppCompatActivity implements Serializable
 
                 //deleting the student from the instructor list
                 String studentName = myUtils.cleanString(currStudent.getName());
+
                 //TODO: what you can do is that you can add an if statement to protect
                 instructorNode.connections.remove(studentName);
             }

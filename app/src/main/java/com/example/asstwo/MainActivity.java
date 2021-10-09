@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         try
         {
             mathTestGraph.addVertex(new Admin("Current", "Admin"));
-            mathTestGraph.setAdmin("currentAdmin");
+            mathTestGraph.setAdmin("Current Admin");
             Log.i(TAG, "Created new Graph");
         }
         catch (IllegalArgumentException err)

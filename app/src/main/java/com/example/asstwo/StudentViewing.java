@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 public class StudentViewing extends AppCompatActivity {
 
-    private Graph mathTestGraph;
 
     @Override
     public void onBackPressed() {
@@ -23,8 +22,6 @@ public class StudentViewing extends AppCompatActivity {
         setContentView(R.layout.activity_student_viewing);
 
         //loading the graph when this is created
-        mathTestGraph = new Graph();
-        mathTestGraph = mathTestGraph.load(StudentViewing.this);
 
         FragmentManager fm = getSupportFragmentManager();
         ItemViewRecycler frag = (ItemViewRecycler) fm.findFragmentById(R.id.viewingContainer);
@@ -40,17 +37,5 @@ public class StudentViewing extends AppCompatActivity {
 
         }
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mathTestGraph.save(StudentViewing.this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mathTestGraph.save(StudentViewing.this);
     }
 }
