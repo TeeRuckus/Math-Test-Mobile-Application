@@ -32,7 +32,13 @@ public class UserPhoto extends AppCompatActivity {
     private ImageButton libraryImportBttn;
     private ImageButton internetImageBttn;
     private Graph mathTestGraph;
+    private String name;
+    private enum state {
+        details,
+        register
+    }
 
+    private static state currState;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -46,7 +52,16 @@ public class UserPhoto extends AppCompatActivity {
             showText(path);
 
             if (image != null) {
-                startActivityWithPicture(path);
+
+                switch(currState)
+                {
+                    case register:
+                        startActivityWithPicture(path);
+                        break;
+                    case details:
+                        startDetailsWithPicture(path);
+                        break;
+                }
             }
         }
         else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_SD_CARD)
@@ -74,7 +89,17 @@ public class UserPhoto extends AppCompatActivity {
                 if (imageSD != null)
                 {
                     path = saveToMemory(imageSD);
-                    startActivityWithPicture(path);
+
+                    switch (currState)
+                    {
+                        case register:
+                            startActivityWithPicture(path);
+                            break;
+
+                        case details:
+                            startDetailsWithPicture(path);
+                            break;
+                    }
                 }
             }
         }
@@ -84,6 +109,14 @@ public class UserPhoto extends AppCompatActivity {
     {
         Intent intent = new Intent(UserPhoto.this, Register.class);
         intent.putExtra("imagePath", path);
+        startActivity(intent);
+    }
+
+    protected void startDetailsWithPicture(String path)
+    {
+        Intent intent = new Intent(UserPhoto.this, Details.class);
+        intent.putExtra("iamgePath", path);
+        intent.putExtra("name", name);
         startActivity(intent);
     }
 
@@ -102,6 +135,8 @@ public class UserPhoto extends AppCompatActivity {
         setContentView(R.layout.activity_user_photo);
         loadUI();
 
+        name = getIntent().getStringExtra("name");
+
         takePictureBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,10 +154,34 @@ public class UserPhoto extends AppCompatActivity {
         internetImageBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(UserPhoto.this, InternetPhotos.class);
-                startActivity(intent);
+                Intent intent = null;
+                switch (currState)
+                {
+                    case register:
+                        intent = new Intent(UserPhoto.this, InternetPhotos.class);
+                        InternetPhotos.register();
+                        startActivity(intent);
+                        break;
+
+                    case details:
+                        intent = new Intent(UserPhoto.this, InternetPhotos.class);
+                        InternetPhotos.details();
+                        intent.putExtra("name", name);
+                        startActivity(intent);
+                        break;
+                }
             }
         });
+    }
+
+    public static void details()
+    {
+        currState = state.details;
+    }
+
+    public static void register()
+    {
+        currState = state.register;
     }
 
     protected void takePicture()

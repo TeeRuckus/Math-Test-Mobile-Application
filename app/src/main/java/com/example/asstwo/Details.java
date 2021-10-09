@@ -30,6 +30,9 @@ public class Details extends AppCompatActivity {
     private Button updateBttn;
     private Button testBttn;
 
+    private String imagePath;
+    private Bitmap currUserImage;
+
     private TextView studentFirstnameError;
     private TextView studentLastNameError;
 
@@ -61,6 +64,9 @@ public class Details extends AppCompatActivity {
             studentPicture.setImageBitmap(currUser.getValue().getAvatar().getImage());
             firstNameBox.setHint(currUser.getValue().getFirstName());
             lastNameBox.setHint(currUser.getValue().getLastName());
+            studentPicture.buildDrawingCache();
+            currUserImage = studentPicture.getDrawingCache();
+
 
 
             FragmentManager fm = getSupportFragmentManager();
@@ -119,6 +125,7 @@ public class Details extends AppCompatActivity {
                     String currEnteredLastName = lastNameBox.getText().toString();
                     Graph.Vertex currVert = mathTestGraph.getVertex(name);
                     User currUser = currVert.getValue();
+                    currUser.getAvatar().setImage(currUserImage);
 
                     try
                     {
@@ -132,15 +139,41 @@ public class Details extends AppCompatActivity {
                         lastNameBox.setText("");
                         firstNameBox.setHint(currEnteredFirstName);
                         lastNameBox.setHint(currEnteredLastName);
-                        mathTestGraph.save(Details.this);
                         Toast.makeText(Details.this, "Student Update", Toast.LENGTH_SHORT).show();
                     }
                     catch(IllegalArgumentException e)
                     {
                     }
 
+                    mathTestGraph.save(Details.this);
+                    //getting the saved image and displaying them on the screen
+                    //studentPicture.setImageBitmap(currUser.getAvatar().getImage());
                 }
             });
+
+            studentPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Details.this, UserPhoto.class);
+                    UserPhoto.details();
+                    intent.putExtra("name", name);
+                    startActivity(intent);
+                }
+            });
+
+            imagePath = getIntent().getStringExtra("imagePath");
+            Log.e(TAG, "the current path: " + imagePath);
+
+            if (imagePath != null)
+            {
+                Log.e(TAG, "the path I received: " + imagePath);
+                //put the  image on the image Button
+                currUserImage = myUtils.getImageStorage(imagePath);
+                studentPicture.setImageBitmap(currUserImage);
+                Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
+                studentPicture.setBackground(dImage);
+            }
+
 
         }
         else

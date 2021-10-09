@@ -54,9 +54,17 @@ public class InternetPhotos extends AppCompatActivity {
     private ImageButton search;
     private EditText searchItem;
     ProgressBar progressBar;
+    private String name;
 
     private String[] names;
     private Bitmap[] images;
+
+    private enum state {
+        register,
+        details
+    }
+
+    private static state currState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +72,7 @@ public class InternetPhotos extends AppCompatActivity {
         setContentView(R.layout.activity_internet_photos);
 
         loadUIElements();
+        name = getIntent().getStringExtra("name");
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +99,36 @@ public class InternetPhotos extends AppCompatActivity {
 
                     String path = saveToMemory(selectedImage);
                     //packaging the selected image and sending it back to the registration activity
-                    Intent intent = new Intent(InternetPhotos.this, Register.class);
-                    intent.putExtra("imagePath", path);
-                    startActivity(intent);
+                    Intent intent = null;
+
+                    switch (currState)
+                    {
+                        case details:
+                            intent = new Intent(InternetPhotos.this, Details.class);
+                            intent.putExtra("imagePath", path);
+                            intent.putExtra("name", name);
+                            startActivity(intent);
+                            break;
+
+                        case register:
+                            intent = new Intent(InternetPhotos.this, Register.class);
+                            intent.putExtra("imagePath", path);
+                            startActivity(intent);
+                            break;
+                    }
                 }
             });
         }
+    }
+
+    public static void register()
+    {
+        currState = state.register;
+    }
+
+    public static void details()
+    {
+        currState = state.details;
     }
 
     private String saveToMemory(Bitmap image)

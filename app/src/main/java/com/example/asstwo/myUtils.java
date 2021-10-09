@@ -7,9 +7,14 @@ package com.example.asstwo;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -76,6 +81,28 @@ public class myUtils extends AppCompatActivity
         //we want it to load with nothing in it
     }
 
+
+    /*
+    code was adapted from the following source: https://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+    Date accessed : 7/10/21 @ 1:00
+     */
+    public static Bitmap getImageStorage(String path)
+    {
+        android.graphics.Bitmap image = null;
+
+        try
+        {
+            File file=new File(path, "profile.jpg");
+            image = BitmapFactory.decodeStream(new FileInputStream(file));
+        }
+        catch (FileNotFoundException e)
+        {
+            Log.e(TAG, "File Not found: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return image;
+    }
 
     public static String[] getCountryNames()
     {

@@ -121,7 +121,7 @@ public class Register extends AppCompatActivity {
         {
             Log.e(TAG, "the path I received: " + imagePath);
             //put the  image on the image Button
-            currUserImage = getImageStorage(imagePath);
+            currUserImage = myUtils.getImageStorage(imagePath);
             Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
             studentPicture.setBackground(dImage);
         }
@@ -313,6 +313,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Register.this, UserPhoto.class);
+                UserPhoto.register();
                 startActivity(intent);
             }
         });
@@ -324,23 +325,6 @@ public class Register extends AppCompatActivity {
     code was adapted from the following source: https://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
     Date accessed : 7/10/21 @ 1:00
      */
-    protected Bitmap getImageStorage(String path)
-    {
-        Bitmap image = null;
-
-        try
-        {
-            File file=new File(path, "profile.jpg");
-            image = BitmapFactory.decodeStream(new FileInputStream(file));
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.e(TAG, "File Not found: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return image;
-    }
 
     @SuppressLint("Range")
     public void searchContactList()
