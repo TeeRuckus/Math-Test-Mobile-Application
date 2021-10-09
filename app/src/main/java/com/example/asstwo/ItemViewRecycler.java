@@ -131,7 +131,7 @@ public class ItemViewRecycler extends Fragment {
                 {
                     Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
                     emailAddress = currVert.getValue().getEmails();
-                    phoneNumbers = currVert.getValue().phoneNumbers;
+                    phoneNumbers = currVert.getValue().getNumbers();
                     break;
                 }
                 else
@@ -232,52 +232,40 @@ public class ItemViewRecycler extends Fragment {
                             startActivity(intent);
                         }
                     });
-
-                    deleteStudent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mathTestGraph.delVertex(studentName.getText().toString());
-                            mathTestGraph.save(getActivity());
-                            getActivity().recreate();
-                        }
-                    });
                     break;
 
                 case addresses:
-                    viewStudent.setVisibility(View.INVISIBLE);
-                    viewStudent.setClickable(false);
-                    viewStudent.setEnabled(false);
-                    viewStudent.setMaxWidth(0);
+                    viewStudent.setVisibility(View.GONE);
+                    studentName.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
                     //TODO: you will have to make this toggle between email addressed and phone
                     //numbers in your programme. COME BACK TO THIS AND FIX IT
-                    studentName.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
-                    deleteStudent.setOnClickListener(new View.OnClickListener() {
+                    /*deleteStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //delete that whole entire email address of phone number from the programme
+                            Log.e(TAG, "addresse clicked: " + studentName.getHint().toString());
+                            String name = Details.getName();
+                            Graph.Vertex currVert = mathTestGraph.getVertex(name);
+                            ArrayList<String> currAddress = currVert.getValue().getEmails();
+                            currAddress.remove(studentName.getHint().toString());
                         }
-                    });
+                    });*/
                     //hiding the buttons from the view
                     break;
 
                 case numbers:
-                    viewStudent.setVisibility(View.INVISIBLE);
-                    viewStudent.setClickable(false);
-                    viewStudent.setEnabled(false);
-                    viewStudent.setMaxWidth(0);
-
-                    //TODO: you will have to make this toggle between email addressed and phone
-                    //numbers in your programme. COME BACK TO THIS AND FIX IT
+                    viewStudent.setVisibility(View.GONE);
                     studentName.setInputType(InputType.TYPE_CLASS_PHONE);
 
-                    deleteStudent.setOnClickListener(new View.OnClickListener() {
+                    /*deleteStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //this will remove teh whole current phone number from the user
+                            Log.e(TAG, "Phone clicked: " + studentName.getHint().toString());
                         }
-                    });
+                    });*/
                     //hiding the buttons from the view
                     break;
 
@@ -335,16 +323,48 @@ public class ItemViewRecycler extends Fragment {
             {
                 case users:
                     holder.bind(students.get(position));
+
+                    holder.deleteStudent.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mathTestGraph.delVertex(holder.studentName.getText().toString());
+                            mathTestGraph.save(getActivity());
+                            students = mathTestGraph.adminStudentLoad();
+                            notifyDataSetChanged();
+                        }
+                    });
                     break;
 
                 case addresses:
                     holder.bindEmailAddresses(emailAddress.get(position));
-                    //this is going to be the same view, so we need to tell it that the data has changed
-                    //notifyDataSetChanged();
+
+                    holder.deleteStudent.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String name = Details.getName();
+                            Graph.Vertex currVert = mathTestGraph.getVertex(name);
+                            ArrayList<String> currAddresses = currVert.getValue().getEmails();
+                            currAddresses.remove(holder.studentName.getHint().toString());
+                            emailAddress = currAddresses;
+                            notifyDataSetChanged();
+                        }
+                    });
                     break;
 
                 case numbers:
                     holder.bindPhoneNumbers(phoneNumbers.get(position));
+
+                    holder.deleteStudent.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String name = Details.getName();
+                            Graph.Vertex currVert = mathTestGraph.getVertex(name);
+                            ArrayList<String> currNumbers = currVert.getValue().getNumbers();
+                            currNumbers.remove(holder.studentName.getHint().toString());
+                            phoneNumbers = currNumbers;
+                            notifyDataSetChanged();
+                        }
+                    });
 
             }
 
