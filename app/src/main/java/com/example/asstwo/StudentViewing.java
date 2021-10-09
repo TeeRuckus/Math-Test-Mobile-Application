@@ -31,6 +31,8 @@ public class StudentViewing extends AppCompatActivity {
 
         if (frag == null)
         {
+            //making sure that the users are going to be displayed on the screen and nothing else
+            ItemViewRecycler.usersViewing();
             frag = new ItemViewRecycler();
             fm.beginTransaction()
                     .add(R.id.viewingContainer, frag)

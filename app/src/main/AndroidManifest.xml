@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AssTwo">
         <activity
+            android:name=".Details"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".StudentViewing"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

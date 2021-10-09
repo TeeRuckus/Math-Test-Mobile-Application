@@ -61,11 +61,11 @@ public abstract class User implements Serializable {
         return new String(lastName);
     }
 
-    public List<String> getEmails() {
+    public ArrayList<String> getEmails() {
         return emailAddresses;
     }
 
-    public List<String> getNumbers() {
+    public ArrayList<String> getNumbers() {
         return phoneNumbers;
     }
 
