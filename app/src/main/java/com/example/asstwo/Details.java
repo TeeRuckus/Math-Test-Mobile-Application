@@ -125,6 +125,8 @@ public class Details extends AppCompatActivity {
                     String currEnteredLastName = lastNameBox.getText().toString();
                     Graph.Vertex currVert = mathTestGraph.getVertex(name);
                     User currUser = currVert.getValue();
+                    studentPicture.buildDrawingCache();
+                    currUserImage = studentPicture.getDrawingCache();
                     currUser.getAvatar().setImage(currUserImage);
 
                     try

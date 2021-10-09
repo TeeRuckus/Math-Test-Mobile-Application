@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -237,36 +239,11 @@ public class ItemViewRecycler extends Fragment {
                 case addresses:
                     viewStudent.setVisibility(View.GONE);
                     studentName.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-
-                    //TODO: you will have to make this toggle between email addressed and phone
-                    //numbers in your programme. COME BACK TO THIS AND FIX IT
-
-                    /*deleteStudent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //delete that whole entire email address of phone number from the programme
-                            Log.e(TAG, "addresse clicked: " + studentName.getHint().toString());
-                            String name = Details.getName();
-                            Graph.Vertex currVert = mathTestGraph.getVertex(name);
-                            ArrayList<String> currAddress = currVert.getValue().getEmails();
-                            currAddress.remove(studentName.getHint().toString());
-                        }
-                    });*/
-                    //hiding the buttons from the view
                     break;
 
                 case numbers:
                     viewStudent.setVisibility(View.GONE);
                     studentName.setInputType(InputType.TYPE_CLASS_PHONE);
-
-                    /*deleteStudent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //this will remove teh whole current phone number from the user
-                            Log.e(TAG, "Phone clicked: " + studentName.getHint().toString());
-                        }
-                    });*/
-                    //hiding the buttons from the view
                     break;
 
             }
@@ -281,11 +258,6 @@ public class ItemViewRecycler extends Fragment {
         public void bind(Graph.Vertex inVert)
         {
             this.vert = inVert;
-            // we must update teh displayed names, and scores. However, for each one we have
-            // to temporarily disable the corresponding event handler, or else the event
-            // handler would assume the *user* has edited the informatio of the current edit
-            // text box which we're viewing
-
             studentName.setText(inVert.getValue().getName());
             studentAvatar.setImageBitmap(inVert.getValue().getAvatar().getImage());
             studentName.setEnabled(false);
@@ -294,6 +266,10 @@ public class ItemViewRecycler extends Fragment {
 
         public void bindPhoneNumbers(String inPhoneNumber)
         {
+            // we must update teh displayed names, and scores. However, for each one we have
+            // to temporarily disable the corresponding event handler, or else the event
+            // handler would assume the *user* has edited the informatio of the current edit
+            // text box which we're viewing
             studentName.setHint(inPhoneNumber);
             studentAvatar.setVisibility(View.GONE);
             studentScore.setVisibility(View.GONE);
@@ -301,6 +277,11 @@ public class ItemViewRecycler extends Fragment {
 
         public void bindEmailAddresses(String inEmail)
         {
+            // we must update teh displayed names, and scores. However, for each one we have
+            // to temporarily disable the corresponding event handler, or else the event
+            // handler would assume the *user* has edited the informatio of the current edit
+            // text box which we're viewing
+
             studentName.setHint(inEmail);
             studentAvatar.setVisibility(View.GONE);
             studentScore.setVisibility(View.GONE);
