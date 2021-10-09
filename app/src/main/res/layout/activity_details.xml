@@ -108,7 +108,8 @@
             android:id="@+id/togglEmailPhoneBttn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/paleNight_buttons"
+            android:textColor="@color/paleNight_white"
+            android:background="@color/paleNight_buttons"
             android:text="Email"
             android:gravity="center"
             android:layout_gravity="right"/>

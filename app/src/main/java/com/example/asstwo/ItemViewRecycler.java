@@ -303,16 +303,15 @@ public class ItemViewRecycler extends Fragment {
         public void bindPhoneNumbers(String inPhoneNumber)
         {
             studentName.setHint(inPhoneNumber);
-            studentAvatar.setEnabled(false);
-            studentAvatar.setVisibility(View.INVISIBLE);
-            studentAvatar.setMaxWidth(0);
+            studentAvatar.setVisibility(View.GONE);
+            studentScore.setVisibility(View.GONE);
         }
 
         public void bindEmailAddresses(String inEmail)
         {
             studentName.setHint(inEmail);
-            studentAvatar.setEnabled(false);
-            studentAvatar.setVisibility(View.INVISIBLE);
+            studentAvatar.setVisibility(View.GONE);
+            studentScore.setVisibility(View.GONE);
             studentAvatar.setMaxWidth(0);
         }
     }

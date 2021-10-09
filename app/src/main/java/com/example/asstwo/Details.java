@@ -56,7 +56,7 @@ public class Details extends AppCompatActivity {
             //if they is nothing attached to the fragment attach something to it now
             if (frag == null)
             {
-                ItemViewRecycler.addressesViewing();
+                ItemViewRecycler.numbersViewing();
                 frag = new ItemViewRecycler();
                 fm.beginTransaction()
                         .add(R.id.framePhoneNumbers, frag)
