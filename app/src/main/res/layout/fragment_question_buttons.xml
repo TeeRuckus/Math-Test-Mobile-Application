@@ -5,10 +5,66 @@
     android:layout_height="match_parent"
     tools:context=".QuestionButtons">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:rowCount="2"
+        android:columnCount="2"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/optionOne"
+            android:layout_width="wrap_content"
+            android:text="option one"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/paleNight_buttons"
+            android:textColor="@color/paleNight_white"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
+        <Button
+            android:id="@+id/optionTwo"
+            android:background="@color/paleNight_buttons"
+            android:textColor="@color/paleNight_white"
+            android:layout_width="wrap_content"
+            android:text="Option two"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/optionThree"
+            android:background="@color/paleNight_buttons"
+            android:textColor="@color/paleNight_white"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:text="option three"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/optionFour"
+            android:background="@color/paleNight_buttons"
+            android:textColor="@color/paleNight_white"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="8dp"
+            android:text="option four"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+    </GridLayout>
 </FrameLayout>

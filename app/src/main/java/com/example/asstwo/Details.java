@@ -163,6 +163,15 @@ public class Details extends AppCompatActivity {
                 }
             });
 
+            testBttn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Details.this, TakeTest.class);
+                    intent.putExtra("name", name);
+                    startActivity(intent);
+                }
+            });
+
             imagePath = getIntent().getStringExtra("imagePath");
             Log.e(TAG, "the current path: " + imagePath);
 
@@ -175,8 +184,6 @@ public class Details extends AppCompatActivity {
                 Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
                 studentPicture.setBackground(dImage);
             }
-
-
         }
         else
         {

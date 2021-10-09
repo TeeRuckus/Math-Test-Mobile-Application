@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AnswerInput">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/enterAnswerTest"
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/dark_second"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:hint="Enter your answer"
+            android:textColor="@color/paleNight_white"
+            android:textColorHint="@color/paleNight_yellow"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/asnwerButtonTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Answer"
+            android:background="@color/paleNight_buttons"
+            android:textColor="@color/white"
+            android:layout_below="@id/enterAnswerTest"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>
