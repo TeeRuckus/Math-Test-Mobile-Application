@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +38,7 @@ public class Details extends AppCompatActivity {
         mathTestGraph = new Graph();
         mathTestGraph = mathTestGraph.load(Details.this);
         name = getIntent().getStringExtra("name");
+        //making it static so I can access it inside on click listeners
 
         if (name != null)
         {
@@ -56,12 +58,49 @@ public class Details extends AppCompatActivity {
             //if they is nothing attached to the fragment attach something to it now
             if (frag == null)
             {
+                //originally load the view in the phone number view
                 ItemViewRecycler.numbersViewing();
                 frag = new ItemViewRecycler();
                 fm.beginTransaction()
                         .add(R.id.framePhoneNumbers, frag)
                         .commit();
             }
+
+
+            emailToggleBttn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String currentButton = emailToggleBttn.getText().toString();
+                    currentButton = myUtils.cleanString(currentButton);
+                    FragmentManager fm = getSupportFragmentManager();
+                    ItemViewRecycler frag = (ItemViewRecycler)  fm.findFragmentById(R.id.framePhoneNumbers);
+
+                    Log.e(TAG, "The current text of the button: " + currentButton);
+                    if (currentButton.equals("EMAIL"))
+                    {
+                        emailNumberBanner.setText("Email Addresses");
+                        emailToggleBttn.setText("Numbers");
+                        ItemViewRecycler.addressesViewing();
+                        frag = new ItemViewRecycler();
+                        fm.beginTransaction()
+                                .add(R.id.framePhoneNumbers, frag)
+                                .commit();
+
+                    }
+                    else
+                    {
+                        emailNumberBanner.setText("Phone Numbers");
+                        emailToggleBttn.setText("Email");
+                        ItemViewRecycler.numbersViewing();
+                        frag = new ItemViewRecycler();
+                        fm.beginTransaction()
+                                .add(R.id.framePhoneNumbers, frag)
+                                .commit();
+
+                    }
+                }
+            });
 
         }
         else

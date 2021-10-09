@@ -2,14 +2,11 @@ package com.example.asstwo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -341,8 +337,7 @@ public class ItemViewRecycler extends Fragment {
 
                 case numbers:
                     holder.bindPhoneNumbers(phoneNumbers.get(position));
-                    //this is going to be the same view, so we need to tell it that the data has changed
-                    //notifyDataSetChanged();
+
             }
 
         }
