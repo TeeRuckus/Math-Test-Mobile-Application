@@ -107,12 +107,19 @@ public class TakeTest extends AppCompatActivity {
         fm.beginTransaction().add(R.id.buttonsContainer, answerButtons).commit();
     }
 
-    public void setUpInputFragment()
+    public void replaceWithButtons()
     {
         fm = getSupportFragmentManager();
-        inputAnswer = (AnswerInput) fm.findFragmentById(R.id.buttonsContainer);
+        answerButtons = new QuestionButtons();
+        fm.beginTransaction().replace(R.id.buttonsContainer, answerButtons).commit();
+    }
+
+
+    public void replaceWithInput()
+    {
+        fm = getSupportFragmentManager();
         inputAnswer = new AnswerInput();
-        fm.beginTransaction().add(R.id.buttonsContainer, inputAnswer).commit();
+        fm.beginTransaction().replace(R.id.buttonsContainer, inputAnswer).commit();
     }
 
     public void loadUI()
@@ -163,6 +170,50 @@ public class TakeTest extends AppCompatActivity {
             cTimer.cancel();
         }
     }
+
+    private int[] convertToArray(JSONArray inArray)
+    {
+        int[] result = new int[inArray.length()];
+
+        for (int ii = 0; ii < inArray.length(); ii++) {
+            try
+            {
+                result[ii] = inArray.getInt(ii);
+            }
+            catch (JSONException e)
+            {
+                Log.e(TAG, "Couldn't read integer: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    private void displayQuestion(MenuItem inQuestion)
+    {
+        question.setText(inQuestion.getQuestion());
+        //time.setText(Integer.toString(inQuestion.getTime()));
+        questionNumber.setText(Integer.toString(takenQuestions.size()));
+        currentScore.setText("100");
+        startTimer(inQuestion.getTime());
+
+    }
+
+    public void setUpQuestionInput(int[] options)
+    {
+        if(options.length != 0)
+        {
+            replaceWithButtons();
+            //set up the buttons
+        }
+        else
+        {
+            replaceWithInput();
+            //set up the text inputs
+        }
+    }
+
 
 
     private class MyTask extends AsyncTask<Void, Integer, String>
@@ -221,6 +272,9 @@ public class TakeTest extends AppCompatActivity {
                 int[] optionsArray = convertToArray(options);
                 MenuItem currQuestion = new MenuItem(questionJson, time, result, optionsArray);
                 takenQuestions.add(currQuestion);
+                setUpQuestionInput(optionsArray);
+
+                Log.e(TAG, "the current options: " + options);
 
                 displayQuestion(currQuestion);
 
@@ -274,33 +328,5 @@ public class TakeTest extends AppCompatActivity {
             }
         }
 
-        private int[] convertToArray(JSONArray inArray)
-        {
-            int[] result = new int[inArray.length()];
-
-            for (int ii = 0; ii < inArray.length(); ii++) {
-                try
-                {
-                    result[ii] = inArray.getInt(ii);
-                }
-                catch (JSONException e)
-                {
-                    Log.e(TAG, "Couldn't read integer: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-
-            return result;
-        }
-
-        private void displayQuestion(MenuItem inQuestion)
-        {
-            question.setText(inQuestion.getQuestion());
-            //time.setText(Integer.toString(inQuestion.getTime()));
-            questionNumber.setText(Integer.toString(takenQuestions.size()));
-            currentScore.setText("100");
-            startTimer(inQuestion.getTime());
-
-        }
     }
 }
