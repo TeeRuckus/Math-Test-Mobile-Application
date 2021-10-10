@@ -151,6 +151,8 @@ public class TakeTest extends AppCompatActivity {
             @Override
             public void onFinish() {
                 time.setText("done!");
+                cancelTimer();
+                new  MyTask().execute();
             }
         };
         cTimer.start();
