@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -46,6 +47,9 @@ public class TakeTest extends AppCompatActivity {
     private ImageButton next;
     private ImageButton prev;
     private Button skipQuestion;
+
+    private int numSections;
+    private int currSectionPos;
 
     private FragmentManager fm;
     private QuestionButtons answerButtons;
@@ -83,6 +87,7 @@ public class TakeTest extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //making another JSON call so we can get a new question
+                    currSectionPos = 0;
                     cancelTimer();
                     new  MyTask().execute();
                 }
@@ -159,6 +164,7 @@ public class TakeTest extends AppCompatActivity {
             public void onFinish() {
                 time.setText("done!");
                 cancelTimer();
+                currSectionPos = 0;
                 new  MyTask().execute();
             }
         };
@@ -205,6 +211,7 @@ public class TakeTest extends AppCompatActivity {
         if(options.length != 0)
         {
             replaceWithButtons();
+            loadButtons(options);
             //set up the buttons
         }
         else
@@ -212,6 +219,82 @@ public class TakeTest extends AppCompatActivity {
             replaceWithInput();
             //set up the text inputs
         }
+    }
+
+    public void loadButtons(int[] options)
+    {
+        Log.e(TAG, "you need buttons right now");
+        makeSections(options);
+    }
+
+    public int[][] makeSections(int[] options)
+    {
+        int size = options.length;
+        //we can only have a maximum of 4 buttons on the screen at a time
+        float sections = (float) size / 4;
+        // if we have a reminder we will want to round up no matter what so that we can fit in the reminders
+        int actualSections = (int) Math.ceil(sections);
+        Log.i(TAG, "Sections to be made: " + actualSections);
+        int[] currSections = new int[actualSections];
+        int[][] optionsGroup = loadSections(actualSections, options);
+
+        return optionsGroup;
+
+    }
+
+    public int[][] loadSections(int numSections, int[] originalArray)
+    {
+        int[][] returnArray = new int[numSections][];
+        //keeps a track on what index it's going to be on the original array
+        int currIndx = 0;
+
+        for (int ii = 0; ii < numSections; ii++)
+        {
+            Log.i(TAG, "YOU HAVE TOUCHED ME HOW DARE YOU!!!");
+            ArrayList<Integer> currSec = new ArrayList<>();
+
+            Log.i(TAG, "starting position: " + currIndx);
+            for(int jj = 0; jj < originalArray.length; jj++)
+            {
+                //a look ahead to make sure that we're only storing the elmennts which we want at
+                //each poisition of our array
+                if(jj >= currIndx  && jj < currIndx + 4)
+                {
+                    Log.e(TAG, "Stored: " + originalArray[jj]);
+                    //trying to create a section of four, if we can't we should do nothing
+                    try{
+                        currSec.add(originalArray[jj]);
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        Log.e(TAG, "TOO FAR NIGGA");
+                        //do nothing as we have reched the end of the current array
+                    }
+
+                }
+            }
+
+            currIndx = currIndx + 4;
+
+            returnArray[ii] = new int[currSec.size()];
+            for(int kk=0; kk < currSec.size(); kk++)
+            {
+                returnArray[ii][kk] = currSec.get(kk);
+            }
+        }
+
+        for(int ii = 0; ii < numSections; ii++)
+        {
+            Log.e(TAG, "Segmented array: " + returnArray[ii].length);
+
+            for (int jj = 0; jj < returnArray[ii].length; jj++)
+            {
+                Log.e(TAG, "Elements [" + ii + "]" + "[" + jj + "]: " + returnArray[ii][jj]);
+            }
+        }
+
+        return returnArray;
+
     }
 
 

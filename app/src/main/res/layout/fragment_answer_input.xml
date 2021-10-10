@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:hint="Enter your answer"
             android:textColor="@color/paleNight_white"
+            android:layout_marginTop="50dp"
             android:textColorHint="@color/paleNight_yellow"
-            android:textSize="20dp"
-            android:layout_centerVertical="true"/>
+            android:textSize="20dp"/>
 
         <Button
             android:id="@+id/asnwerButtonTest"
