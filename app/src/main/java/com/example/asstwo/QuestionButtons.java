@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -13,14 +14,30 @@ import android.view.ViewGroup;
  */
 public class QuestionButtons extends Fragment {
 
+    private static final String TAG = "QuestionButtons.";
+    private Button optionOne;
+    private Button optionTwo;
+    private Button optionThree;
+    private Button optionFour;
+
+    private enum buttonNumbers {
+        twoButtons,
+        threeButtons,
+        allButtons
+    }
+
+    private static buttonNumbers currState;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String receivedOptionOne;
+    private String receivedOptionTwo;
+    private String receivedOptionThree;
+    private String receivedOptionFour;
+
 
     public QuestionButtons() {
         // Required empty public constructor
@@ -47,9 +64,16 @@ public class QuestionButtons extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        receivedOptionOne = "";
+        receivedOptionTwo = "";
+        receivedOptionThree = "";
+        receivedOptionFour = "";
+
+        if (this.getArguments() != null) {
+            receivedOptionOne = this.getArguments().getString("optionOne", "");
+            receivedOptionTwo = this.getArguments().getString("optionTwo", "");
+            receivedOptionThree = this.getArguments().getString("optionThree", "");
+            receivedOptionFour = this.getArguments().getString("optionFour", "");
         }
     }
 
@@ -57,6 +81,75 @@ public class QuestionButtons extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_question_buttons, container, false);
+        View v = inflater.inflate(R.layout.fragment_question_buttons, container, false);
+        optionOne = v.findViewById(R.id.optionOne);
+        optionTwo = v.findViewById(R.id.optionTwo);
+        optionThree = v.findViewById(R.id.optionThree);
+        optionFour = v.findViewById(R.id.optionFour);
+
+        //depending what state the programme is going to be in will determine how many buttons are going to
+        //to be displayed to on the screen
+
+        if(receivedOptionOne.equals(""))
+        {
+            optionOne.setVisibility(View.INVISIBLE);
+            optionOne.setClickable(false);
+        }
+        else
+        {
+            optionOne.setText(receivedOptionOne);
+        }
+
+
+        if(receivedOptionTwo.equals(""))
+        {
+            optionTwo.setVisibility(View.INVISIBLE);
+            optionTwo.setClickable(false);
+        }
+        else
+        {
+            optionTwo.setText(receivedOptionTwo);
+        }
+
+        if(receivedOptionThree.equals(""))
+        {
+            optionThree.setVisibility(View.INVISIBLE);
+            optionThree.setClickable(false);
+
+        }
+        else
+        {
+            optionThree.setText(receivedOptionThree);
+        }
+
+
+        if(receivedOptionFour.equals(""))
+        {
+            optionFour.setVisibility(View.INVISIBLE);
+            optionFour.setClickable(false);
+        }
+        else
+        {
+            optionFour.setText(receivedOptionFour);
+        }
+
+        //setting the current views from the  options which were recieved in the programme
+
+        return v;
+    }
+
+    public static void setTwoButtons()
+    {
+        currState = buttonNumbers.twoButtons;
+    }
+
+    public static void setThreeButtons()
+    {
+        currState = buttonNumbers.threeButtons;
+    }
+
+    public static void setFullButtons()
+    {
+        currState = buttonNumbers.allButtons;
     }
 }

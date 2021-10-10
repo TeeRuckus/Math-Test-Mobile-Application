@@ -50,6 +50,8 @@ public class TakeTest extends AppCompatActivity {
 
     private int numSections;
     private int currSectionPos;
+    private int[] currentOptions;
+    private int[][] madeSections;
 
     private FragmentManager fm;
     private QuestionButtons answerButtons;
@@ -76,6 +78,8 @@ public class TakeTest extends AppCompatActivity {
         cTimer = null;
 
         name = getIntent().getStringExtra("name");
+        numSections = 0;
+        currSectionPos = 0;
 
         if (name != null)
         {
@@ -90,6 +94,35 @@ public class TakeTest extends AppCompatActivity {
                     currSectionPos = 0;
                     cancelTimer();
                     new  MyTask().execute();
+                }
+            });
+
+
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e(TAG, "next has being clicked");
+                    currSectionPos = (currSectionPos + 1 ) % numSections;
+                    Log.e(TAG, "The next position: " + currSectionPos);
+                    displayOptions(madeSections);
+                }
+            });
+
+            prev.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e(TAG, "previous has bneing clicked");
+                    //currSectionPos = Math.abs((currSectionPos - 1)) % numSections;
+                    //currSectionPos = (currSectionPos % numSections) - 1;
+                    currSectionPos = (currSectionPos - 1) % numSections;
+
+                    //must make a temporary variable for this maths absolute function to work properly
+                    int x = Math.abs(currSectionPos);
+                    currSectionPos = x;
+
+                    Log.e(TAG, "The preivous position: " + x);
+                    displayOptions(madeSections);
+
                 }
             });
 
@@ -112,16 +145,32 @@ public class TakeTest extends AppCompatActivity {
         fm.beginTransaction().add(R.id.buttonsContainer, answerButtons).commit();
     }
 
-    public void replaceWithButtons()
+    public void replaceWithButtons(String opOne, String opTwo, String opThree, String opFour)
     {
+        next.setVisibility(View.VISIBLE);
+        prev.setVisibility(View.VISIBLE);
+        next.setClickable(true);
+        prev.setClickable(true);
         fm = getSupportFragmentManager();
         answerButtons = new QuestionButtons();
+        Bundle bundle = new Bundle();
+        bundle.putString("optionOne",opOne);
+        bundle.putString("optionTwo",opTwo);
+        bundle.putString("optionThree",opThree);
+        bundle.putString("optionFour", opFour);
+        answerButtons.setArguments(bundle);
         fm.beginTransaction().replace(R.id.buttonsContainer, answerButtons).commit();
     }
 
 
     public void replaceWithInput()
     {
+        answerSet.setText("");
+        next.setVisibility(View.GONE);
+        prev.setVisibility(View.GONE);
+        next.setClickable(false);
+        prev.setClickable(false);
+
         fm = getSupportFragmentManager();
         inputAnswer = new AnswerInput();
         fm.beginTransaction().replace(R.id.buttonsContainer, inputAnswer).commit();
@@ -210,9 +259,14 @@ public class TakeTest extends AppCompatActivity {
     {
         if(options.length != 0)
         {
-            replaceWithButtons();
-            loadButtons(options);
+            replaceWithButtons("1", "2", "6", "4");
+            madeSections = makeSections(options);
+
+            //setting up the first section of buttons
             //set up the buttons
+            //currentOptions = madeSections[currSectionPos];
+
+            displayOptions(madeSections);
         }
         else
         {
@@ -221,10 +275,42 @@ public class TakeTest extends AppCompatActivity {
         }
     }
 
-    public void loadButtons(int[] options)
+    public void displayOptions(int[][] availableOptions)
     {
-        Log.e(TAG, "you need buttons right now");
-        makeSections(options);
+        int[] inAnswers = availableOptions[currSectionPos];
+        int numOptions = inAnswers.length;
+
+        answerSet.setText("Answer Set: " + (currSectionPos + 1)  + " / " + numSections);
+
+        switch (numOptions)
+        {
+            case 1:
+                replaceWithButtons(Integer.toString(inAnswers[0]), "", "", "");
+                break;
+
+            case 2:
+                replaceWithButtons(Integer.toString(inAnswers[0]),
+                        Integer.toString(inAnswers[1]),
+                        "",
+                        "");
+                break;
+
+            case 3:
+                replaceWithButtons(Integer.toString(inAnswers[0]),
+                        Integer.toString(inAnswers[1]),
+                        Integer.toString(inAnswers[2]),
+                        "");
+                break;
+
+            case 4:
+                replaceWithButtons(Integer.toString(inAnswers[0]),
+                        Integer.toString(inAnswers[1]),
+                        Integer.toString(inAnswers[2]),
+                        Integer.toString(inAnswers[3]));
+                break;
+        }
+
+
     }
 
     public int[][] makeSections(int[] options)
@@ -233,10 +319,10 @@ public class TakeTest extends AppCompatActivity {
         //we can only have a maximum of 4 buttons on the screen at a time
         float sections = (float) size / 4;
         // if we have a reminder we will want to round up no matter what so that we can fit in the reminders
-        int actualSections = (int) Math.ceil(sections);
-        Log.i(TAG, "Sections to be made: " + actualSections);
-        int[] currSections = new int[actualSections];
-        int[][] optionsGroup = loadSections(actualSections, options);
+        numSections = (int) Math.ceil(sections);
+        Log.i(TAG, "Sections to be made: " + numSections);
+        int[] currSections = new int[numSections];
+        int[][] optionsGroup = loadSections(numSections, options);
 
         return optionsGroup;
 
@@ -250,24 +336,20 @@ public class TakeTest extends AppCompatActivity {
 
         for (int ii = 0; ii < numSections; ii++)
         {
-            Log.i(TAG, "YOU HAVE TOUCHED ME HOW DARE YOU!!!");
             ArrayList<Integer> currSec = new ArrayList<>();
 
-            Log.i(TAG, "starting position: " + currIndx);
             for(int jj = 0; jj < originalArray.length; jj++)
             {
                 //a look ahead to make sure that we're only storing the elmennts which we want at
                 //each poisition of our array
                 if(jj >= currIndx  && jj < currIndx + 4)
                 {
-                    Log.e(TAG, "Stored: " + originalArray[jj]);
                     //trying to create a section of four, if we can't we should do nothing
                     try{
                         currSec.add(originalArray[jj]);
                     }
                     catch (IndexOutOfBoundsException e)
                     {
-                        Log.e(TAG, "TOO FAR NIGGA");
                         //do nothing as we have reched the end of the current array
                     }
 
@@ -280,16 +362,6 @@ public class TakeTest extends AppCompatActivity {
             for(int kk=0; kk < currSec.size(); kk++)
             {
                 returnArray[ii][kk] = currSec.get(kk);
-            }
-        }
-
-        for(int ii = 0; ii < numSections; ii++)
-        {
-            Log.e(TAG, "Segmented array: " + returnArray[ii].length);
-
-            for (int jj = 0; jj < returnArray[ii].length; jj++)
-            {
-                Log.e(TAG, "Elements [" + ii + "]" + "[" + jj + "]: " + returnArray[ii][jj]);
             }
         }
 
