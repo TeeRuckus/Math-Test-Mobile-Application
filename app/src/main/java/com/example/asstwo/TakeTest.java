@@ -2,15 +2,21 @@ package com.example.asstwo;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
@@ -21,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -32,11 +40,12 @@ public class TakeTest extends AppCompatActivity {
     private TextView question;
     private TextView time;
     private TextView questionNumber;
-    private TextView currenScore;
+    private TextView currentScore;
     private TextView answerSet;
     private Button end;
     private ImageButton next;
     private ImageButton prev;
+    private Button skipQuestion;
 
     private FragmentManager fm;
     private QuestionButtons answerButtons;
@@ -44,14 +53,23 @@ public class TakeTest extends AppCompatActivity {
 
     private URL url;
     private HttpsURLConnection conn;
+    private ArrayList<MenuItem> takenQuestions;
+    private CountDownTimer cTimer;
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelTimer();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_test);
         loadUI();
+
+        takenQuestions = new ArrayList<>();
+        cTimer = null;
 
         name = getIntent().getStringExtra("name");
 
@@ -60,6 +78,15 @@ public class TakeTest extends AppCompatActivity {
             banner.setText("Test: " + name);
             setUpButtonFragment();
             new  MyTask().execute();
+
+            skipQuestion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //making another JSON call so we can get a new question
+                    cancelTimer();
+                    new  MyTask().execute();
+                }
+            });
 
         }
         else
@@ -94,11 +121,45 @@ public class TakeTest extends AppCompatActivity {
         question = findViewById(R.id.testQuestionArea);
         time = findViewById(R.id.displayTestTime);
         questionNumber = findViewById(R.id.displayQuestionNumberTest);
-        currenScore = findViewById(R.id.displayScoreTest);
+        currentScore = findViewById(R.id.displayScoreTest);
         answerSet = findViewById(R.id.questionSetTest);
         end = findViewById(R.id.endTest);
         next = findViewById(R.id.nextAnswers);
         prev = findViewById(R.id.previousAnswers);
+        skipQuestion = findViewById(R.id.skipTestQuestion);
+    }
+
+    public void startTimer(int requiredTime)
+    {
+        float halfTime = requiredTime / 2;
+        cTimer = new CountDownTimer(requiredTime * 1000, 1000) {
+            @Override
+            public void onTick(long l) {
+                int currentTime = (int) (l / 1000);
+                time.setText(Float.toString(currentTime));
+
+                if (currentTime <= halfTime)
+                {
+                    time.setTextColor(getResources().getColor(R.color.paleNight_error));
+                }
+                else
+                {
+                    time.setTextColor(getResources().getColor(R.color.paleNight_text));
+                }
+
+            }
+            @Override
+            public void onFinish() {
+                time.setText("done!");
+            }
+        };
+        cTimer.start();
+    }
+
+    public void cancelTimer() {
+        if (cTimer !=null){
+            cTimer.cancel();
+        }
     }
 
 
@@ -144,11 +205,29 @@ public class TakeTest extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String retrievedJSON) {
             //super.onPostExecute(s);
 
-            //getting  the json and displaying it on the screen
-            question.setText(s);
+            try
+            {
+                JSONObject jBase = new JSONObject(retrievedJSON);
+                JSONArray options = jBase.getJSONArray("options");
+                String questionJson = jBase.getString("question");
+                int result= jBase.getInt("result");
+                int time = jBase.getInt("timetosolve");
+
+                int[] optionsArray = convertToArray(options);
+                MenuItem currQuestion = new MenuItem(questionJson, time, result, optionsArray);
+                takenQuestions.add(currQuestion);
+
+                displayQuestion(currQuestion);
+
+
+                //MenuItem currQuestion =  new MenuItem(question, time, result, options);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -191,6 +270,34 @@ public class TakeTest extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
+        }
+
+        private int[] convertToArray(JSONArray inArray)
+        {
+            int[] result = new int[inArray.length()];
+
+            for (int ii = 0; ii < inArray.length(); ii++) {
+                try
+                {
+                    result[ii] = inArray.getInt(ii);
+                }
+                catch (JSONException e)
+                {
+                    Log.e(TAG, "Couldn't read integer: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+            return result;
+        }
+
+        private void displayQuestion(MenuItem inQuestion)
+        {
+            question.setText(inQuestion.getQuestion());
+            //time.setText(Integer.toString(inQuestion.getTime()));
+            questionNumber.setText(Integer.toString(takenQuestions.size()));
+            currentScore.setText("100");
+            startTimer(inQuestion.getTime());
 
         }
     }

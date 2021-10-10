@@ -32,11 +32,12 @@
             android:background="@color/paleNight_foreground"
             android:text="Your question goes here"
             android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@color/paleNight_text"
-            android:textSize="16dp"
+            android:textSize="24dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="0.75"/>
 
         <LinearLayout
             android:id="@+id/llTwoTest"
@@ -140,7 +141,7 @@
                 android:id="@+id/buttonsContainer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="20"
+                android:layout_weight="10"
                 android:background="@color/paleNight_text">
             </FrameLayout>
 
@@ -155,14 +156,33 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/questionSetTest"
+        <LinearLayout
+            android:id="@+id/llSevenTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Answer Set X / X"
-            android:textColor="@color/paleNight_white"
-            android:textSize="16dp"
-            android:gravity="center"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/questionSetTest"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Answer Set X / X"
+                android:textColor="@color/paleNight_white"
+                android:textSize="16dp"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/skipTestQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/purple_500"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="skip"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
