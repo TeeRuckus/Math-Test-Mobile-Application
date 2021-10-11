@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,16 +28,17 @@ public class QuestionButtons extends Fragment {
     }
 
     private static buttonNumbers currState;
+    private String receivedOptionOne;
+    private String receivedOptionTwo;
+    private String receivedOptionThree;
+    private String receivedOptionFour;
+    private QuestionBttnsListener listenerOption;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private String receivedOptionOne;
-    private String receivedOptionTwo;
-    private String receivedOptionThree;
-    private String receivedOptionFour;
 
 
     public QuestionButtons() {
@@ -76,6 +78,15 @@ public class QuestionButtons extends Fragment {
             receivedOptionFour = this.getArguments().getString("optionFour", "");
         }
     }
+
+    //creating an interface so we can get the button clicks within the hosting activity
+    public interface QuestionBttnsListener {
+        void onClickOptionOne(CharSequence input);
+        void onClickOptionTwo(CharSequence input);
+        void onClickOptionThree(CharSequence input);
+        void onClickOptionFour(CharSequence input);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,8 +145,64 @@ public class QuestionButtons extends Fragment {
         }
 
         //setting the current views from the  options which were recieved in the programme
+        optionOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //getting the text which was on the option one button
+                CharSequence currOption  = optionOne.getText();
+                //this is going to be sent to whoever is going to be implementing this interface
+                listenerOption.onClickOptionOne(currOption);
+            }
+        });
+
+        optionTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CharSequence currOption = optionTwo.getText();
+                listenerOption.onClickOptionTwo(currOption);
+            }
+        });
+
+        optionThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CharSequence currOption = optionThree.getText();
+                listenerOption.onClickOptionThree(currOption);
+            }
+        });
+
+        optionFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CharSequence currOption = optionFour.getText();
+                listenerOption.onClickOptionFour(currOption);
+            }
+        });
 
         return v;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // checking if the current activity which we're attaching ourselves is going to implement
+        // this interface
+        if (context instanceof QuestionBttnsListener) {
+            listenerOption = (QuestionBttnsListener) context;
+        }
+        else
+        {
+            //if we have forgotten to implement this listner into our activity we should fail
+            throw new RuntimeException(context.toString()
+            + " must implement QuestionBttnsListnerOpOne");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //removing the listner when it has being detached
+        listenerOption = null;
     }
 
     public static void setTwoButtons()

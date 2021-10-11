@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,15 +23,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.AsynchronousChannelGroup;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class TakeTest extends AppCompatActivity {
+public class TakeTest extends AppCompatActivity implements QuestionButtons.QuestionBttnsListener {
 
     private static final String TAG = "TakeTest.";
     private String name;
@@ -62,6 +57,9 @@ public class TakeTest extends AppCompatActivity {
     private ArrayList<MenuItem> takenQuestions;
     private CountDownTimer cTimer;
 
+    //references for all the elements inside of the fragments
+    Button optionOne;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -69,10 +67,38 @@ public class TakeTest extends AppCompatActivity {
     }
 
     @Override
+    public void onClickOptionOne(CharSequence input) {
+        Log.e(TAG, "Option one which was clikcked " + input);
+    }
+
+    @Override
+    public void onClickOptionTwo(CharSequence input) {
+        Log.e(TAG, "Option one which was clikcked " + input);
+
+    }
+
+    @Override
+    public void onClickOptionThree(CharSequence input) {
+        Log.e(TAG, "Option one which was clikcked " + input);
+
+    }
+
+    @Override
+    public void onClickOptionFour(CharSequence input) {
+        Log.e(TAG, "Option one which was clikcked " + input);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_test);
         loadUI();
+
+        //making sure that instances of the two fragments are going to be initialised so I can
+        //attach the required interfaces
+        answerButtons = new QuestionButtons();
+        inputAnswer = new AnswerInput();
 
         takenQuestions = new ArrayList<>();
         cTimer = null;
@@ -115,16 +141,17 @@ public class TakeTest extends AppCompatActivity {
                     //currSectionPos = Math.abs((currSectionPos - 1)) % numSections;
                     //currSectionPos = (currSectionPos % numSections) - 1;
                     currSectionPos = (currSectionPos - 1) % numSections;
-
-                    //must make a temporary variable for this maths absolute function to work properly
-                    int x = Math.abs(currSectionPos);
-                    currSectionPos = x;
-
-                    Log.e(TAG, "The preivous position: " + x);
+                    currSectionPos = Math.abs(currSectionPos);
                     displayOptions(madeSections);
-
                 }
             });
+
+            /*optionOne.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e(TAG, "You clicked me you MOTHER FUCKER");
+                }
+            });*/
 
         }
         else
@@ -138,9 +165,7 @@ public class TakeTest extends AppCompatActivity {
         fm = getSupportFragmentManager();
         answerButtons = (QuestionButtons) fm.findFragmentById(R.id.buttonsContainer);
         answerButtons = new QuestionButtons();
-
         //staging for the data I want to pass inside the fragmen
-        Bundle argsButtons = new Bundle();
 
         fm.beginTransaction().add(R.id.buttonsContainer, answerButtons).commit();
     }
@@ -262,10 +287,6 @@ public class TakeTest extends AppCompatActivity {
             replaceWithButtons("1", "2", "6", "4");
             madeSections = makeSections(options);
 
-            //setting up the first section of buttons
-            //set up the buttons
-            //currentOptions = madeSections[currSectionPos];
-
             displayOptions(madeSections);
         }
         else
@@ -280,7 +301,10 @@ public class TakeTest extends AppCompatActivity {
         int[] inAnswers = availableOptions[currSectionPos];
         int numOptions = inAnswers.length;
 
-        answerSet.setText("Answer Set: " + (currSectionPos + 1)  + " / " + numSections);
+        //making sure that the number which is going to be abvaliable in the screen is going to be
+        //human readable format
+        int displayCurrPos = currSectionPos + 1;
+        answerSet.setText("Answer Set: " + (displayCurrPos)  + " / " + numSections);
 
         switch (numOptions)
         {
@@ -309,8 +333,6 @@ public class TakeTest extends AppCompatActivity {
                         Integer.toString(inAnswers[3]));
                 break;
         }
-
-
     }
 
     public int[][] makeSections(int[] options)
