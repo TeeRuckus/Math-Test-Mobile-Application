@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class TakeTest extends AppCompatActivity implements QuestionButtons.QuestionBttnsListener {
+public class TakeTest extends AppCompatActivity implements QuestionButtons.QuestionBttnsListener, AnswerInput.AnswerInputListener {
 
     private static final String TAG = "TakeTest.";
     private String name;
@@ -90,6 +90,11 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
     }
 
     @Override
+    public void onClickAnswer(CharSequence input) {
+        Log.e(TAG, "Typed in answer: " + input);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_test);
@@ -111,6 +116,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         {
             banner.setText("Test: " + name);
             setUpButtonFragment();
+            //setUpInputFragment();
             new  MyTask().execute();
 
             skipQuestion.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +174,15 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         //staging for the data I want to pass inside the fragmen
 
         fm.beginTransaction().add(R.id.buttonsContainer, answerButtons).commit();
+    }
+
+    public void setUpInputFragment()
+    {
+        fm = getSupportFragmentManager();
+        inputAnswer = (AnswerInput) fm.findFragmentById(R.id.buttonsContainer);
+        inputAnswer = new AnswerInput();
+
+        fm.beginTransaction().add(R.id.buttonsContainer, inputAnswer).commit();
     }
 
     public void replaceWithButtons(String opOne, String opTwo, String opThree, String opFour)

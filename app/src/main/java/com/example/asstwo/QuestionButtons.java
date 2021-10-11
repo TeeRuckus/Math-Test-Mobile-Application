@@ -201,7 +201,7 @@ public class QuestionButtons extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        //removing the listner when it has being detached
+        //removing the listener when it has being detached
         listenerOption = null;
     }
 
