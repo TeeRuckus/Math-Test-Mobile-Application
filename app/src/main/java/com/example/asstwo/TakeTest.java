@@ -51,6 +51,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
     private TextView questionNumber;
     private TextView currentScore;
     private TextView answerSet;
+    private TextView elapsedTime;
     private Button end;
     private ImageButton next;
     private ImageButton prev;
@@ -328,17 +329,29 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         next = findViewById(R.id.nextAnswers);
         prev = findViewById(R.id.previousAnswers);
         skipQuestion = findViewById(R.id.skipTestQuestion);
+        elapsedTime = findViewById(R.id.displayElapsedTime);
     }
 
     public void startTimer(int requiredTime)
     {
+        //need to make it final so we can access it inside the annoymous classes which we have made
+
         float halfTime = requiredTime / 2;
         cTimer = new CountDownTimer(requiredTime * 1000, 1000) {
             @Override
             public void onTick(long l) {
                 int currentTime = (int) (l / 1000);
                 time.setText(Float.toString(currentTime));
-                userTime += currentTime;
+                int countUp = (requiredTime - currentTime);
+                countUp = userTime + countUp;
+
+                //once we have reached the finished time, we should update the users current time
+                if(currentTime == requiredTime)
+                {
+                    userTime += countUp;
+                }
+
+                elapsedTime.setText(Integer.toString(countUp));
 
 
                 if (currentTime <= halfTime)
@@ -353,8 +366,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             }
             @Override
             public void onFinish() {
-                time.setText("done!");
                 cancelTimer();
+                time.setText("done!");
                 currSectionPos = 0;
                 new  MyTask().execute();
             }
@@ -364,6 +377,13 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
     public void cancelTimer() {
         if (cTimer !=null){
+            float timeLeft = Float.parseFloat(time.getText().toString().trim());
+            //getting the time which you had to solve
+            int size = takenQuestions.size();
+            MenuItem currQuestion = takenQuestions.get(size - 1);
+            int actualTime = currQuestion.getTime();
+            int timeUser = actualTime -  (int) timeLeft;
+            userTime += timeUser;
             cTimer.cancel();
         }
     }
