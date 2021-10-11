@@ -57,6 +57,9 @@ public class Details extends AppCompatActivity {
         {
             //Toast.makeText(Details.this, name, Toast.LENGTH_LONG).show();
             Graph.Vertex currUser = mathTestGraph.getVertex(name);
+            User student = currUser.getValue();
+            Log.e(TAG, "The number of tests taken: " + student.getHistory().size());
+
             loadUI();
 
             //getting the current details of the user, and displaying them on the screen

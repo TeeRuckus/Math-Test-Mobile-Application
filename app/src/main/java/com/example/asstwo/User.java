@@ -6,13 +6,8 @@ TODO:
  */
 package com.example.asstwo;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.lang.String;
@@ -34,7 +29,7 @@ public abstract class User implements Serializable {
         firstName = "John";
         lastName = "Doe";
         avatar = new Avatar();
-        history = new ArrayList<TestHistory>();
+        history = new ArrayList<>();
         phoneNumbers = new ArrayList<>();
         emailAddresses = new ArrayList();
     }
@@ -76,7 +71,6 @@ public abstract class User implements Serializable {
 
     public ArrayList<TestHistory> getHistory()
     {
-        /*TODO: you will need to make a function which is going to sort the history entries */
         return history;
     }
 
@@ -90,8 +84,8 @@ public abstract class User implements Serializable {
     }
 
 
-    public void addHistoryEntry(String inHistory) {
-        //TODO: come back and actually implement this method when you get to that part of the functionality
+    public void addHistoryEntry(TestHistory inEntry) {
+        history.add(inEntry);
     }
 
     public void setLastName(String inLastName) {
@@ -251,12 +245,5 @@ public abstract class User implements Serializable {
             throw new IndexOutOfBoundsException("Error: you're alllowed a maximum of 10 phone numbers per person");
         }
         return valid;
-    }
-
-    protected void sortHistory()
-    {
-        for (TestHistory currHist : history)
-        {
-        }
     }
 }

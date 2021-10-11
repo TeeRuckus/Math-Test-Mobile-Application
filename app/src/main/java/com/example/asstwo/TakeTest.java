@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,9 +26,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
+
+/*
+TODO:
+    - I will need to save the current test history once this current activity has finished
+    - I will need to make sure that I will do the save on instance things for all my classes including this class
+    - I will need to make sure that once this activity has being stopped or destroyed I will cancel the timer
+    - you will need to load the mathTestGraph into this activity as well
+ */
 
 public class TakeTest extends AppCompatActivity implements QuestionButtons.QuestionBttnsListener, AnswerInput.AnswerInputListener {
 
@@ -42,11 +55,13 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
     private ImageButton next;
     private ImageButton prev;
     private Button skipQuestion;
+    private Graph mathTestGraph;
 
     private int numSections;
     private int currSectionPos;
     private int[][] madeSections;
     private int userScore;
+    private int userTime;
 
     private FragmentManager fm;
     private QuestionButtons answerButtons;
@@ -64,6 +79,13 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
     protected void onDestroy() {
         super.onDestroy();
         cancelTimer();
+        mathTestGraph.save(TakeTest.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mathTestGraph.save(TakeTest.this);
     }
 
     @Override
@@ -103,6 +125,13 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         int currAnswer = currQuestion.getAnswer();
         String inAnswerString = inAnswer.toString();
         String currAnswerString =  Integer.toString(currAnswer);
+        //setting the amount of time which has elapsed
+        currQuestion.setElapsedTime(userTime);
+
+        //getting the current question and setting the users respone
+        int size = takenQuestions.size();
+        MenuItem lastQuestion = takenQuestions.get(size - 1);
+        lastQuestion.setResponse(inAnswerString);
 
         if(currAnswerString.equals(inAnswerString))
         {
@@ -140,6 +169,10 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         setContentView(R.layout.activity_take_test);
         loadUI();
 
+        mathTestGraph = new Graph();
+        mathTestGraph = mathTestGraph.load(TakeTest.this);
+        Log.e(TAG, "Has loaded succesfully: " + mathTestGraph.size());
+
         //making sure that instances of the two fragments are going to be initialised so I can
         //attach the required interfaces
         answerButtons = new QuestionButtons();
@@ -151,6 +184,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         name = getIntent().getStringExtra("name");
         numSections = 0;
         currSectionPos = 0;
+        userTime = 0;
 
         if (name != null)
         {
@@ -164,6 +198,9 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                 public void onClick(View view) {
                     //making another JSON call so we can get a new question
                     currSectionPos = 0;
+                    int size = takenQuestions.size();
+                    MenuItem currQuestion = takenQuestions.get(size - 1);
+                    currQuestion.setElapsedTime(userTime);
                     cancelTimer();
                     new  MyTask().execute();
                 }
@@ -192,12 +229,35 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                 }
             });
 
-            /*optionOne.setOnClickListener(new View.OnClickListener() {
+            end.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e(TAG, "You clicked me you MOTHER FUCKER");
+                    //getting the  current time and date so we can make a new entry for the test
+                    TestHistory historyEntry = new TestHistory();
+                    User currUser = mathTestGraph.getVertex(name).getValue();
+                    //need to addd one as arrays are going to be zero index. Hence, making it more
+                    //human read able by adding a one to the test title
+                    int numberOfTests = currUser.getHistory().size() + 1;
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    LocalDateTime now = LocalDateTime.now();
+                    String currTitle = "Test: " + numberOfTests + " Finished at: " + dtf.format(now);
+
+                    //getting the last question, and setting what the elapsed time has being
+                    int size = takenQuestions.size();
+                    MenuItem currQuestion = takenQuestions.get(size - 1);
+                    currQuestion.setElapsedTime(userTime);
+
+                    historyEntry.setTitle(currTitle);
+                    historyEntry.setQuestions(takenQuestions);
+                    currUser.addHistoryEntry(historyEntry);
+                    mathTestGraph.save(TakeTest.this);
+
+                    //restaring the detials activity with the current user
+                    Intent intent = new Intent(TakeTest.this, Details.class);
+                    intent.putExtra("name", name);
+                    startActivity(intent);
                 }
-            });*/
+            });
 
         }
         else
@@ -278,6 +338,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             public void onTick(long l) {
                 int currentTime = (int) (l / 1000);
                 time.setText(Float.toString(currentTime));
+                userTime += currentTime;
+
 
                 if (currentTime <= halfTime)
                 {

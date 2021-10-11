@@ -1,9 +1,10 @@
 package com.example.asstwo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MenuItem {
+public class MenuItem implements Serializable {
 
     //private class fields for the class
     private String question;
@@ -12,6 +13,7 @@ public class MenuItem {
     private int[] options;
     private String response;
     private int currScore;
+    private int elapsedTime;
 
     //default constructor of the class
     public MenuItem()
@@ -22,6 +24,7 @@ public class MenuItem {
         options = new int[] {3,2,4,11};
         response = "DID NOT ANSWER";
         currScore = 0;
+        elapsedTime = 0;
     }
 
     //alternate constructor of the class
@@ -30,11 +33,12 @@ public class MenuItem {
         // I am not going to validate the return results from the server as I am going to assume
         // they're going to be correct for the time being
         this.question = new String(inQuestion);
-        this.time = inTime;
         this.answer = inAnswer;
-        options = inOptions;
-        response = "DID NOT ANSWER";
-        currScore = 0;
+        this.options = inOptions;
+        this.response = "DID NOT ANSWER";
+        this.currScore = 0;
+        this.time = inTime;
+        this.elapsedTime = 0;
     }
 
     //accessor methods for each menu item
@@ -68,9 +72,19 @@ public class MenuItem {
         currScore += inScore;
     }
 
-    // this is going to tell us how many sections of answers are avaiable in sets of 4 so that it can
-    // be displayed back to the user
+    public void setTime(int inTime)
+    {
+        time = inTime;
+    }
 
-    // this function is going to seperate the options into sets of  4 in their own individual indexes
-    // in an array list
+    public void setElapsedTime(int inTime)
+    {
+        elapsedTime += inTime;
+    }
+
+    public void setResponse(String inResponse)
+    {
+        this.response = new String(inResponse);
+    }
+
 }

@@ -122,8 +122,9 @@ public class Register extends AppCompatActivity {
             Log.e(TAG, "the path I received: " + imagePath);
             //put the  image on the image Button
             currUserImage = myUtils.getImageStorage(imagePath);
-            Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
-            studentPicture.setBackground(dImage);
+            studentPicture.setImageBitmap(currUserImage);
+            //Drawable dImage = new BitmapDrawable(getResources(), currUserImage);
+            //studentPicture.setBackground(dImage);
         }
 
         Log.i(TAG, "Current Graph Object: " + mathTestGraph);
@@ -223,8 +224,6 @@ public class Register extends AppCompatActivity {
                         mathTestGraph.addVertex(currStdnt);
                         //making sure whenever a user is saved we're going to save it to the graph
                         mathTestGraph.save(Register.this);
-                        Log.e(TAG, "Register user and add another user to the network");
-                        //TODO: come back and actually add the student to the graph structure
 
                         Context cntx = getApplicationContext();
                         CharSequence text = "student created";
@@ -584,6 +583,7 @@ public class Register extends AppCompatActivity {
         phNumInput.setText("");
         emailInput.setText("");
         importFromContactsBttn.setVisibility(View.INVISIBLE);
+        studentPicture.setImageBitmap(null);
         studentPicture.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));
         studentPicture.setForeground(getResources().getDrawable(R.drawable.ic_launcher_foreground));
     }
