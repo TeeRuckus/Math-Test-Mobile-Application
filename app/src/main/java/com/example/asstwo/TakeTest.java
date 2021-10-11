@@ -45,8 +45,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
     private int numSections;
     private int currSectionPos;
-    private int[] currentOptions;
     private int[][] madeSections;
+    private int userScore;
 
     private FragmentManager fm;
     private QuestionButtons answerButtons;
@@ -69,29 +69,69 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
     @Override
     public void onClickOptionOne(CharSequence input) {
         Log.e(TAG, "Option one which was clikcked " + input);
+        checkAnswer(input);
     }
 
     @Override
     public void onClickOptionTwo(CharSequence input) {
         Log.e(TAG, "Option one which was clikcked " + input);
-
+        checkAnswer(input);
     }
 
     @Override
     public void onClickOptionThree(CharSequence input) {
         Log.e(TAG, "Option one which was clikcked " + input);
-
+        checkAnswer(input);
     }
 
     @Override
     public void onClickOptionFour(CharSequence input) {
         Log.e(TAG, "Option one which was clikcked " + input);
-
+        checkAnswer(input);
     }
 
     @Override
     public void onClickAnswer(CharSequence input) {
         Log.e(TAG, "Typed in answer: " + input);
+        checkAnswer(input);
+    }
+
+    public void checkAnswer(CharSequence inAnswer)
+    {
+        int currSize = takenQuestions.size();
+        MenuItem currQuestion = takenQuestions.get(currSize - 1);
+        int currAnswer = currQuestion.getAnswer();
+        String inAnswerString = inAnswer.toString();
+        String currAnswerString =  Integer.toString(currAnswer);
+
+        if(currAnswerString.equals(inAnswerString))
+        {
+            Toast.makeText(TakeTest.this, " +10 Correct Answer", Toast.LENGTH_SHORT).show();
+            //cancelling the previous time and starting a new one so that the will have enough time
+            //to see their result of the question and start next question
+            cancelTimer();
+            userScore += 10;
+            currQuestion.setCurrScore(userScore);
+            currentScore.setText(Integer.toString(userScore));
+            currentScore.setTextColor(getResources().getColor(android.R.color.holo_green_dark, getTheme()));
+            startTimer(1);
+
+        }
+        else
+        {
+            Toast.makeText(TakeTest.this, " -5 Incorrect! Correct Answer: " + currAnswerString
+            ,Toast.LENGTH_SHORT).show();
+            //cancelling the previous timer and starting a new one so that will have enough time
+            //to see their result of the question and srart the next question
+            cancelTimer();
+            userScore -= 5;
+            currQuestion.setCurrScore(userScore);
+            currentScore.setText(Integer.toString(userScore));
+            currentScore.setTextColor(getResources().getColor(android.R.color.holo_red_dark, getTheme()));
+            startTimer(1);
+        }
+
+
     }
 
     @Override
@@ -290,7 +330,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         question.setText(inQuestion.getQuestion());
         //time.setText(Integer.toString(inQuestion.getTime()));
         questionNumber.setText(Integer.toString(takenQuestions.size()));
-        currentScore.setText("100");
         startTimer(inQuestion.getTime());
 
     }

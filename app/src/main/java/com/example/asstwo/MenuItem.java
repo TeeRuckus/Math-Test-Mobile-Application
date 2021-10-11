@@ -11,6 +11,7 @@ public class MenuItem {
     private int answer;
     private int[] options;
     private String response;
+    private int currScore;
 
     //default constructor of the class
     public MenuItem()
@@ -19,7 +20,8 @@ public class MenuItem {
         time = 60;
         answer = 2;
         options = new int[] {3,2,4,11};
-        response = "";
+        response = "DID NOT ANSWER";
+        currScore = 0;
     }
 
     //alternate constructor of the class
@@ -31,7 +33,8 @@ public class MenuItem {
         this.time = inTime;
         this.answer = inAnswer;
         options = inOptions;
-        response = "";
+        response = "DID NOT ANSWER";
+        currScore = 0;
     }
 
     //accessor methods for each menu item
@@ -58,6 +61,11 @@ public class MenuItem {
     public void setAnswer(String inAnswer)
     {
         response = new String(inAnswer);
+    }
+
+    public void setCurrScore(int inScore)
+    {
+        currScore += inScore;
     }
 
     // this is going to tell us how many sections of answers are avaiable in sets of 4 so that it can
