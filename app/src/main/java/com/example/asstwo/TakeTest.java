@@ -144,6 +144,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             userScore += 10;
             currQuestion.setCurrScore(userScore);
             Log.e(TAG, "Set score by the programme: " + userScore);
+            Log.e(TAG, "Retrieved score by the programme: " + currQuestion.getScore());
             currentScore.setText(Integer.toString(userScore));
             currentScore.setTextColor(getResources().getColor(android.R.color.holo_green_dark, getTheme()));
             startTimer(1);
@@ -251,6 +252,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                     int size = takenQuestions.size();
                     MenuItem currQuestion = takenQuestions.get(size - 1);
                     currQuestion.setElapsedTime(userTime);
+                    currQuestion.setCurrScore(userScore);
 
                     historyEntry.setTitle(currTitle);
                     historyEntry.setQuestions(takenQuestions);

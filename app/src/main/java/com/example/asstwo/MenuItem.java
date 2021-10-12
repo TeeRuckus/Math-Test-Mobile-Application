@@ -67,6 +67,12 @@ public class MenuItem implements Serializable {
         return this.currScore;
     }
 
+    public String getResponse()
+    {
+        return response;
+    }
+
+
     public void setAnswer(String inAnswer)
     {
         response = new String(inAnswer);

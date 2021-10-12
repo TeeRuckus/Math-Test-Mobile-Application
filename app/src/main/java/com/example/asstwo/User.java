@@ -6,6 +6,7 @@ TODO:
  */
 package com.example.asstwo;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -71,7 +72,6 @@ public abstract class User implements Serializable {
 
     public ArrayList<TestHistory> getHistory()
     {
-        //TODO: you might need to return a new copy of history
         return history;
     }
 
@@ -86,7 +86,8 @@ public abstract class User implements Serializable {
 
 
     public void addHistoryEntry(TestHistory inEntry) {
-        history.add(inEntry);
+        Log.e(TAG, "History has being added: " + inEntry.getScore());
+        this.history.add(inEntry);
     }
 
     public void setLastName(String inLastName) {

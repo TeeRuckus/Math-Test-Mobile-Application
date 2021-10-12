@@ -312,6 +312,7 @@ public class ItemViewRecycler extends Fragment {
             studentName.setEnabled(false);
             studentName.setText(inHistory.getTestTitle());
             Log.e(TAG, "The last score of the test which was taken: " + inHistory.getScore());
+            //TODO: for some reason this is not working at the current moment
             studentScore.setText(Integer.toString(inHistory.getScore()));
         }
 

@@ -9,6 +9,8 @@ TODO:
  */
 package com.example.asstwo;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -17,6 +19,7 @@ import java.util.Set;
 
 public class TestHistory implements Serializable
 {
+    private final String TAG = "TestHistory";
     private String testName;
     private ArrayList<MenuItem> questions;
 
@@ -57,18 +60,19 @@ public class TestHistory implements Serializable
         //cumalitive score of the tests
         int size = questions.size();
         MenuItem lastQuestion = questions.get(size - 1);
+        int score = lastQuestion.getScore();
         return lastQuestion.getScore();
     }
 
     //MUTATORS
     public void setTitle(String inTitle)
     {
-        this.testName = inTitle;
+        this.testName = new String(inTitle);
     }
 
     public void setQuestions(ArrayList<MenuItem> inQuestions)
     {
-        this.questions = inQuestions;
+        this.questions = new ArrayList<MenuItem>(inQuestions);
     }
 
     //private methods
