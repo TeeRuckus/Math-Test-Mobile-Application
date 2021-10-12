@@ -103,7 +103,7 @@ public class QuestionButtons extends Fragment {
 
         if(receivedOptionOne.equals(""))
         {
-            optionOne.setVisibility(View.INVISIBLE);
+            optionOne.setVisibility(View.GONE);
             optionOne.setClickable(false);
         }
         else
@@ -114,7 +114,7 @@ public class QuestionButtons extends Fragment {
 
         if(receivedOptionTwo.equals(""))
         {
-            optionTwo.setVisibility(View.INVISIBLE);
+            optionTwo.setVisibility(View.GONE);
             optionTwo.setClickable(false);
         }
         else
@@ -124,7 +124,7 @@ public class QuestionButtons extends Fragment {
 
         if(receivedOptionThree.equals(""))
         {
-            optionThree.setVisibility(View.INVISIBLE);
+            optionThree.setVisibility(View.GONE);
             optionThree.setClickable(false);
 
         }
@@ -136,7 +136,7 @@ public class QuestionButtons extends Fragment {
 
         if(receivedOptionFour.equals(""))
         {
-            optionFour.setVisibility(View.INVISIBLE);
+            optionFour.setVisibility(View.GONE);
             optionFour.setClickable(false);
         }
         else

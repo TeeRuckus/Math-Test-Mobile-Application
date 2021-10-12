@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class Details extends AppCompatActivity {
 
     private static final String TAG = "Details.";
@@ -29,6 +31,7 @@ public class Details extends AppCompatActivity {
     private Button emailToggleBttn;
     private Button updateBttn;
     private Button testBttn;
+    private Button viewTestHistory;
 
     private String imagePath;
     private Bitmap currUserImage;
@@ -79,8 +82,9 @@ public class Details extends AppCompatActivity {
             if (frag == null)
             {
                 //originally load the view in the phone number view
-                ItemViewRecycler.numbersViewing();
+
                 frag = new ItemViewRecycler();
+                ItemViewRecycler.numbersViewing();
                 fm.beginTransaction()
                         .add(R.id.framePhoneNumbers, frag)
                         .commit();
@@ -175,6 +179,27 @@ public class Details extends AppCompatActivity {
                 }
             });
 
+            viewTestHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    User currUser = mathTestGraph.getVertex(name).getValue();
+                    ArrayList<TestHistory> currHistory = currUser.getHistory();
+
+                    if(currHistory.size() > 0)
+                    {
+                        Intent intent = new Intent(Details.this, StudentViewing.class);
+                        StudentViewing.test();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(Details.this, "User hasn't done any tests", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+
             imagePath = getIntent().getStringExtra("imagePath");
             Log.e(TAG, "the current path: " + imagePath);
 
@@ -210,6 +235,7 @@ public class Details extends AppCompatActivity {
         emailToggleBttn = findViewById(R.id.togglEmailPhoneBttn);
         updateBttn = findViewById(R.id.updateDetails);
         testBttn = findViewById(R.id.takeTestDetails);
+        viewTestHistory = findViewById(R.id.viewHistoryDetails);
     }
 
     @Override

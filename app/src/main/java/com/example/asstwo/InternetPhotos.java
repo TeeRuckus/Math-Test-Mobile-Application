@@ -250,7 +250,7 @@ public class InternetPhotos extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(InternetPhotos.this, "Problem wiht downloading", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InternetPhotos.this, "Problem with downloading", Toast.LENGTH_LONG).show();
                     }
                 });
             } else {

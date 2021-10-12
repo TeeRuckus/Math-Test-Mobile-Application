@@ -71,6 +71,7 @@ public abstract class User implements Serializable {
 
     public ArrayList<TestHistory> getHistory()
     {
+        //TODO: you might need to return a new copy of history
         return history;
     }
 

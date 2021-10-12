@@ -49,6 +49,17 @@ public class TestHistory implements Serializable
         return questions;
     }
 
+    public int getScore()
+    {
+
+        //the total score which the student received for the current test is going to be always the
+        //question which they did for the last question as the questions are going to always set the
+        //cumalitive score of the tests
+        int size = questions.size();
+        MenuItem lastQuestion = questions.get(size - 1);
+        return lastQuestion.getScore();
+    }
+
     //MUTATORS
     public void setTitle(String inTitle)
     {

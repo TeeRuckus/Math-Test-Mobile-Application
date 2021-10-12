@@ -45,6 +45,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
     private static final String TAG = "TakeTest.";
     private String name;
+    private  String currTitle;
     private TextView banner;
     private TextView question;
     private TextView time;
@@ -109,7 +110,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
     @Override
     public void onClickOptionFour(CharSequence input) {
-        Log.e(TAG, "Option one which was clikcked " + input);
+        Log.e(TAG, "Option one which was clicked " + input);
         checkAnswer(input);
     }
 
@@ -142,6 +143,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             cancelTimer();
             userScore += 10;
             currQuestion.setCurrScore(userScore);
+            Log.e(TAG, "Set score by the programme: " + userScore);
             currentScore.setText(Integer.toString(userScore));
             currentScore.setTextColor(getResources().getColor(android.R.color.holo_green_dark, getTheme()));
             startTimer(1);
@@ -170,6 +172,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         setContentView(R.layout.activity_take_test);
         loadUI();
 
+
         mathTestGraph = new Graph();
         mathTestGraph = mathTestGraph.load(TakeTest.this);
         Log.e(TAG, "Has loaded succesfully: " + mathTestGraph.size());
@@ -189,6 +192,11 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
         if (name != null)
         {
+            User currUser = mathTestGraph.getVertex(name).getValue();
+            int numberOfTests = currUser.getHistory().size() + 1;
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            currTitle = "Test: " + numberOfTests + " Started at: " + dtf.format(now);
             banner.setText("Test: " + name);
             setUpButtonFragment();
             //setUpInputFragment();
@@ -238,10 +246,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                     User currUser = mathTestGraph.getVertex(name).getValue();
                     //need to addd one as arrays are going to be zero index. Hence, making it more
                     //human read able by adding a one to the test title
-                    int numberOfTests = currUser.getHistory().size() + 1;
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                    LocalDateTime now = LocalDateTime.now();
-                    String currTitle = "Test: " + numberOfTests + " Finished at: " + dtf.format(now);
 
                     //getting the last question, and setting what the elapsed time has being
                     int size = takenQuestions.size();
@@ -252,6 +256,11 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                     historyEntry.setQuestions(takenQuestions);
                     currUser.addHistoryEntry(historyEntry);
                     mathTestGraph.save(TakeTest.this);
+
+                    //making sure that
+                    cancelTimer();
+                    answerButtons = null;
+                    inputAnswer = null;
 
                     //restaring the detials activity with the current user
                     Intent intent = new Intent(TakeTest.this, Details.class);
@@ -597,7 +606,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override

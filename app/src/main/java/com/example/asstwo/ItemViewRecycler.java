@@ -38,6 +38,7 @@ public class ItemViewRecycler extends Fragment {
     private String currUser;
     private Graph mathTestGraph;
     private ArrayList<Graph.Vertex> tempStudents;
+    private ArrayList<TestHistory> currTests;
 
     private RecyclerView rv;
     private ItemAdapter adapter;
@@ -49,7 +50,8 @@ public class ItemViewRecycler extends Fragment {
     public enum state {
         users,
         addresses,
-        numbers
+        numbers,
+        testViews
     }
 
     private static state currMode;
@@ -111,6 +113,7 @@ public class ItemViewRecycler extends Fragment {
         mathTestGraph = mathTestGraph.load(getActivity());
         //TODO: you will need to make different states for laoding different things depending on
         //where you're in the application
+        currUser = Details.getName();
 
         switch(currMode)
         {
@@ -125,7 +128,6 @@ public class ItemViewRecycler extends Fragment {
                 //TODO: you will need to get the students name here so you can view teh addresses
                 //which they will have saved under them
 
-                currUser = Details.getName();
                 //addresses and numbers are going to be loaded at teh same time as the oncreate
                 //method is only created once
 
@@ -134,12 +136,16 @@ public class ItemViewRecycler extends Fragment {
                     Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
                     emailAddress = currVert.getValue().getEmails();
                     phoneNumbers = currVert.getValue().getNumbers();
-                    break;
                 }
                 else
                 {
                     Log.e(TAG, "can't load student contact emails at the moment");
                 }
+                break;
+
+            case testViews:
+                currTests = mathTestGraph.getVertex(currUser).getValue().getHistory();
+                Log.e(TAG, "The amount of tests which were taken by the user: " + currTests.size());
                 break;
         }
 
@@ -159,14 +165,15 @@ public class ItemViewRecycler extends Fragment {
         rv.setLayoutManager(rvLayout);
         searchUsers = (EditText) view.findViewById(R.id.searchStudent);
         sortOrder = (Spinner) view.findViewById(R.id.sortOrderSpinner);
+        LinearLayout topBanner = view.findViewById(R.id.llOneRecycler);
 
         //TODO: When you have time you should add the code for searching for the students here aswellS
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
+                getContext(), R.array.sort_options, android.R.layout.simple_spinner_item);
         switch(currMode)
         {
             case users:
                 //attaching the sorting methods which are available on the spinner
-                ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
-                        getContext(), R.array.sort_options, android.R.layout.simple_spinner_item);
                 sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sortOrder.setAdapter(sortAdapter);
 
@@ -175,11 +182,17 @@ public class ItemViewRecycler extends Fragment {
             case addresses: case numbers:
                 //hiding the stuff which I don't need which is going to be the whole entire linear
                 //layout including the spinner
-                LinearLayout topBanner = view.findViewById(R.id.llOneRecycler);
-                topBanner.setVisibility(View.INVISIBLE);
-                searchUsers.setMaxHeight(0);
-                sortOrder.setMinimumHeight(0);
-                sortOrder.setVisibility(View.INVISIBLE);
+                topBanner.setVisibility(View.GONE);
+                //searchUsers.setMaxHeight(0);
+                //sortOrder.setMinimumHeight(0);
+                sortOrder.setVisibility(View.GONE);
+                break;
+
+            case testViews:
+                //attaching the sorting methods which are available on the spinner
+                sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sortOrder.setAdapter(sortAdapter);
+                break;
         }
 
 
@@ -199,6 +212,11 @@ public class ItemViewRecycler extends Fragment {
     public static void numbersViewing()
     {
         currMode = state.numbers;
+    }
+
+    public static void testViewing()
+    {
+        currMode = state.testViews;
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder
@@ -246,13 +264,13 @@ public class ItemViewRecycler extends Fragment {
                     studentName.setInputType(InputType.TYPE_CLASS_PHONE);
                     break;
 
+                case testViews:
+                    //they should not be an option to delete students
+                    deleteStudent.setVisibility(View.GONE);
+                    Log.e(TAG, "You will need to implement going to the results page of your programme");
+                    break;
+
             }
-
-
-            //TODO: add the functionality to view students detail page, and to delete the current
-            //student as well
-
-            //TODO: when you're in the email or the phone number order I should put a text watcher here
         }
 
         public void bind(Graph.Vertex inVert)
@@ -286,6 +304,20 @@ public class ItemViewRecycler extends Fragment {
             studentAvatar.setVisibility(View.GONE);
             studentScore.setVisibility(View.GONE);
             studentAvatar.setMaxWidth(0);
+        }
+
+        public void bindTestHistory(TestHistory inHistory)
+        {
+            studentAvatar.setVisibility(View.GONE);
+            studentName.setEnabled(false);
+            studentName.setText(inHistory.getTestTitle());
+            Log.e(TAG, "The last score of the test which was taken: " + inHistory.getScore());
+            studentScore.setText(Integer.toString(inHistory.getScore()));
+        }
+
+        public void bindTestResults(TestHistory inHistory)
+        {
+
         }
     }
 
@@ -346,6 +378,13 @@ public class ItemViewRecycler extends Fragment {
                             notifyDataSetChanged();
                         }
                     });
+                    break;
+
+                case testViews:
+                    holder.bindTestHistory(currTests.get(position));
+
+                    //TODO: you might need to add a delete method here for deleting your student
+                    break;
 
             }
 
@@ -364,6 +403,11 @@ public class ItemViewRecycler extends Fragment {
                     break;
                 case numbers:
                     retSize = phoneNumbers.size();
+                    break;
+
+                case testViews:
+                    retSize = currTests.size();
+                    break;
             }
 
             return retSize;
