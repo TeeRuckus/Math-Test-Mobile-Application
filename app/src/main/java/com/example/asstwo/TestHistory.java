@@ -17,7 +17,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 
-public class TestHistory implements Serializable
+public class TestHistory implements Serializable, Comparable
 {
     private final String TAG = "TestHistory";
     private String testName;
@@ -86,5 +86,28 @@ public class TestHistory implements Serializable
         }
 
         return valid;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        //this funciton is to sort the inputted values in order. Therefore the highest one first, and
+        //then the lowest one is going to be next as well
+        TestHistory inHistory = (TestHistory) o;
+
+        int returnValue = 0;
+        if(this.getScore() == inHistory.getScore())
+        {
+            returnValue = 0;
+        }
+        else if (this.getScore() > inHistory.getScore())
+        {
+            returnValue = -1;
+        }
+        else
+        {
+            returnValue = 1;
+        }
+
+        return returnValue;
     }
 }

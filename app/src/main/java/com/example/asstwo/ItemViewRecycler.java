@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -192,6 +194,32 @@ public class ItemViewRecycler extends Fragment {
                 //attaching the sorting methods which are available on the spinner
                 sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sortOrder.setAdapter(sortAdapter);
+
+                sortOrder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        String selectedItem = adapterView.getItemAtPosition(i).toString();
+                        if (selectedItem.equals("Lowest"))
+                        {
+                            Collections.sort(currTests, Collections.reverseOrder());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else
+                        {
+                            Collections.sort(currTests);
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                        //do nothing in here for the time being
+                    }
+                });
+
+                //seeing if we can attach an on click listener to the spinner object
                 break;
         }
 
@@ -267,7 +295,6 @@ public class ItemViewRecycler extends Fragment {
                 case testViews:
                     //they should not be an option to delete students
                     deleteStudent.setVisibility(View.GONE);
-                    Log.e(TAG, "You will need to implement going to the results page of your programme");
                     break;
 
             }
@@ -383,6 +410,7 @@ public class ItemViewRecycler extends Fragment {
 
                 case testViews:
                     holder.bindTestHistory(currTests.get(position));
+
 
                     //TODO: you might need to add a delete method here for deleting your student
                     break;
