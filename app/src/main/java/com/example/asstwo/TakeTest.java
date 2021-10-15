@@ -147,8 +147,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             Log.e(TAG, "Retrieved score by the programme: " + currQuestion.getScore());
             currentScore.setText(Integer.toString(userScore));
             currentScore.setTextColor(getResources().getColor(android.R.color.holo_green_dark, getTheme()));
-            startTimer(1);
-
+            //startTimer(1);
+            new  MyTask().execute();
         }
         else
         {
@@ -161,7 +161,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             currQuestion.setCurrScore(userScore);
             currentScore.setText(Integer.toString(userScore));
             currentScore.setTextColor(getResources().getColor(android.R.color.holo_red_dark, getTheme()));
-            startTimer(1);
+            //startTimer(1);
+            new  MyTask().execute();
         }
 
 
@@ -259,7 +260,8 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                     currUser.addHistoryEntry(historyEntry);
                     mathTestGraph.save(TakeTest.this);
 
-                    //making sure that
+                    //making sure that all the things are going to be set to null
+                    //so we don't get unexpected behaviour out of the system
                     cancelTimer();
                     answerButtons = null;
                     inputAnswer = null;

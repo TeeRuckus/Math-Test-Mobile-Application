@@ -41,6 +41,8 @@ public class ItemViewRecycler extends Fragment {
     private Graph mathTestGraph;
     private ArrayList<Graph.Vertex> tempStudents;
     private ArrayList<TestHistory> currTests;
+    private ArrayList<TestHistory> tempTests;
+    private ArrayList<TestHistory> sortedTests;
 
     private RecyclerView rv;
     private ItemAdapter adapter;
@@ -53,7 +55,8 @@ public class ItemViewRecycler extends Fragment {
         users,
         addresses,
         numbers,
-        testViews
+        testViews,
+        results
     }
 
     private static state currMode;
@@ -146,8 +149,13 @@ public class ItemViewRecycler extends Fragment {
                 break;
 
             case testViews:
-                currTests = mathTestGraph.getVertex(currUser).getValue().getHistory();
-                Log.e(TAG, "The amount of tests which were taken by the user: " + currTests.size());
+                ArrayList<TestHistory> temp = mathTestGraph.getVertex(currUser).getValue().getHistory();
+                sortedTests = new ArrayList<>(temp);
+                currTests = sortedTests;
+
+                //having a temp array so that then the no option is selected it's going to go to the
+                //original array instead of a sorted array
+                tempTests = new ArrayList<>(temp);
                 break;
         }
 
@@ -176,6 +184,8 @@ public class ItemViewRecycler extends Fragment {
         {
             case users:
                 //attaching the sorting methods which are available on the spinner
+                topBanner.setVisibility(View.GONE);
+                sortOrder.setVisibility(View.GONE);
                 sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sortOrder.setAdapter(sortAdapter);
 
@@ -194,21 +204,35 @@ public class ItemViewRecycler extends Fragment {
                 //attaching the sorting methods which are available on the spinner
                 sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 sortOrder.setAdapter(sortAdapter);
+                searchUsers.setVisibility(View.GONE);
 
+                //TODO: you should have a third option in your drop down menu which is going to be no sorting of the test
                 sortOrder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         String selectedItem = adapterView.getItemAtPosition(i).toString();
                         if (selectedItem.equals("Lowest"))
                         {
+                            //ensuring that we're only sorting the original and not the temp array
+                            //we're re-assigning the current test array back to itself again
+                            currTests = sortedTests;
                             Collections.sort(currTests, Collections.reverseOrder());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else if (selectedItem.equals("Highest"))
+                        {
+                            //ensuring that we're only sorting the original and not the temp array
+                            //we're re-assigning the current test array back to itself again
+                            currTests = sortedTests;
+                            Collections.sort(currTests);
                             adapter.notifyDataSetChanged();
                         }
                         else
                         {
-                            Collections.sort(currTests);
+                            Log.e(TAG, "No option is selected");
+                            //the tempTests is always going to have the unsorted data in it for the programme
+                            currTests = tempTests;
                             adapter.notifyDataSetChanged();
-
                         }
 
                     }
@@ -295,6 +319,20 @@ public class ItemViewRecycler extends Fragment {
                 case testViews:
                     //they should not be an option to delete students
                     deleteStudent.setVisibility(View.GONE);
+
+                    viewStudent.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //trying to see if I can print out all the quesktions in the test.
+                            //this is more of a sanity chec for myself than anything
+                            String currStudent = Details.getName();
+                            Intent intentSecond = new Intent(getActivity(), StudentViewing.class);
+                            StudentViewing.results();
+                            intentSecond.putExtra("test", studentName.getText().toString());
+                            intentSecond.putExtra("name", currStudent);
+                            startActivity(intentSecond);
+                       }
+                    });
                     break;
 
             }

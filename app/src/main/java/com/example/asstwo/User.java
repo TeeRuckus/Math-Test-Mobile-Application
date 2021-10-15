@@ -75,6 +75,24 @@ public abstract class User implements Serializable {
         return history;
     }
 
+    public int indexOfTitle(String inTitle)
+    {
+        int index = -1;
+
+        for  (TestHistory test : history)
+        {
+            index++;
+            if (test.getTestTitle().equals(inTitle))
+            {
+                // once the test has being found the algorithm will now waste time
+                //looking for the remaining tests
+                return index;
+            }
+        }
+
+        return index;
+    }
+
 
     public Avatar getAvatar() {
         return avatar;

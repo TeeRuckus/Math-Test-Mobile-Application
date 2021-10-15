@@ -25,5 +25,15 @@
         android:layout_margin="20dp"
         android:background="@color/paleNight_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/sendEmailBttn"
+        />
+
+    <Button
+        android:id="@+id/sendEmailBttn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/paleNight_ascent_color"
+        android:text="Email"/>
 </RelativeLayout>
