@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -600,16 +601,26 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
 
                 case addresses:
                     holder.bindEmailAddresses(emailAddress.get(position));
-
+                    //only allowing the delete function if they is going to be more than one
+                    //contact in the user
                     holder.deleteStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             String name = Details.getName();
                             Graph.Vertex currVert = mathTestGraph.getVertex(name);
                             ArrayList<String> currAddresses = currVert.getValue().getEmails();
-                            currAddresses.remove(holder.studentName.getHint().toString());
-                            emailAddress = currAddresses;
-                            notifyDataSetChanged();
+
+                            if (currAddresses.size() > 1)
+                            {
+                                currAddresses.remove(holder.studentName.getHint().toString());
+                                emailAddress = currAddresses;
+                                mathTestGraph.save(getActivity());
+                                notifyDataSetChanged();
+                            }
+                            else
+                            {
+                                Toast.makeText(getActivity(), "need atleast one email address", Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     break;
@@ -617,15 +628,25 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 case numbers:
                     holder.bindPhoneNumbers(phoneNumbers.get(position));
 
+                    //only allow the delete if they is more than one contact
                     holder.deleteStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             String name = Details.getName();
                             Graph.Vertex currVert = mathTestGraph.getVertex(name);
                             ArrayList<String> currNumbers = currVert.getValue().getNumbers();
-                            currNumbers.remove(holder.studentName.getHint().toString());
-                            phoneNumbers = currNumbers;
-                            notifyDataSetChanged();
+
+                            if (currNumbers.size() > 1)
+                            {
+                                currNumbers.remove(holder.studentName.getHint().toString());
+                                phoneNumbers = currNumbers;
+                                mathTestGraph.save(getActivity());
+                                notifyDataSetChanged();
+                            }
+                            else
+                            {
+                                Toast.makeText(getActivity(), "need at least one phone number", Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     break;
