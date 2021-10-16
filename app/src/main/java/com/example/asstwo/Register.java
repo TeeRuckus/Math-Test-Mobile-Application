@@ -71,11 +71,12 @@ public class Register extends AppCompatActivity {
     //switches activities
     private static String firstNameSave;
     private static String lastNameSave;
-    private static String phNumSave;
-    //private static String  emailSave;
+    //private static String phNumSave;
+    private static ArrayList<String> phNumSave;
     private static ArrayList<String> emailSave;
 
     private static int emailSaveIndex;
+    private static int phNumSaveIndex;
 
     @Override
     public void onBackPressed() {
@@ -102,7 +103,18 @@ public class Register extends AppCompatActivity {
         if (emailSave == null)
         {
             emailSave = new ArrayList<>();
+            //just adding some blank text
+            emailSave.add("");
             emailSaveIndex = 0;
+        }
+
+        //making sure a new array list is going to be maed on teh intital launch of this  activity
+        if(phNumSave == null)
+        {
+            phNumSave = new ArrayList<>();
+            phNumSave.add("");
+            phNumSaveIndex = 0;
+
         }
 
         if (firstNameSave != null)
@@ -115,17 +127,32 @@ public class Register extends AppCompatActivity {
             studentLastName.setText(lastNameSave);
         }
 
-        if(phNumSave != null)
+        if(phNumSave.size() >= 0)
         {
-            phNumInput.setText(phNumSave);
+            if (phNumSaveIndex == 0)
+            {
+                phNumInput.setText(phNumSave.get(0));
+            }
+            else
+            {
+                int indexPhone = phNumSave.size() - 1;
+                phNumInput.setText(phNumSave.get(indexPhone));
+            }
         }
 
-        if(emailSave.size() >= 1)
+        if(emailSave.size() >= 0)
         {
-            //getting the last email saved and setting that as the view of the register form of the app
-            Log.e(TAG, "am I inside of here on the save or not?");
-            int index = emailSave.size() - 1;
-            emailInput.setText(emailSave.get(index));
+
+            if  (emailSave.size() == 0)
+            {
+                emailInput.setText(emailSave.get(0));
+            }
+            else
+            {
+                //getting the last email saved and setting that as the view of the register form of the app
+                int index = emailSave.size() - 1;
+                emailInput.setText(emailSave.get(index));
+            }
         }
 
         imagePath = getIntent().getStringExtra("imagePath");
@@ -195,7 +222,14 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                phNumSave = phNumInput.getText().toString();
+                if(phNumSave.size() == 0)
+                {
+                    phNumSave.add(phNumInput.getText().toString());
+                }
+                else
+                {
+                    phNumSave.set(phNumSaveIndex, phNumInput.getText().toString());
+                }
 
             }
         });
@@ -240,9 +274,13 @@ public class Register extends AppCompatActivity {
                         Bitmap image = studentPicture.getDrawingCache();
                         Avatar tempAvatar = new Avatar("profile picture", image);
                         currStdnt.setAvatar(tempAvatar);
-                        //email save is going to have all the emails which we have even when we
+                        //emailSave is going to have all the emails which we have even when we
                         //switch around activities
                         currStdnt.setEmails(emailSave);
+
+                        //phSave is gong to have all the p0hone numbers which have beinga added when
+                        //switching around activities
+                        currStdnt.setPhoneNumbers(phNumSave);
                         mathTestGraph.addVertex(currStdnt);
                         //making sure whenever a user is saved we're going to save it to the graph
                         mathTestGraph.save(Register.this);
@@ -254,6 +292,8 @@ public class Register extends AppCompatActivity {
                         toast.show();
                         clearText();
                         currStdnt = new Student();
+                        emailSave = new ArrayList<>();
+                        phNumSave = new ArrayList<>();
                     }
                     catch(IllegalArgumentException e)
                     {
@@ -299,6 +339,8 @@ public class Register extends AppCompatActivity {
                 try
                 {
                     currStdnt.addPhoneNum(phNumInput.getText().toString());
+                    phNumSaveIndex++;
+                    phNumSave.add(phNumInput.getText().toString());
                     phNumInput.setText("");
                     //if an error had occurred set the error dialogue to blank after correct input
                     phoneNumError.setText("");
@@ -308,7 +350,6 @@ public class Register extends AppCompatActivity {
                     Log.e(TAG, err.getMessage());
                     phoneNumError.setText("Invalid Number format");
                 }
-
                 catch (IndexOutOfBoundsException err)
                 {
                     Log.e(TAG, "Maximum of 10 numbers reached");
