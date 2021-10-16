@@ -83,6 +83,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
         User student = mathTestGraph.getVertex(currUser).getValue();
         ArrayList<String> emails = student.getEmails();
         String [] emailsArray = makeEmailArray(emails);
+        String body = null;
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SENDTO);
@@ -91,9 +92,61 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
         //you can add all the emails which are going to be registered under the users account
         intent.putExtra(Intent.EXTRA_EMAIL, emailsArray);
         intent.putExtra(Intent.EXTRA_SUBJECT, "Test results for " + currUser);
-        intent.putExtra(Intent.EXTRA_TEXT, "body of the text");
-        startActivityForResult(intent, REQUEST_EMAIL);
 
+        switch (userSend)
+        {
+            case normal:
+                body = makeEmailBody(tempTests, "chronological", currUser);
+                break;
+
+            case lowest:
+                body = makeEmailBody(currTests, "lowest grading to highest grading", currUser);
+                break;
+
+            case highest:
+                body = makeEmailBody(currTests, "highest grading to lowest grading", currUser);
+                break;
+        }
+
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        startActivityForResult(intent, REQUEST_EMAIL);
+    }
+
+    public String makeEmailBody(ArrayList<TestHistory> inTests, String sortOrder, String name)
+    {
+        String emailBody;
+
+        emailBody = "Dear " + name  + ", \n \n"+
+                "I hope this email finds you well. Please find attached below as requested a " +
+                "transcript of your math test results in " + sortOrder + " order. \n \n";
+
+        for (int ii = 0; ii < inTests.size() ; ii ++)
+        {
+            TestHistory currTest = inTests.get(ii);
+            ArrayList<MenuItem> questions = currTest.getQuestions();
+            emailBody += "\t" + currTest.getTestTitle() + "\n \n";
+
+            for (int jj = 0; jj < questions.size(); jj++)
+            {
+                MenuItem currQuestion = questions.get(jj);
+
+                emailBody += "\t \t Question #" + (jj + 1) + ":" +
+                        "\t \t \t " + currQuestion.getQuestion() + "\n" +
+                        "\t \t \t Correct Answer: " + currQuestion.getAnswer() + "\n" +
+                        "\t \t \t Your response: " + currQuestion.getResponse() + "\n" +
+                        "\t \t \t Score at question: " + currQuestion.getScore() + "\n" +
+                        "\t \t \t Available time: " + currQuestion.getTime() + "\n" +
+                        "\t \t \t Elapsed time at question: " + currQuestion.getElapsedTime() + "\n \n";
+            }
+
+            emailBody += "\n \n";
+        }
+
+        emailBody += "Kind Regards, \n " +
+                "the math test Team.";
+
+
+        return emailBody;
     }
 
     public String [] makeEmailArray(ArrayList<String> inArrayList)
@@ -311,6 +364,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                             currTests = sortedTests;
                             Collections.sort(currTests, Collections.reverseOrder());
                             adapter.notifyDataSetChanged();
+                            userSend = sendOrder.lowest;
                         }
                         else if (selectedItem.equals("Highest"))
                         {
@@ -319,13 +373,15 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                             currTests = sortedTests;
                             Collections.sort(currTests);
                             adapter.notifyDataSetChanged();
+                            userSend = sendOrder.highest;
+
                         }
                         else
                         {
-                            Log.e(TAG, "No option is selected");
                             //the tempTests is always going to have the unsorted data in it for the programme
                             currTests = tempTests;
                             adapter.notifyDataSetChanged();
+                            userSend = sendOrder.normal;
                         }
 
                     }
