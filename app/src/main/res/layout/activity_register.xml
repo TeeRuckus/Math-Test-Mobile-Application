@@ -37,9 +37,9 @@
 
     <ImageButton
         android:id="@+id/importIcon"
-        android:layout_below="@id/studentPictureView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/studentPictureView"
         android:layout_centerHorizontal="true"
         android:background="@color/paleNight_background"
         app:srcCompat="@android:drawable/ic_menu_set_as" />

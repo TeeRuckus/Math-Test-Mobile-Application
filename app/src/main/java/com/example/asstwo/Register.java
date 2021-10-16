@@ -2,9 +2,11 @@ package com.example.asstwo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,9 +44,8 @@ public class Register extends AppCompatActivity {
 
 
     private static final String TAG = "Register.";
-    private static final int REQUEST_READ_CONTACT_PERMISSION = 4;
-
-
+    private final int REQUEST_READ_CONTACT_PERMISSION = 4;
+    private final int REQUEST_CONTACT = 7000;
     private ImageButton studentPicture;
     private ImageButton importFromContactsBttn;
     private EditText studentFirstName;
@@ -297,13 +299,21 @@ public class Register extends AppCompatActivity {
         importFromContactsBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context cntx = getApplicationContext();
-                CharSequence text = "Importing Contact";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(cntx, text, duration);
-                toast.show();
-                importPhoneNumber();
-                importEmailAddress();
+                //importPhoneNumber();
+                //importEmailAddress();
+
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_PICK);
+                //making it that we can only access the phone numbers of the mobile phone
+                intent.setData(ContactsContract.Contacts.CONTENT_URI);
+
+                //granting the necessary contact read permissions to the user
+                if (ContextCompat.checkSelfPermission(Register.this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(Register.this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACT_PERMISSION);
+                }
+                startActivityForResult(intent, REQUEST_CONTACT);
             }
         });
 
@@ -318,6 +328,97 @@ public class Register extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CONTACT && resultCode == RESULT_OK)
+        {
+            //fill in the text fields for the edit text of the found information of the user
+
+            Uri contactUri = data.getData();
+            String[] queryFileds = new String[] {
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.DISPLAY_NAME
+            };
+
+            Cursor c = getContentResolver().query(
+                    contactUri, queryFileds, null, null, null
+            );
+
+            try
+            {
+                if(c.getCount() > 0)
+                {
+                    c.moveToFirst();
+                    //getting what the id is going to be associated with the current contact
+                    this.contactId = c.getInt(0);
+                    String contactName = c.getString(1);
+                    String firstName = contactName.split(" ")[0];
+                    String lastName = contactName.split(" ")[1];
+                    studentFirstName.setText(firstName);
+                    studentLastName.setText(lastName);
+                }
+            }
+            finally
+            {
+                //we should always close the cursor no matter what is going to happen to the programme
+                c.close();
+            }
+
+            //getting the phone number of the student
+            Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+            String[] queryFieldsPhone = new  String[] {
+                    ContactsContract.CommonDataKinds.Phone.NUMBER
+            };
+
+            c = getContentResolver().query(
+                    phoneUri, queryFieldsPhone, null, null, null
+            );
+
+            try
+            {
+                if(c.getCount() > 0)
+                {
+                    c.moveToFirst();
+                    String phoneNumber  = c.getString(0);
+                    phNumInput.setText(phoneNumber);
+                }
+            }
+            finally
+            {
+                //we should close the cursor no matter what is going to happen to the programme
+                c.close();
+
+            }
+            //getting the email address of the student
+            //getting the email for the user
+
+            Uri  emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+            String [] queryFieldsEmail = new String [] {
+                    ContactsContract.CommonDataKinds.Email.ADDRESS
+            };
+
+            c = getContentResolver().query(
+                    emailUri, queryFieldsEmail, null, null, null
+            );
+
+            try
+            {
+                if(c.getCount() > 0)
+                {
+                    c.moveToFirst();
+                    String email = c.getString(0);
+                    emailInput.setText(email);
+                }
+            }
+            finally {
+                //we should always close the cursor no matter what happens to the programme
+                c.close();
+            }
+        }
     }
 
     /*
@@ -570,10 +671,6 @@ public class Register extends AppCompatActivity {
         addMoreEmail = findViewById(R.id.addMoreEmailBttn);
         registerBttn = findViewById(R.id.registerStudentBttn);
         phoneNumError = findViewById(R.id.phoneNumError);
-
-        //the import icon should only show up when we're imporing a contact into teh programme
-        importFromContactsBttn.setVisibility(View.INVISIBLE);
-        importFromContactsBttn.setClickable(false);
     }
 
     public void clearText()
@@ -582,7 +679,6 @@ public class Register extends AppCompatActivity {
         studentLastName.setText("");
         phNumInput.setText("");
         emailInput.setText("");
-        importFromContactsBttn.setVisibility(View.INVISIBLE);
         studentPicture.setImageBitmap(null);
         studentPicture.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));
         studentPicture.setForeground(getResources().getDrawable(R.drawable.ic_launcher_foreground));
