@@ -195,9 +195,6 @@ public class UserPhoto extends AppCompatActivity {
     {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        //TODO: you will need make this exclusive to image files which are currently on your external
-        //storagte
-        //allowing it to get everything which is in our phone right now
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_SD_CARD);
     }

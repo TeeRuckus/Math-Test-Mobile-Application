@@ -1,6 +1,7 @@
 package com.example.asstwo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
     private Graph mathTestGraph;
     private static String test;
     private CharSequence testToOpen;
+    private static final int REQUEST_EMAIL = 1234;
 
     @Override
     public void onListSelected(CharSequence currTitle) {
@@ -143,10 +145,33 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
                     Toast.makeText(StudentViewing.this, "Name not received", Toast.LENGTH_LONG).show();
                 }
 
+                //the button is going to be only visible on results anyways
+
+                emailBttn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        email();
+                    }
+                });
+
                 break;
         }
 
     }
+
+    public void email()
+    {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SENDTO);
+        //we only allow to open mailing apps in this intent
+        intent.setData(Uri.parse("mailto:"));
+        //you can add all the emails which are going to be registered under the users account
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"tawanakwaramba@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Test results for jeffery");
+        intent.putExtra(Intent.EXTRA_TEXT, "body of the text");
+        startActivityForResult(intent, REQUEST_EMAIL);
+    }
+
 
     public static void students()
     {

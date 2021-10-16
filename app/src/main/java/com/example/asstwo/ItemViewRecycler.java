@@ -460,7 +460,7 @@ public class ItemViewRecycler extends Fragment {
         {
             question++;
             String description =
-                    "Question #" + question + "\n" +
+                    "Question #" + question + "\n \n" +
                             "\t" + menuItem.getQuestion() + "\n" +
                             "\t" + "Correct Answer: " + menuItem.getAnswer() + "\n" +
                             "\t" + "Your response: " + menuItem.getResponse() + "\n" +
