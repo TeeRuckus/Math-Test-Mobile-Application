@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StudentViewing extends AppCompatActivity implements ItemViewRecycler.onClickRowListener {
+public class StudentViewing extends AppCompatActivity {
 
 
     private final String TAG = "StudentViewing";
@@ -25,9 +25,11 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
     private static String test;
     private CharSequence testToOpen;
     private static final int REQUEST_EMAIL = 1234;
+    private emailListener listenerSend;
 
-    @Override
+   /* @Override
     public void onListSelected(CharSequence currTitle) {
+        Log.e(TAG, "AM I ACTUALLY GOING TO BE USEFUL TO YOU MY MASTER");
         testToOpen = currTitle;
         Log.e(TAG, "inside of me? " + currTitle);
 
@@ -41,7 +43,7 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
                     .add(R.id.viewingContainer, frag)
                     .commit();
         }
-    }
+    }*/
 
     private enum state {
         students,
@@ -76,6 +78,7 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
         setContentView(R.layout.activity_student_viewing);
         emailBttn = findViewById(R.id.sendEmailBttn);
         banner = findViewById(R.id.bannerStudentViewing);
+        String name = null;
 
         //loading the graph when this is created
         mathTestGraph = new Graph();
@@ -113,10 +116,21 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
                             .commit();
 
                 }
+
+                emailBttn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String name = getIntent().getStringExtra("name");
+                        String test = getIntent().getStringExtra("test");
+                        listenerSend.emailTo(name);
+                        //email(name, test);
+                    }
+                });
+
                 break;
 
             case results:
-                String name = getIntent().getStringExtra("name");
+                name = getIntent().getStringExtra("name");
                 test = getIntent().getStringExtra("test");
                 banner.setText("Results: " + name.split(" ")[0]);
 
@@ -147,19 +161,38 @@ public class StudentViewing extends AppCompatActivity implements ItemViewRecycle
 
                 //the button is going to be only visible on results anyways
 
-                emailBttn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        email();
-                    }
-                });
 
                 break;
         }
 
     }
 
-    public void email()
+    public interface emailListener {
+        void emailTo(String name);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+        if (fragment instanceof emailListener)
+        {
+            listenerSend = (emailListener) fragment;
+        }
+        else
+        {
+            throw new RuntimeException(fragment.toString() +
+                    " must implement email listener");
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        listenerSend = null;
+    }
+
+    public void email(String name, String test)
     {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SENDTO);

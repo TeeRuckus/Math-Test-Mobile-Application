@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,7 @@ import java.util.Collections;
  * Use the {@link ItemViewRecycler#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ItemViewRecycler extends Fragment {
+public class ItemViewRecycler extends Fragment implements StudentViewing.emailListener {
 
     private static final String TAG = "ItemViewRecycler";
     //the places where we're going to store the data which we have read into the programme
@@ -46,6 +47,7 @@ public class ItemViewRecycler extends Fragment {
     private ArrayList<TestHistory> tempTests;
     private ArrayList<TestHistory> sortedTests;
     private ArrayList<MenuItem> testInformation;
+    private static final int REQUEST_EMAIL = 1234;
 
     private onClickRowListener listener;
 
@@ -64,16 +66,55 @@ public class ItemViewRecycler extends Fragment {
         results
     }
 
+    public enum sendOrder {
+        normal,
+        lowest,
+        highest
+    }
+
     private static state currMode;
+    private sendOrder userSend;
 
+    @Override
+    public void emailTo(String name) {
+        Log.e(TAG, "I am going to send an email to the following person");
 
-    //an interface method which is going to be used to listen on whcih row was selected in the programme
+        //getting the person which we should be sending the results too
+        User student = mathTestGraph.getVertex(currUser).getValue();
+        ArrayList<String> emails = student.getEmails();
+        String [] emailsArray = makeEmailArray(emails);
 
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SENDTO);
+        //we only allow to open mailing apps in this intent
+        intent.setData(Uri.parse("mailto:"));
+        //you can add all the emails which are going to be registered under the users account
+        intent.putExtra(Intent.EXTRA_EMAIL, emailsArray);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Test results for " + currUser);
+        intent.putExtra(Intent.EXTRA_TEXT, "body of the text");
+        startActivityForResult(intent, REQUEST_EMAIL);
+
+    }
+
+    public String [] makeEmailArray(ArrayList<String> inArrayList)
+    {
+        String [] emails = new String[inArrayList.size()];
+
+        for (int ii = 0; ii < emails.length; ii++)
+        {
+            emails[ii] = inArrayList.get(ii);
+        }
+
+        return emails;
+    }
+
+    //TODO: you will need to find out if you actually use this, and delete it if you don't actually
+    //actually use it
     public interface onClickRowListener {
         void onListSelected(CharSequence currTitle);
     }
 
-    @Override
+    /*@Override
     public void onAttach(Context context) {
         super.onAttach(context);
         // checking if the current activity which we're attaching ourselves is going to
@@ -97,7 +138,7 @@ public class ItemViewRecycler extends Fragment {
         super.onDetach();
         //removing the listener when it has being detached
         listener = null;
-    }
+    }*/
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -391,7 +432,7 @@ public class ItemViewRecycler extends Fragment {
                             Intent intentSecond = new Intent(getActivity(), StudentViewing.class);
                             StudentViewing.results();
                             String currTest = studentName.getText().toString();
-                            listener.onListSelected(currTest);
+                            //listener.onListSelected(currTest);
                             intentSecond.putExtra("name", currStudent);
                             intentSecond.putExtra("test", currTest);
                             startActivity(intentSecond);
