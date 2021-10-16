@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,11 +39,15 @@ public class ItemViewRecycler extends Fragment {
     private ArrayList<String> phoneNumbers;
     private ArrayList<String> emailAddress;
     private String currUser;
+    private String currTestTaken;
     private Graph mathTestGraph;
     private ArrayList<Graph.Vertex> tempStudents;
     private ArrayList<TestHistory> currTests;
     private ArrayList<TestHistory> tempTests;
     private ArrayList<TestHistory> sortedTests;
+    private ArrayList<MenuItem> testInformation;
+
+    private onClickRowListener listener;
 
     private RecyclerView rv;
     private ItemAdapter adapter;
@@ -61,6 +66,38 @@ public class ItemViewRecycler extends Fragment {
 
     private static state currMode;
 
+
+    //an interface method which is going to be used to listen on whcih row was selected in the programme
+
+    public interface onClickRowListener {
+        void onListSelected(CharSequence currTitle);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // checking if the current activity which we're attaching ourselves is going to
+        // implement this interface
+
+        if (context instanceof onClickRowListener)
+        {
+            listener = (onClickRowListener) context;
+        }
+        else
+        {
+            // if the user has forgotten to implmenet the listener, we should complai
+
+            throw new RuntimeException(context.toString() +
+                    " must implement onClickRowListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //removing the listener when it has being detached
+        listener = null;
+    }
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -157,6 +194,21 @@ public class ItemViewRecycler extends Fragment {
                 //original array instead of a sorted array
                 tempTests = new ArrayList<>(temp);
                 break;
+
+            case results:
+                currTestTaken = StudentViewing.getTest();
+
+                if(currTestTaken != null)
+                {
+                    User currStudent = mathTestGraph.getVertex(currUser).getValue();
+                    int index = currStudent.indexOfTitle(currTestTaken);
+                    testInformation = currStudent.getHistory().get(index).getQuestions();
+                }
+                else
+                {
+                    Log.e(TAG, "Have not received the test name properly");
+                }
+                break;
         }
 
     }
@@ -245,6 +297,9 @@ public class ItemViewRecycler extends Fragment {
 
                 //seeing if we can attach an on click listener to the spinner object
                 break;
+            case results:
+                topBanner.setVisibility(View.GONE);
+                break;
         }
 
 
@@ -271,6 +326,11 @@ public class ItemViewRecycler extends Fragment {
         currMode = state.testViews;
     }
 
+    public static void results()
+    {
+        currMode = state.results;
+    }
+
     private class ItemViewHolder extends RecyclerView.ViewHolder
     {
         private static final String TAG = "ItemViewHolder";
@@ -281,6 +341,8 @@ public class ItemViewRecycler extends Fragment {
         private ImageButton deleteStudent;
         private LinearLayout currLayout;
         private Graph.Vertex vert;
+
+
 
 
         public ItemViewHolder(LayoutInflater li, ViewGroup parent) {
@@ -328,15 +390,29 @@ public class ItemViewRecycler extends Fragment {
                             String currStudent = Details.getName();
                             Intent intentSecond = new Intent(getActivity(), StudentViewing.class);
                             StudentViewing.results();
-                            intentSecond.putExtra("test", studentName.getText().toString());
+                            String currTest = studentName.getText().toString();
+                            listener.onListSelected(currTest);
                             intentSecond.putExtra("name", currStudent);
+                            intentSecond.putExtra("test", currTest);
                             startActivity(intentSecond);
                        }
                     });
+
+                    break;
+                case results:
+                    //this view should be read only hence, disabling the unnecassary information which
+                    //I don't need for this view
+                    viewStudent.setVisibility(View.GONE);
+                    deleteStudent.setVisibility(View.GONE);
+                    studentAvatar.setVisibility(View.GONE);
+                    studentScore.setVisibility(View.GONE);
+                    studentName.setEnabled(false);
                     break;
 
             }
         }
+
+
 
         public void bind(Graph.Vertex inVert)
         {
@@ -376,19 +452,30 @@ public class ItemViewRecycler extends Fragment {
             studentAvatar.setVisibility(View.GONE);
             studentName.setEnabled(false);
             studentName.setText(inHistory.getTestTitle());
-            Log.e(TAG, "The last score of the test which was taken: " + inHistory.getScore());
             //TODO: for some reason this is not working at the current moment
             studentScore.setText(Integer.toString(inHistory.getScore()));
         }
 
-        public void bindTestResults(TestHistory inHistory)
+        public void bindTestResults(MenuItem menuItem, int question)
         {
+            question++;
+            String description =
+                    "Question #" + question + "\n" +
+                            "\t" + menuItem.getQuestion() + "\n" +
+                            "\t" + "Correct Answer: " + menuItem.getAnswer() + "\n" +
+                            "\t" + "Your response: " + menuItem.getResponse() + "\n" +
+                            "\t" + "Score at question: " + menuItem.getScore() + "\n" +
+                            "\t" + "Available time: " + menuItem.getTime() + "\n" +
+                            "\t" +  "Elapsed time at question: " + menuItem.getElapsedTime();
 
+            studentName.setText(description);
         }
     }
 
     public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder>
     {
+        private onClickRowListener listener;
+
         @NonNull
         @Override
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
@@ -453,6 +540,11 @@ public class ItemViewRecycler extends Fragment {
                     //TODO: you might need to add a delete method here for deleting your student
                     break;
 
+
+                case results:
+                    holder.bindTestResults(testInformation.get(position), position);
+                    break;
+
             }
 
         }
@@ -474,6 +566,10 @@ public class ItemViewRecycler extends Fragment {
 
                 case testViews:
                     retSize = currTests.size();
+                    break;
+
+                case results:
+                    retSize = testInformation.size();
                     break;
             }
 

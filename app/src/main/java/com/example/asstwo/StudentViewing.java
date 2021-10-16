@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,13 +14,32 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StudentViewing extends AppCompatActivity {
+public class StudentViewing extends AppCompatActivity implements ItemViewRecycler.onClickRowListener {
 
 
     private final String TAG = "StudentViewing";
     private TextView banner;
     private Button emailBttn;
     private Graph mathTestGraph;
+    private static String test;
+    private CharSequence testToOpen;
+
+    @Override
+    public void onListSelected(CharSequence currTitle) {
+        testToOpen = currTitle;
+        Log.e(TAG, "inside of me? " + currTitle);
+
+        FragmentManager fm = getSupportFragmentManager();
+        ItemViewRecycler frag = (ItemViewRecycler) fm.findFragmentById(R.id.viewingContainer);
+        if (frag == null) {
+            //making sure that the users are going to be displayed on the screen and nothing else
+            ItemViewRecycler.usersViewing();
+            frag = new ItemViewRecycler();
+            fm.beginTransaction()
+                    .add(R.id.viewingContainer, frag)
+                    .commit();
+        }
+    }
 
     private enum state {
         students,
@@ -52,8 +72,8 @@ public class StudentViewing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_viewing);
-        banner = findViewById(R.id.bannerStudentViewing);
         emailBttn = findViewById(R.id.sendEmailBttn);
+        banner = findViewById(R.id.bannerStudentViewing);
 
         //loading the graph when this is created
         mathTestGraph = new Graph();
@@ -83,7 +103,6 @@ public class StudentViewing extends AppCompatActivity {
                 banner.setText("Tests");
                 if (frag == null)
                 {
-                    Log.e(TAG, "I have entered where the tests are going to be for the programme");
                     //making sure that the users are going to be displayed on the screen and nothing else
                     ItemViewRecycler.testViewing();
                     frag = new ItemViewRecycler();
@@ -95,27 +114,35 @@ public class StudentViewing extends AppCompatActivity {
                 break;
 
             case results:
-                String testTitle = getIntent().getStringExtra("test");
                 String name = getIntent().getStringExtra("name");
+                test = getIntent().getStringExtra("test");
                 banner.setText("Results: " + name.split(" ")[0]);
-                Log.e(TAG, "The test result to be viewed: " + name);
 
-                User currUser = mathTestGraph.getVertex(name).getValue();
-                ArrayList<TestHistory> currUsersTest = currUser.getHistory();
-                Log.e(TAG, "The current users test: " + currUsersTest);
-                int index = currUser.indexOfTitle(testTitle);
-                Log.e(TAG, "the found index: " + index);
-
-                if (testTitle != null)
+                if (name != null )
                 {
+                    if (test != null)
+                    {
+                        //doing our magical shit here
+                        if (frag == null)
+                        {
+                            ItemViewRecycler.results();
+                            frag= new ItemViewRecycler();
+                            fm.beginTransaction()
+                                    .add(R.id.viewingContainer, frag)
+                                    .commit();
+                        }
 
+                    }
+                    else
+                    {
+                        Toast.makeText(StudentViewing.this, "Test not received", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
-                    Toast.makeText(StudentViewing.this, "Test not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StudentViewing.this, "Name not received", Toast.LENGTH_LONG).show();
                 }
 
-                //open up the results page of the programme
                 break;
         }
 
@@ -126,7 +153,6 @@ public class StudentViewing extends AppCompatActivity {
         currState = state.students;
     }
 
-
     public static void test()
     {
         currState = state.test;
@@ -135,5 +161,9 @@ public class StudentViewing extends AppCompatActivity {
     public static void results()
     {
         currState = state.results;
+    }
+
+    public static String getTest() {
+        return test;
     }
 }

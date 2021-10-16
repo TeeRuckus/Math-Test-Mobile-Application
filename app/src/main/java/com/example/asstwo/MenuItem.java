@@ -67,6 +67,11 @@ public class MenuItem implements Serializable {
         return this.currScore;
     }
 
+    public int getElapsedTime()
+    {
+        return this.elapsedTime;
+    }
+
     public String getResponse()
     {
         return response;

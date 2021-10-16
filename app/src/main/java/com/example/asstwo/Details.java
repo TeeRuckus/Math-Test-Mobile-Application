@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class Details extends AppCompatActivity {
+public class Details extends AppCompatActivity implements ItemViewRecycler.onClickRowListener {
 
     private static final String TAG = "Details.";
     private Graph mathTestGraph;
@@ -248,5 +248,10 @@ public class Details extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mathTestGraph.save(Details.this);
+    }
+
+    @Override
+    public void onListSelected(CharSequence currTitle) {
+        // do nothing for the current being
     }
 }
