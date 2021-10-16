@@ -72,7 +72,10 @@ public class Register extends AppCompatActivity {
     private static String firstNameSave;
     private static String lastNameSave;
     private static String phNumSave;
-    private static String emailSave;
+    //private static String  emailSave;
+    private static ArrayList<String> emailSave;
+
+    private static int emailSaveIndex;
 
     @Override
     public void onBackPressed() {
@@ -95,6 +98,13 @@ public class Register extends AppCompatActivity {
         loadGraph();
         loadUIElements();
 
+        //making sure a new array list is going to be made on the initial launch of this activity
+        if (emailSave == null)
+        {
+            emailSave = new ArrayList<>();
+            emailSaveIndex = 0;
+        }
+
         if (firstNameSave != null)
         {
             studentFirstName.setText(firstNameSave);
@@ -110,11 +120,12 @@ public class Register extends AppCompatActivity {
             phNumInput.setText(phNumSave);
         }
 
-        if(emailSave != null)
+        if(emailSave.size() >= 1)
         {
-            //TODO: you will need to find out how you can make all the email addressed which they
-            //have inputted into the app actually persistent
-            emailInput.setText(emailSave);
+            //getting the last email saved and setting that as the view of the register form of the app
+            Log.e(TAG, "am I inside of here on the save or not?");
+            int index = emailSave.size() - 1;
+            emailInput.setText(emailSave.get(index));
         }
 
         imagePath = getIntent().getStringExtra("imagePath");
@@ -150,7 +161,6 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.e(TAG, "HEY YOU HAVE CHANGED THE FIRST NAME: ");
                 //searchContactList();
                 firstNameSave = studentFirstName.getText().toString();
             }
@@ -169,7 +179,6 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.e(TAG, "HEY YOU HAVE CHANGED THE LAST NAME: ");
                 //searchContactList();
                 lastNameSave = studentLastName.getText().toString();
             }
@@ -202,7 +211,15 @@ public class Register extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                emailSave =  emailInput.getText().toString();
+                if (emailSave.size() == 0)
+                {
+                    emailSave.add(emailInput.getText().toString());
+                }
+                else
+                {
+                    emailSave.set(emailSaveIndex, emailInput.getText().toString());
+                }
+                //emailSave =  emailInput.getText().toString();
             }
         });
 
@@ -223,6 +240,9 @@ public class Register extends AppCompatActivity {
                         Bitmap image = studentPicture.getDrawingCache();
                         Avatar tempAvatar = new Avatar("profile picture", image);
                         currStdnt.setAvatar(tempAvatar);
+                        //email save is going to have all the emails which we have even when we
+                        //switch around activities
+                        currStdnt.setEmails(emailSave);
                         mathTestGraph.addVertex(currStdnt);
                         //making sure whenever a user is saved we're going to save it to the graph
                         mathTestGraph.save(Register.this);
@@ -252,6 +272,8 @@ public class Register extends AppCompatActivity {
                 try
                 {
                     currStdnt.addEmail(emailInput.getText().toString());
+                    emailSaveIndex++;
+                    emailSave.add(emailInput.getText().toString());
                     emailInput.setText("");
                     //if an error had occur set the error dialogue to blank after correct input
                     emailError.setText("");
