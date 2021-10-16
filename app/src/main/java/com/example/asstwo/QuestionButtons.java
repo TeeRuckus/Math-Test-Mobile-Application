@@ -3,6 +3,7 @@ package com.example.asstwo;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,6 +144,8 @@ public class QuestionButtons extends Fragment {
         {
             optionFour.setText(receivedOptionFour);
         }
+
+
 
         //setting the current views from the  options which were recieved in the programme
         optionOne.setOnClickListener(new View.OnClickListener() {

@@ -336,7 +336,6 @@ public class Register extends AppCompatActivity {
 
         if (requestCode == REQUEST_CONTACT && resultCode == RESULT_OK)
         {
-            //fill in the text fields for the edit text of the found information of the user
 
             Uri contactUri = data.getData();
             String[] queryFileds = new String[] {
@@ -348,6 +347,7 @@ public class Register extends AppCompatActivity {
                     contactUri, queryFileds, null, null, null
             );
 
+            //getting the user name of the required user
             try
             {
                 if(c.getCount() > 0)
@@ -374,8 +374,13 @@ public class Register extends AppCompatActivity {
                     ContactsContract.CommonDataKinds.Phone.NUMBER
             };
 
+            String whereClausePhone = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?";
+            String [] whereValuesPhone = new String[] {
+                    String.valueOf(this.contactId)
+            };
+
             c = getContentResolver().query(
-                    phoneUri, queryFieldsPhone, null, null, null
+                    phoneUri, queryFieldsPhone, whereClausePhone, whereValuesPhone, null
             );
 
             try
@@ -400,9 +405,13 @@ public class Register extends AppCompatActivity {
             String [] queryFieldsEmail = new String [] {
                     ContactsContract.CommonDataKinds.Email.ADDRESS
             };
+            String whereClauseEmail = ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?";
+            String [] whereValuesEmail = new String[] {
+                    String.valueOf(this.contactId)
+            };
 
             c = getContentResolver().query(
-                    emailUri, queryFieldsEmail, null, null, null
+                    emailUri, queryFieldsEmail, whereClauseEmail, whereValuesEmail, null
             );
 
             try

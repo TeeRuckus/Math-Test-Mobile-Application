@@ -92,31 +92,26 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
     @Override
     public void onClickOptionOne(CharSequence input) {
-        Log.e(TAG, "Option one which was clikcked " + input);
         checkAnswer(input);
     }
 
     @Override
     public void onClickOptionTwo(CharSequence input) {
-        Log.e(TAG, "Option one which was clikcked " + input);
         checkAnswer(input);
     }
 
     @Override
     public void onClickOptionThree(CharSequence input) {
-        Log.e(TAG, "Option one which was clikcked " + input);
         checkAnswer(input);
     }
 
     @Override
     public void onClickOptionFour(CharSequence input) {
-        Log.e(TAG, "Option one which was clicked " + input);
         checkAnswer(input);
     }
 
     @Override
     public void onClickAnswer(CharSequence input) {
-        Log.e(TAG, "Typed in answer: " + input);
         checkAnswer(input);
     }
 
@@ -458,6 +453,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         switch (numOptions)
         {
             case 1:
+                //you should replace this with a another fragment whcih is going to be a single button located in the middle
                 replaceWithButtons(Integer.toString(inAnswers[0]), "", "", "");
                 break;
 
@@ -469,6 +465,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                 break;
 
             case 3:
+                //TODO: you should replace with buttons except that they're going to be round instead
                 replaceWithButtons(Integer.toString(inAnswers[0]),
                         Integer.toString(inAnswers[1]),
                         Integer.toString(inAnswers[2]),
