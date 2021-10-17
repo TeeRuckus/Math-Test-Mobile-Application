@@ -1,5 +1,6 @@
 package com.example.asstwo;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -84,10 +85,30 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                 //originally load the view in the phone number view
 
                 frag = new ItemViewRecycler();
+                //ItemViewRecycler.numbersViewing();
                 ItemViewRecycler.numbersViewing();
                 fm.beginTransaction()
                         .add(R.id.framePhoneNumbers, frag)
                         .commit();
+            }
+
+            //only attach the emails on the same screen if it's going to be a tablet
+            boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+            if(tabletSize)
+            {
+                FragmentManager fmTab = getSupportFragmentManager();
+                ItemViewRecyclerTablet fragTab = (ItemViewRecyclerTablet) fmTab.findFragmentById(R.id.frameEmails);
+
+                if (fragTab == null)
+                {
+                    emailToggleBttn.setVisibility(View.GONE);
+                    fragTab = new ItemViewRecyclerTablet();
+                    ItemViewRecyclerTablet.addressesViewing();
+                    //ItemViewRecycler.addressesViewing();
+                    fmTab.beginTransaction()
+                            .add(R.id.frameEmails, fragTab)
+                            .commit();
+                }
             }
 
             emailToggleBttn.setOnClickListener(new View.OnClickListener() {

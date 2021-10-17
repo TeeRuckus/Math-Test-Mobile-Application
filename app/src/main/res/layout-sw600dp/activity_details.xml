@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".Details">
+
+    <TextView
+        android:id="@+id/bannerDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Student details"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+    <ImageButton
+        android:id="@+id/userImageDetails"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@+id/bannerDetails"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher_background" />
+
+    <EditText
+        android:id="@+id/firstNameDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userImageDetails"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:hint="First Name"
+        android:inputType="textPersonName"
+        android:textColor="@color/paleNight_white"
+        android:textColorHint="@color/paleNight_yellow"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/firstNameDetailsError"
+        android:layout_below="@id/firstNameDetails"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_error"
+        android:textSize="10dp" />
+
+    <EditText
+        android:id="@+id/lastNameDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:hint="Last Name"
+        android:inputType="textPersonName"
+        android:textColor="@color/paleNight_white"
+        android:textColorHint="@color/paleNight_yellow"
+        android:textSize="20dp"
+        android:layout_below="@+id/firstNameDetailsError"/>
+
+    <TextView
+        android:id="@+id/lastNameDetailsError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/lastNameDetails"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_error"
+        android:textSize="10dp" />
+
+    <LinearLayout
+        android:id="@+id/llThreeDetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lastNameDetailsError"
+        android:layout_above="@+id/updateDetails"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:id="@+id/llOneDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/numbersHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_white"
+                android:background="@color/paleNight_secondary_background"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="20dp"
+                android:text="Phone Numbers"/>
+
+            <FrameLayout
+                android:id="@+id/framePhoneNumbers"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/paleNight_foreground"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFourDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emailHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_white"
+                android:background="@color/paleNight_secondary_background"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="20dp"
+                android:text="Emails"/>
+
+            <FrameLayout
+                android:id="@+id/frameEmails"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/paleNight_foreground"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/togglEmailPhoneBttn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_white"
+                android:background="@color/paleNight_buttons"
+                android:text="Email"
+                android:gravity="center"
+                android:layout_gravity="right"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/updateDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_above="@id/llTwoDetails"
+        android:textColor="@color/paleNight_white"
+        android:background="@color/paleNight_buttons"
+        />
+
+    <LinearLayout
+        android:id="@+id/llTwoDetails"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/viewHistoryDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="View Test History"
+            android:layout_margin="15dp"
+            android:background="@color/paleNight_ascent_color"/>
+
+        <Button
+            android:id="@+id/takeTestDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Take Test"
+            android:layout_margin="15dp"
+            android:background="@color/paleNight_ascent_color"/>
+
+    </LinearLayout>
+</RelativeLayout>

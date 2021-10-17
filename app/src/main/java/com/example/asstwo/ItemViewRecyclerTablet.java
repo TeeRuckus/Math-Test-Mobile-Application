@@ -1,6 +1,5 @@
 package com.example.asstwo;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +27,10 @@ import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ItemViewRecycler#newInstance} factory method to
+ * Use the {@link ItemViewRecyclerTablet#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ItemViewRecycler extends Fragment implements StudentViewing.emailListener {
+public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.emailListener {
 
     private static final String TAG = "ItemViewRecycler";
     //the places where we're going to store the data which we have read into the programme
@@ -203,7 +200,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
     private String mParam1;
     private String mParam2;
 
-    public ItemViewRecycler() {
+    public ItemViewRecyclerTablet() {
         // Required empty public constructor
     }
 
@@ -216,8 +213,8 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
      * @return A new instance of fragment ItemViewRecycler.
      */
     // TODO: Rename and change types and number of parameters
-    public static ItemViewRecycler newInstance(String param1, String param2) {
-        ItemViewRecycler fragment = new ItemViewRecycler();
+    public static ItemViewRecyclerTablet newInstance(String param1, String param2) {
+        ItemViewRecyclerTablet fragment = new ItemViewRecyclerTablet();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
