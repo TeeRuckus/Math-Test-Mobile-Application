@@ -11,6 +11,7 @@
         android:rowCount="2"
         android:columnCount="2"
         android:layout_gravity="center">
+
         <Button
             android:id="@+id/optionOne"
             android:layout_width="wrap_content"

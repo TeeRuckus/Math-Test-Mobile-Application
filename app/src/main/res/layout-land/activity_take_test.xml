@@ -7,11 +7,6 @@
     android:background="@color/paleNight_background"
     tools:context=".TakeTest">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
     <TextView
         android:id="@+id/bannerTest"
         android:layout_width="match_parent"
@@ -29,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/bannerTest"
-        android:layout_above="@id/endTest"
         android:orientation="vertical">
 
         <TextView
@@ -57,7 +51,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Time: "
-                android:textSize="16dp"
+                android:textSize="12dp"
                 android:textAlignment="center"
                 android:textColor="@color/paleNight_text"/>
 
@@ -67,6 +61,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/paleNight_text"
+                android:textSize="12dp"
                 android:gravity="center"
                 android:text="00:00"/>
         </LinearLayout>
@@ -84,7 +79,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="ElapsedTime: "
-                android:textSize="16dp"
+                android:textSize="12dp"
                 android:textAlignment="center"
                 android:textColor="@color/paleNight_text"/>
 
@@ -94,6 +89,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/paleNight_text"
+                android:textSize="12dp"
                 android:gravity="center"
                 android:text="00:00"/>
         </LinearLayout>
@@ -111,7 +107,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Question Number:"
-                android:textSize="16dp"
+                android:textSize="12dp"
                 android:textAlignment="center"
                 android:textColor="@color/paleNight_text"/>
 
@@ -121,6 +117,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/paleNight_text"
+                android:textSize="12dp"
                 android:gravity="center"
                 android:text="1"/>
         </LinearLayout>
@@ -138,7 +135,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Current Score:"
-                android:textSize="16dp"
+                android:textSize="12dp"
                 android:textAlignment="center"
                 android:textColor="@color/paleNight_text"/>
 
@@ -147,6 +144,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:textSize="12dp"
                 android:textColor="@color/paleNight_text"
                 android:gravity="center"
                 android:text="0"/>
@@ -156,7 +154,7 @@
             android:id="@+id/llThreeTest"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="horizontal"
             android:background="@color/paleNight_text">
 
@@ -172,8 +170,8 @@
             <FrameLayout
                 android:id="@+id/buttonsContainer"
                 android:layout_width="0dp"
+                android:layout_weight="20"
                 android:layout_height="match_parent"
-                android:layout_weight="10"
                 android:background="@color/paleNight_text">
             </FrameLayout>
 
@@ -209,9 +207,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/purple_500"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:text="skip"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/endTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:background="@color/paleNight_ascent_color"
+                android:text="End"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -219,13 +225,8 @@
     </LinearLayout>
 
 
-    <Button
-        android:id="@+id/endTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/paleNight_ascent_color"
-        android:text="End"
-        android:textColor="@color/white" />
 
-    </LinearLayout>
+
+
+
 </RelativeLayout>
