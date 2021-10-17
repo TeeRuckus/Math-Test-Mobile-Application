@@ -2,6 +2,8 @@ package com.example.asstwo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,14 +18,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class StudentViewing extends AppCompatActivity {
+    private static final String TAG = "StudentViewing";
     private TextView banner;
     private Button emailBttn;
     private Graph mathTestGraph;
     private static String test;
-    private CharSequence testToOpen;
     private final int REQUEST_EMAIL = 1234;
     private emailListener listenerSend;
     private String name;
+    private String exitState;
 
     private enum state {
         students,
@@ -175,6 +178,24 @@ public class StudentViewing extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("name", name);
+        outState.putSerializable("graph", mathTestGraph);
+        outState.putString("state", exitState);
+        StudentViewing.students();
+    }
+
+    /*@Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+    apparently this is going to receive the same bundle as on create, so we don't need it for our
+    programme
+    */
 
     public interface emailListener {
         void emailTo(String name);

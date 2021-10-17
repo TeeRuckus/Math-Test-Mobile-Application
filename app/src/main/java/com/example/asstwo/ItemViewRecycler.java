@@ -437,13 +437,15 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 case addresses:
                     viewStudent.setVisibility(View.INVISIBLE);
                     viewStudent.setClickable(false);
-                    studentName.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    //studentName.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    studentName.setEnabled(false);
                     break;
 
                 case numbers:
                     viewStudent.setVisibility(View.INVISIBLE);
                     viewStudent.setClickable(false);
-                    studentName.setInputType(InputType.TYPE_CLASS_PHONE);
+                    //studentName.setInputType(InputType.TYPE_CLASS_PHONE);
+                    studentName.setEnabled(false);
                     break;
 
                 case testViews:

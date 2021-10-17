@@ -61,16 +61,16 @@
         android:id="@+id/lastNameDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/firstNameDetailsError"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@color/dark_second"
         android:gravity="center"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:hint="Last Name"
         android:inputType="textPersonName"
         android:textColor="@color/paleNight_white"
         android:textColorHint="@color/paleNight_yellow"
-        android:textSize="20dp"
-        android:layout_below="@+id/firstNameDetailsError"/>
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/lastNameDetailsError"
@@ -84,11 +84,55 @@
         android:textColor="@color/paleNight_error"
         android:textSize="10dp" />
 
+    <!-- you will need to add this to your tablet view -->
+    <LinearLayout
+        android:id="@+id/llZeroDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
+        android:layout_below="@+id/lastNameDetailsError">
+
+        <EditText
+            android:id="@+id/addMoreEmailPhone"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@color/dark_second"
+            android:gravity="center"
+            android:hint="add more"
+            android:textColor="@color/paleNight_white"
+            android:textColorHint="@color/paleNight_yellow"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/addMoreDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="add"
+            android:background="@color/paleNight_ascent_color"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/addMoreDetailsError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/llZeroDetails"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_error"
+        android:textSize="10dp" />
+
     <LinearLayout
         android:id="@+id/llOneDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/lastNameDetailsError"
+        android:layout_below="@id/addMoreDetailsError"
         android:layout_above="@+id/updateDetails"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"

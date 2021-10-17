@@ -23,6 +23,7 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
 
     private Graph mathTestGraph;
     private static String name;
+    private static final String TAG = "Details";
 
     private ImageButton studentPicture;
     private EditText firstNameBox;
@@ -32,6 +33,10 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
     private Button updateBttn;
     private Button testBttn;
     private Button viewTestHistory;
+    private Button addMore;
+    private Button addMoreTablet;
+    private TextView addMoreError;
+    private EditText addMoreTextBox;
 
     private String imagePath;
     private Bitmap currUserImage;
@@ -141,6 +146,60 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                         fm.beginTransaction()
                                 .add(R.id.framePhoneNumbers, fragNew)
                                 .commit();
+                    }
+                }
+            });
+
+            addMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String currentButton = emailToggleBttn.getText().toString();
+                    currentButton = myUtils.cleanString(currentButton);
+                    User currStudent = mathTestGraph.getVertex(name).getValue();
+
+
+                    if (currentButton.equals("EMAIL"))
+                    {
+                        try
+                        {
+
+                            currStudent.addPhoneNum(addMoreTextBox.getText().toString());
+                            //cleaing the text if they was an error message which was displayed before hand
+                            addMoreError.setText("");
+                            Toast.makeText(Details.this, "Number added", Toast.LENGTH_LONG).show();
+                            addMoreTextBox.setText("");
+                            mathTestGraph.save(Details.this);
+                        }
+                        catch (IllegalArgumentException e)
+                        {
+                            addMoreError.setText("Inavalid Phone Number");
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                            addMoreError.setText("can only have a maximum of 10 phone numbers");
+                        }
+
+                    }
+                    else
+                    {
+                        try
+                        {
+                            currStudent.addEmail(addMoreTextBox.getText().toString());
+                            //clearing the text if they was an error message displayed before hand
+                            addMoreError.setText("");
+                            Toast.makeText(Details.this, "Email added", Toast.LENGTH_LONG).show();
+                            //we will need to update the data inside of the recycler view of the progrogramme
+                            addMoreTextBox.setText("");
+                            mathTestGraph.save(Details.this);
+                        }
+                        catch (IllegalArgumentException e)
+                        {
+                            addMoreError.setText("Invalid Email address");
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                            addMoreError.setText("can only have a maximum of 10 email addresses");
+                        }
                     }
                 }
             });
@@ -284,6 +343,16 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
         updateBttn = findViewById(R.id.updateDetails);
         testBttn = findViewById(R.id.takeTestDetails);
         viewTestHistory = findViewById(R.id.viewHistoryDetails);
+        addMore = findViewById(R.id.addMoreDetails);
+        addMoreError = findViewById(R.id.addMoreDetailsError);
+        addMoreTextBox = findViewById(R.id.addMoreEmailPhone);
+
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize)
+        {
+
+            addMoreTablet = findViewById(R.id.addMoreDetailsEmail);
+        }
     }
 
     @Override
