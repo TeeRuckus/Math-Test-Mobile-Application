@@ -44,6 +44,8 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(Details.this, StudentViewing.class);
+        StudentViewing.students();
+        StudentViewing.HomePage();
         startActivity(intent);
     }
 
@@ -157,52 +159,54 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                     currUserImage = studentPicture.getDrawingCache();
                     currUser.getAvatar().setImage(currUserImage);
 
-                    if(!(currEnteredFirstName.equals("")) && !(currEnteredLastName.equals("")))
-                    {
-                        currUser.setFirstName(currEnteredFirstName);
-                        currUser.setLastName(currEnteredLastName);
-                        mathTestGraph.delVertex(name);
-                        //in this application the user is almost going to be always a student
-                        mathTestGraph.addVertex((Student) currUser);
-                        name = currUser.getName();
-                        firstNameBox.setText("");
-                        lastNameBox.setText("");
-                        firstNameBox.setHint(currEnteredFirstName);
-                        lastNameBox.setHint(currEnteredLastName);
-                        Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
-                        mathTestGraph.save(Details.this);
-                    }
-                    else if (!(currEnteredFirstName.equals("")))
-                    {
-                        //getting what they old last name would have being in the programme
-                        String oldLastName = currUser.getLastName();
-                        currUser.setFirstName(currEnteredFirstName);
-                        currUser.setLastName(oldLastName);
+                    try {
+                        if (!(currEnteredFirstName.equals("")) && !(currEnteredLastName.equals(""))) {
+                            currUser.setFirstName(currEnteredFirstName);
+                            currUser.setLastName(currEnteredLastName);
+                            mathTestGraph.delVertex(name);
+                            //in this application the user is almost going to be always a student
+                            mathTestGraph.addVertex((Student) currUser);
+                            name = currUser.getName();
+                            firstNameBox.setText("");
+                            lastNameBox.setText("");
+                            firstNameBox.setHint(currEnteredFirstName);
+                            lastNameBox.setHint(currEnteredLastName);
+                            Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
+                            mathTestGraph.save(Details.this);
+                        } else if (!(currEnteredFirstName.equals(""))) {
+                            //getting what they old last name would have being in the programme
+                            String oldLastName = currUser.getLastName();
+                            currUser.setFirstName(currEnteredFirstName);
+                            currUser.setLastName(oldLastName);
 
-                        mathTestGraph.delVertex(name);
-                        mathTestGraph.addVertex((Student) currUser);
-                        name = currUser.getName();
-                        firstNameBox.setText("");
-                        lastNameBox.setText("");
-                        firstNameBox.setHint(currEnteredFirstName);
-                        lastNameBox.setHint(oldLastName);
-                        Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
-                        mathTestGraph.save(Details.this);
+                            mathTestGraph.delVertex(name);
+                            mathTestGraph.addVertex((Student) currUser);
+                            name = currUser.getName();
+                            firstNameBox.setText("");
+                            lastNameBox.setText("");
+                            firstNameBox.setHint(currEnteredFirstName);
+                            lastNameBox.setHint(oldLastName);
+                            Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
+                            mathTestGraph.save(Details.this);
+                        } else if (!(currEnteredLastName.equals(""))) {
+                            String oldFirstName = currUser.getFirstName();
+                            currUser.setFirstName(oldFirstName);
+                            currUser.setLastName(currEnteredLastName);
+                            mathTestGraph.delVertex(name);
+                            mathTestGraph.addVertex((Student) currUser);
+                            name = currUser.getName();
+                            firstNameBox.setText("");
+                            lastNameBox.setText("");
+                            firstNameBox.setHint(oldFirstName);
+                            lastNameBox.setHint(currEnteredLastName);
+                            Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
+                            mathTestGraph.save(Details.this);
+                        }
                     }
-                    else if(!(currEnteredLastName.equals("")))
+                    catch (IllegalArgumentException e)
                     {
-                        String oldFirstName = currUser.getFirstName();
-                        currUser.setFirstName(oldFirstName);
-                        currUser.setLastName(currEnteredLastName);
-                        mathTestGraph.delVertex(name);
-                        mathTestGraph.addVertex((Student) currUser);
-                        name = currUser.getName();
-                        firstNameBox.setText("");
-                        lastNameBox.setText("");
-                        firstNameBox.setHint(oldFirstName);
-                        lastNameBox.setHint(currEnteredLastName);
-                        Toast.makeText(Details.this, "Student Updated", Toast.LENGTH_SHORT).show();
-                        mathTestGraph.save(Details.this);
+                        studentFirstnameError.setText("User already exists");
+                        studentLastNameError.setText("User already exists");
                     }
                 }
             });
@@ -237,6 +241,8 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                     {
                         Intent intent = new Intent(Details.this, StudentViewing.class);
                         StudentViewing.test();
+                        StudentViewing.DetailsPage();
+                        intent.putExtra("name", name);
                         startActivity(intent);
                     }
                     else

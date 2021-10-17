@@ -26,24 +26,7 @@ public class StudentViewing extends AppCompatActivity {
     private CharSequence testToOpen;
     private static final int REQUEST_EMAIL = 1234;
     private emailListener listenerSend;
-
-   /* @Override
-    public void onListSelected(CharSequence currTitle) {
-        Log.e(TAG, "AM I ACTUALLY GOING TO BE USEFUL TO YOU MY MASTER");
-        testToOpen = currTitle;
-        Log.e(TAG, "inside of me? " + currTitle);
-
-        FragmentManager fm = getSupportFragmentManager();
-        ItemViewRecycler frag = (ItemViewRecycler) fm.findFragmentById(R.id.viewingContainer);
-        if (frag == null) {
-            //making sure that the users are going to be displayed on the screen and nothing else
-            ItemViewRecycler.usersViewing();
-            frag = new ItemViewRecycler();
-            fm.beginTransaction()
-                    .add(R.id.viewingContainer, frag)
-                    .commit();
-        }
-    }*/
+    private String name;
 
     private enum state {
         students,
@@ -51,7 +34,13 @@ public class StudentViewing extends AppCompatActivity {
         results
     }
 
+    private enum returnScreen {
+        details,
+        home
+    }
+
     private static state currState;
+    private static returnScreen prevScreen;
 
     @Override
     protected void onDestroy() {
@@ -68,7 +57,26 @@ public class StudentViewing extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(StudentViewing.this, MainActivity.class);
+        Intent intent = null;
+
+        //name = getIntent().getStringExtra("name");
+        switch(prevScreen)
+        {
+            case home:
+                intent = new Intent(StudentViewing.this, MainActivity.class);
+                break;
+
+            case details:
+                intent = new Intent(StudentViewing.this, Details.class);
+                break;
+
+            default:
+                //go back to the main actvity if it wasn't specified
+                intent = new Intent(StudentViewing.this, MainActivity.class);
+                break;
+
+        }
+        intent.putExtra("name", name);
         startActivity(intent);
     }
 
@@ -78,7 +86,8 @@ public class StudentViewing extends AppCompatActivity {
         setContentView(R.layout.activity_student_viewing);
         emailBttn = findViewById(R.id.sendEmailBttn);
         banner = findViewById(R.id.bannerStudentViewing);
-        String name = null;
+        //name = null;
+        name = getIntent().getStringExtra("name");
 
         //loading the graph when this is created
         mathTestGraph = new Graph();
@@ -120,10 +129,9 @@ public class StudentViewing extends AppCompatActivity {
                 emailBttn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String name = getIntent().getStringExtra("name");
+                        name = getIntent().getStringExtra("name");
                         String test = getIntent().getStringExtra("test");
                         listenerSend.emailTo(name);
-                        //email(name, test);
                     }
                 });
 
@@ -223,5 +231,15 @@ public class StudentViewing extends AppCompatActivity {
 
     public static String getTest() {
         return test;
+    }
+
+    public static void DetailsPage()
+    {
+        prevScreen = returnScreen.details;
+    }
+
+    public static void HomePage()
+    {
+        prevScreen = returnScreen.home;
     }
 }

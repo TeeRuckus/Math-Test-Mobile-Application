@@ -358,7 +358,6 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        //TODO: you might need to refactor this so you can actually choose a contact from the contact list
         importFromContactsBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
