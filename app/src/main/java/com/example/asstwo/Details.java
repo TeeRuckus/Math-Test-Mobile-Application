@@ -53,6 +53,7 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
         startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,13 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
         mathTestGraph = mathTestGraph.load(Details.this);
         name = getIntent().getStringExtra("name");
         //making it static so I can access it inside on click listeners
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+
+        Log.e(TAG, "Saved instance: " + savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            name = savedInstanceState.getString("name");
+        }
 
         if (name != null)
         {
@@ -98,7 +106,6 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
             }
 
             //only attach the emails on the same screen if it's going to be a tablet
-            boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
             if(tabletSize)
             {
                 FragmentManager fmTab = getSupportFragmentManager();
@@ -178,6 +185,7 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                         {
                             addMoreError.setText("can only have a maximum of 10 phone numbers");
                         }
+                        //just replacing the fragment with the updated information
 
                     }
                     else
@@ -203,6 +211,35 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                     }
                 }
             });
+
+            if(tabletSize)
+            {
+                User currStudent = mathTestGraph.getVertex(name).getValue();
+                addMoreTablet.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try
+                        {
+                            currStudent.addEmail(addMoreTextBox.getText().toString());
+                            //clearing the text if they was an error message displayed before hand
+                            addMoreError.setText("");
+                            Toast.makeText(Details.this, "Email added", Toast.LENGTH_LONG).show();
+                            //we will need to update the data inside of the recycler view of the progrogramme
+                            addMoreTextBox.setText("");
+                            mathTestGraph.save(Details.this);
+                        }
+                        catch (IllegalArgumentException e)
+                        {
+                            addMoreError.setText("Invalid Email address");
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                            addMoreError.setText("can only have a maximum of 10 email addresses");
+                        }
+
+                    }
+                });
+            }
 
             updateBttn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -326,6 +363,12 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("name", name);
+    }
+
     public static String getName()
     {
         return name;
@@ -350,7 +393,6 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
         if (tabletSize)
         {
-
             addMoreTablet = findViewById(R.id.addMoreDetailsEmail);
         }
     }

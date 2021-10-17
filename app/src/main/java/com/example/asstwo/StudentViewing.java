@@ -2,6 +2,7 @@ package com.example.asstwo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ public class StudentViewing extends AppCompatActivity {
     private emailListener listenerSend;
     private String name;
     private String exitState;
+    private String exitStatus;
 
     private enum state {
         students,
@@ -84,6 +86,7 @@ public class StudentViewing extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +103,34 @@ public class StudentViewing extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         ItemViewRecycler frag = (ItemViewRecycler) fm.findFragmentById(R.id.viewingContainer);
 
+        Log.e(TAG, "SavedInstanceState: " + savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            exitStatus = savedInstanceState.getString("exitStatus");
+            Log.e(TAG, "exit status " + exitStatus);
+
+            if(exitStatus.equals("students"))
+            {
+                currState = state.students;
+            }
+            else if (exitStatus.equals("test"))
+            {
+                currState = state.test;
+            }
+            else if (exitStatus.equals("results"))
+            {
+                currState = state.results;
+            }
+
+            name = savedInstanceState.getString("name");
+            test = savedInstanceState.getString("test");
+            Log.e(TAG, "test student viewing: " + test);
+        }
+
         switch(currState)
         {
             case students:
+                exitStatus = "students";
                 if (frag == null)
                 {
                     //making sure that the users are going to be displayed on the screen and nothing else
@@ -118,6 +146,7 @@ public class StudentViewing extends AppCompatActivity {
                 break;
 
             case test:
+                exitStatus = "test";
                 banner.setText("Tests");
                 if (frag == null)
                 {
@@ -142,6 +171,7 @@ public class StudentViewing extends AppCompatActivity {
                 break;
 
             case results:
+                exitStatus = "results";
                 name = getIntent().getStringExtra("name");
                 test = getIntent().getStringExtra("test");
                 banner.setText("Results: " + name.split(" ")[0]);
@@ -172,20 +202,22 @@ public class StudentViewing extends AppCompatActivity {
                 }
 
                 //the button is going to be only visible on results anyways
-
-
                 break;
         }
 
     }
+    /*@Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putCharSequence("exitStatus", exitStatus);
+    }*/
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("exitStatus", exitStatus);
         outState.putString("name", name);
-        outState.putSerializable("graph", mathTestGraph);
-        outState.putString("state", exitState);
-        StudentViewing.students();
+        outState.putString("test", test);
     }
 
     /*@Override

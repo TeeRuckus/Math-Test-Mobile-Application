@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,7 @@ import java.util.Collections;
  */
 public class ItemViewRecycler extends Fragment implements StudentViewing.emailListener {
 
+    private static final String TAG = "ItemViewRecycler";
     //the places where we're going to store the data which we have read into the programme
     private ArrayList<Graph.Vertex> students;
     private ArrayList<String> phoneNumbers;
@@ -57,6 +59,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
 
     private Spinner sortOrder;
     private EditText searchUsers;
+    private String exitStatus;
 
     public enum state {
         users,
@@ -200,6 +203,14 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
     }
 
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("exitStatus", exitStatus);
+        outState.putString("name", currUser);
+        outState.putString("test", currTestTaken);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,22 +225,60 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
         //where you're in the application
         currUser = Details.getName();
 
+        Log.e(TAG, "saveInstanceState " + savedInstanceState);
+
+        if (savedInstanceState != null)
+        {
+            exitStatus = savedInstanceState.getString("exitStatus");
+            currUser = savedInstanceState.getString("name");
+            currTestTaken = savedInstanceState.getString("test");
+            if (exitStatus.equals("users"))
+            {
+                currMode = state.users;
+            }
+            else if (exitStatus.equals("addresses"))
+            {
+                currMode = state.addresses;
+            }
+            else if (exitStatus.equals("numbers"))
+            {
+                currMode = state.numbers;
+            }
+            else if (exitStatus.equals("results"))
+            {
+                currMode = state.results;
+            }
+            else if (exitStatus.equals("testViews"))
+            {
+                currMode = state.testViews;
+            }
+        }
+
         switch(currMode)
         {
             case users:
+                exitStatus = "users";
                 if (!mathTestGraph.isEmpty())
                 {
                     students = mathTestGraph.adminStudentLoad();
                 }
 
                 break;
-            case addresses: case numbers:
-                //TODO: you will need to get the students name here so you can view teh addresses
-                //which they will have saved under them
-
-                //addresses and numbers are going to be loaded at teh same time as the oncreate
-                //method is only created once
-
+            case addresses:
+                exitStatus = "addresses";
+                if(currUser != null)
+                {
+                    Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
+                    emailAddress = currVert.getValue().getEmails();
+                    phoneNumbers = currVert.getValue().getNumbers();
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Can't find student", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case numbers:
+                exitStatus = "numbers";
                 if(currUser != null)
                 {
                     Graph.Vertex currVert = mathTestGraph.getVertex(currUser);
@@ -243,6 +292,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 break;
 
             case testViews:
+                exitStatus = "testViews";
                 ArrayList<TestHistory> temp = mathTestGraph.getVertex(currUser).getValue().getHistory();
                 sortedTests = new ArrayList<>(temp);
                 currTests = sortedTests;
@@ -253,7 +303,12 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 break;
 
             case results:
-                currTestTaken = StudentViewing.getTest();
+                exitStatus = "results";
+                if (savedInstanceState == null)
+                {
+                    currTestTaken = StudentViewing.getTest();
+                }
+
 
                 if(currTestTaken != null)
                 {
