@@ -41,14 +41,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+
 public class InternetPhotos extends AppCompatActivity {
 
-    private static final String TAG = "internetPhotos.";
-    private static final int RETURNED_IMAGES = 50;
-
-    //only doing this, so we can access a lopping variable inside of a annoymous class
-    private static int ii_special;
-    private static int stop_images;
+    private final int RETURNED_IMAGES = 50;
+    private int stop_images;
 
     private GridView gridview;
     private ImageButton search;
@@ -65,6 +62,13 @@ public class InternetPhotos extends AppCompatActivity {
     }
 
     private static state currState;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //making sure the static variables are going to be staged for deletion
+        currState = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +88,6 @@ public class InternetPhotos extends AppCompatActivity {
 
     public void loadImagesGridView()
     {
-        Log.e(TAG, "Images: " + images);
         if (images != null)
         {
             gridview.setVisibility(View.VISIBLE);
@@ -146,7 +149,6 @@ public class InternetPhotos extends AppCompatActivity {
             // Use the compress method on the BitMap object to write image to the OutputStream
             image.compress(Bitmap.CompressFormat.PNG, 100, fos);
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found in the system: " + e.getMessage());
             e.printStackTrace();
         } finally
         {
@@ -156,7 +158,6 @@ public class InternetPhotos extends AppCompatActivity {
             }
             catch (IOException e)
             {
-                Log.e(TAG, "Something went wrong in reading the file: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -214,8 +215,6 @@ public class InternetPhotos extends AppCompatActivity {
                         {
                             //Drawable currDrawable = new BitmapDrawable(getResources(), image);
                             //int currImage  = Integer.parseInt(currDrawable.toString());
-                            Log.e(TAG, "End parameter: " + RETURNED_IMAGES);
-                            Log.e(TAG, "Current index: " + ii);
                             images[ii] = image;
                             names[ii] = searchItem + " " + Integer.toString(ii + 1);
                         }
@@ -235,7 +234,6 @@ public class InternetPhotos extends AppCompatActivity {
             Bitmap image = null;
             Uri.Builder url = Uri.parse(imageUrl).buildUpon();
             String urlString = url.build().toString();
-            Log.e(TAG, "individual Image URL : " + urlString);
 
 
             HttpURLConnection conn = establishConnection(urlString);
@@ -267,10 +265,8 @@ public class InternetPhotos extends AppCompatActivity {
             try {
                 InputStream is = conn.getInputStream();
                 byte[] byteData = getByteArrayFromInputStream(is);
-                Log.e(TAG, "Data: " + String.valueOf(byteData.length));
                 image = BitmapFactory.decodeByteArray(byteData, 0, byteData.length);
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
 
@@ -306,7 +302,6 @@ public class InternetPhotos extends AppCompatActivity {
                     //loading up the returned string with the first 50 results which were returned
                     for (int ii = 0; ii < RETURNED_IMAGES; ii++) {
                         stop_images = ii;
-                        Log.i(TAG, "Current index: " + ii);
                         JSONObject jHitsItem = jHits.getJSONObject(ii);
                         imageUrl[ii] = jHitsItem.getString("largeImageURL");
                     }
@@ -333,7 +328,6 @@ public class InternetPhotos extends AppCompatActivity {
             url.appendQueryParameter("key", "22656668-cebab27bc7924c4e89fa2f3b5");
             url.appendQueryParameter("q", searchItem);
             String urlString = url.build().toString();
-            Log.i(TAG, "The built URL: " + urlString);
 
             HttpURLConnection conn = establishConnection(urlString);
 
@@ -355,9 +349,19 @@ public class InternetPhotos extends AppCompatActivity {
             } else {
                 data = getDownloadString(conn);
                 if (data != null) {
-                    Log.e(TAG, data);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(InternetPhotos.this, "downloading", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } else {
-                    Log.e(TAG, "Nothing returned");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(InternetPhotos.this, "Nothing returned", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
 
                 conn.disconnect();
@@ -374,7 +378,6 @@ public class InternetPhotos extends AppCompatActivity {
                 byte[] byteData = IOUtils.toByteArray(is);
                 data = new String(byteData, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
 
@@ -388,7 +391,6 @@ public class InternetPhotos extends AppCompatActivity {
                     valid = true;
                 }
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
 
@@ -402,11 +404,9 @@ public class InternetPhotos extends AppCompatActivity {
                 URL url = new URL(urlString);
                 conn = (HttpURLConnection) url.openConnection();
             } catch (MalformedURLException e){
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
             catch (IOException e) {
-                Log.e(TAG, "Something happend with the IO: " + e.getMessage());
                 e.printStackTrace();
             }
 

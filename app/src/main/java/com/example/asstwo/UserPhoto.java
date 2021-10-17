@@ -24,14 +24,12 @@ import java.io.IOException;
 
 public class UserPhoto extends AppCompatActivity {
 
-    private static final String TAG = "UserPhoto.";
-    private static final int REQUEST_THUMBNAIL = 1234;
-    private static final int REQUEST_SD_CARD = 5678;
+    private final int REQUEST_THUMBNAIL = 1234;
+    private final int REQUEST_SD_CARD = 5678;
 
     private ImageButton takePictureBttn;
     private ImageButton libraryImportBttn;
     private ImageButton internetImageBttn;
-    private Graph mathTestGraph;
     private String name;
     private enum state {
         details,
@@ -39,6 +37,13 @@ public class UserPhoto extends AppCompatActivity {
     }
 
     private static state currState;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //making sure that I am stagin the static variables so that no memory leaks will happen
+        currState = null;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -80,7 +85,6 @@ public class UserPhoto extends AppCompatActivity {
                     imageSD = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
 
                 } catch (IOException e) {
-                    Log.e(TAG, "couldn't find the requrested image");
                     e.printStackTrace();
                 }
 
@@ -218,7 +222,6 @@ public class UserPhoto extends AppCompatActivity {
             // Use the compress method on the BitMap object to write image to the OutputStream
             image.compress(Bitmap.CompressFormat.PNG, 100, fos);
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found in the system: " + e.getMessage());
             e.printStackTrace();
         } finally
         {
@@ -228,7 +231,6 @@ public class UserPhoto extends AppCompatActivity {
             }
             catch (IOException e)
             {
-                Log.e(TAG, "Something went wrong in reading the file: " + e.getMessage());
                 e.printStackTrace();
             }
         }

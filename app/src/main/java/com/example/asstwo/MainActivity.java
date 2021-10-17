@@ -14,16 +14,15 @@ public class MainActivity extends AppCompatActivity {
     private Button viewStdntBttn;
     private Button registerStdntBttn;
     private Graph mathTestGraph;
-    private static final String TAG = "MainActivity.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadGraph();
-        Log.i(TAG, "Current Users: " + mathTestGraph.size());
-
         loadUIElements();
+
+        Register.clear();
 
         viewStdntBttn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,14 +53,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "YOU HAVE DESTROYED ME MATE AND I HATE YOU");
         mathTestGraph.save(MainActivity.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "YOU HAVE STOPPED ME YOUR LORD");
         mathTestGraph.save(MainActivity.this);
     }
 
@@ -74,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
         {
             mathTestGraph.addVertex(new Admin("Current", "Admin"));
             mathTestGraph.setAdmin("Current Admin");
-            Log.i(TAG, "Created new Graph");
         }
         catch (IllegalArgumentException err)
         {
-            Log.i(TAG, "Admin already exist in the programme");
+            err.printStackTrace();
         }
     }
 

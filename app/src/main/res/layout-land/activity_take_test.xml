@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paleNight_background"
+    tools:context=".TakeTest">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/bannerTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@color/dark_second"
+        android:gravity="center"
+        android:text="Test"
+        android:textAllCaps="true"
+        android:textColor="@color/paleNight_white"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:id="@+id/llOneTest"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bannerTest"
+        android:layout_above="@id/endTest"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/testQuestionArea"
+            android:background="@color/paleNight_foreground"
+            android:text="Your question goes here"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textColor="@color/paleNight_text"
+            android:textSize="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"/>
+
+        <LinearLayout
+            android:id="@+id/llTwoTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/paleNight_foreground"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/timeViewTest"
+                android:layout_width="0dp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Time: "
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/paleNight_text"/>
+
+            <TextView
+                android:id="@+id/displayTestTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_text"
+                android:gravity="center"
+                android:text="00:00"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llEightTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/paleNight_foreground"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/elapsedTimeView"
+                android:layout_width="0dp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="ElapsedTime: "
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/paleNight_text"/>
+
+            <TextView
+                android:id="@+id/displayElapsedTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_text"
+                android:gravity="center"
+                android:text="00:00"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFiveTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/paleNight_foreground"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/qeuestionViewTest"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Question Number:"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/paleNight_text"/>
+
+            <TextView
+                android:id="@+id/displayQuestionNumberTest"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_text"
+                android:gravity="center"
+                android:text="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSixTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/paleNight_foreground"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/scoreViewTest"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Current Score:"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/paleNight_text"/>
+
+            <TextView
+                android:id="@+id/displayScoreTest"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/paleNight_text"
+                android:gravity="center"
+                android:text="0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llThreeTest"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/paleNight_text">
+
+            <ImageButton
+                android:id="@+id/previousAnswers"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:rotation="90"
+                android:background="@android:color/transparent"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <FrameLayout
+                android:id="@+id/buttonsContainer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:background="@color/paleNight_text">
+            </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/nextAnswers"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:rotation="90"
+                android:background="@android:color/transparent"
+                app:srcCompat="@android:drawable/arrow_up_float" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSevenTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/questionSetTest"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Answer Set X / X"
+                android:textColor="@color/paleNight_white"
+                android:textSize="16dp"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/skipTestQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/purple_500"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="skip"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/endTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/paleNight_ascent_color"
+        android:text="End"
+        android:textColor="@color/white" />
+
+    </LinearLayout>
+</RelativeLayout>

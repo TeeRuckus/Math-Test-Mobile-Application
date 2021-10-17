@@ -23,8 +23,7 @@ import android.content.Context.*;
 public class Graph extends AppCompatActivity implements Serializable
 {
     //a public static method
-    private static final String SAVE = "MathTest_appData.ser";
-    private static final String TAG = "Graph.";
+    private final String SAVE = "MathTest_appData.ser";
     private HashMap<String, Vertex> vertices;
     private String currentAdmin = "ADMIN";
 
@@ -383,10 +382,8 @@ public class Graph extends AppCompatActivity implements Serializable
             os = new ObjectOutputStream(fos);
             os.writeObject(this);
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "ERROR: the file doesn't exist: " + e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e(TAG, "ERROR: something went wrong while reading the file: " + e.getMessage());
             e.printStackTrace();
         }
         finally
@@ -399,7 +396,6 @@ public class Graph extends AppCompatActivity implements Serializable
             }
             catch(IOException e)
             {
-                Log.e(TAG, "ERROR: they was nothing to close: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -435,7 +431,6 @@ public class Graph extends AppCompatActivity implements Serializable
                 }
             } catch (IOException e)
             {
-                Log.e(TAG, "ERROR: failed to close the streams: " + e.getMessage());
                 e.printStackTrace();
             }
         }

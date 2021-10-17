@@ -32,7 +32,6 @@ import java.util.Collections;
  */
 public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.emailListener {
 
-    private static final String TAG = "ItemViewRecycler";
     //the places where we're going to store the data which we have read into the programme
     private ArrayList<Graph.Vertex> students;
     private ArrayList<String> phoneNumbers;
@@ -45,7 +44,7 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
     private ArrayList<TestHistory> tempTests;
     private ArrayList<TestHistory> sortedTests;
     private ArrayList<MenuItem> testInformation;
-    private static final int REQUEST_EMAIL = 1234;
+    private final int REQUEST_EMAIL = 1234;
 
     private onClickRowListener listener;
 
@@ -75,7 +74,6 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
 
     @Override
     public void emailTo(String name) {
-        Log.e(TAG, "I am going to send an email to the following person");
 
         //getting the person which we should be sending the results too
         User student = mathTestGraph.getVertex(currUser).getValue();
@@ -165,31 +163,6 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
         void onListSelected(CharSequence currTitle);
     }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // checking if the current activity which we're attaching ourselves is going to
-        // implement this interface
-
-        if (context instanceof onClickRowListener)
-        {
-            listener = (onClickRowListener) context;
-        }
-        else
-        {
-            // if the user has forgotten to implmenet the listener, we should complai
-
-            throw new RuntimeException(context.toString() +
-                    " must implement onClickRowListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        //removing the listener when it has being detached
-        listener = null;
-    }*/
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -226,6 +199,8 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
     public void onDestroy() {
         super.onDestroy();
         mathTestGraph.save(getActivity());
+        //making sure that the static variables are going to be staged for deleting in my programme
+        currMode = null;
     }
 
     @Override
@@ -273,7 +248,7 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
                 }
                 else
                 {
-                    Log.e(TAG, "can't load student contact emails at the moment");
+                    Toast.makeText(getActivity(), "Can't load Emails", Toast.LENGTH_LONG).show();
                 }
                 break;
 
@@ -298,7 +273,7 @@ public class ItemViewRecyclerTablet extends Fragment implements StudentViewing.e
                 }
                 else
                 {
-                    Log.e(TAG, "Have not received the test name properly");
+                    Toast.makeText(getActivity(), "Can't find test", Toast.LENGTH_LONG).show();
                 }
                 break;
         }

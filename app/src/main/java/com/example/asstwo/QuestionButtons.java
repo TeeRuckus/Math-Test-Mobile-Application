@@ -16,19 +16,12 @@ import android.widget.Button;
  */
 public class QuestionButtons extends Fragment {
 
-    private static final String TAG = "QuestionButtons.";
     private Button optionOne;
     private Button optionTwo;
     private Button optionThree;
     private Button optionFour;
 
-    private enum buttonNumbers {
-        twoButtons,
-        threeButtons,
-        allButtons
-    }
 
-    private static buttonNumbers currState;
     private String receivedOptionOne;
     private String receivedOptionTwo;
     private String receivedOptionThree;
@@ -206,20 +199,5 @@ public class QuestionButtons extends Fragment {
         super.onDetach();
         //removing the listener when it has being detached
         listenerOption = null;
-    }
-
-    public static void setTwoButtons()
-    {
-        currState = buttonNumbers.twoButtons;
-    }
-
-    public static void setThreeButtons()
-    {
-        currState = buttonNumbers.threeButtons;
-    }
-
-    public static void setFullButtons()
-    {
-        currState = buttonNumbers.allButtons;
     }
 }

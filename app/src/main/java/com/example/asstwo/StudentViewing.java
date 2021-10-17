@@ -16,15 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class StudentViewing extends AppCompatActivity {
-
-
-    private final String TAG = "StudentViewing";
     private TextView banner;
     private Button emailBttn;
     private Graph mathTestGraph;
     private static String test;
     private CharSequence testToOpen;
-    private static final int REQUEST_EMAIL = 1234;
+    private final int REQUEST_EMAIL = 1234;
     private emailListener listenerSend;
     private String name;
 
@@ -46,6 +43,10 @@ public class StudentViewing extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mathTestGraph.save(StudentViewing.this);
+        //staging all the variables for deletion
+        test = null;
+        currState = null;
+        prevScreen = null;
     }
 
     @Override

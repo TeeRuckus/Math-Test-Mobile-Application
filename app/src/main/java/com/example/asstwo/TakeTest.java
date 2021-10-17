@@ -33,17 +33,9 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/*
-TODO:
-    - I will need to save the current test history once this current activity has finished
-    - I will need to make sure that I will do the save on instance things for all my classes including this class
-    - I will need to make sure that once this activity has being stopped or destroyed I will cancel the timer
-    - you will need to load the mathTestGraph into this activity as well
- */
 
 public class TakeTest extends AppCompatActivity implements QuestionButtons.QuestionBttnsListener, AnswerInput.AnswerInputListener {
 
-    private static final String TAG = "TakeTest.";
     private String name;
     private  String currTitle;
     private TextView banner;
@@ -138,8 +130,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             cancelTimer();
             userScore += 10;
             currQuestion.setCurrScore(userScore);
-            Log.e(TAG, "Set score by the programme: " + userScore);
-            Log.e(TAG, "Retrieved score by the programme: " + currQuestion.getScore());
             currentScore.setText(Integer.toString(userScore));
             currentScore.setTextColor(getResources().getColor(android.R.color.holo_green_dark, getTheme()));
             //startTimer(1);
@@ -172,7 +162,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
         mathTestGraph = new Graph();
         mathTestGraph = mathTestGraph.load(TakeTest.this);
-        Log.e(TAG, "Has loaded succesfully: " + mathTestGraph.size());
 
         //making sure that instances of the two fragments are going to be initialised so I can
         //attach the required interfaces
@@ -216,9 +205,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e(TAG, "next has being clicked");
                     currSectionPos = (currSectionPos + 1 ) % numSections;
-                    Log.e(TAG, "The next position: " + currSectionPos);
                     displayOptions(madeSections);
                 }
             });
@@ -226,9 +213,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             prev.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e(TAG, "previous has bneing clicked");
-                    //currSectionPos = Math.abs((currSectionPos - 1)) % numSections;
-                    //currSectionPos = (currSectionPos % numSections) - 1;
                     currSectionPos = (currSectionPos - 1) % numSections;
                     currSectionPos = Math.abs(currSectionPos);
                     displayOptions(madeSections);
@@ -407,7 +391,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
             }
             catch (JSONException e)
             {
-                Log.e(TAG, "Couldn't read integer: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -488,7 +471,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
         float sections = (float) size / 4;
         // if we have a reminder we will want to round up no matter what so that we can fit in the reminders
         numSections = (int) Math.ceil(sections);
-        Log.i(TAG, "Sections to be made: " + numSections);
         int[] currSections = new int[numSections];
         int[][] optionsGroup = loadSections(numSections, options);
 
@@ -570,7 +552,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                 boas.close();
                 result = new String(boas.toByteArray());
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
             finally {
@@ -596,13 +577,7 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                 MenuItem currQuestion = new MenuItem(questionJson, time, result, optionsArray);
                 takenQuestions.add(currQuestion);
                 setUpQuestionInput(optionsArray);
-
-                Log.e(TAG, "the current options: " + options);
-
                 displayQuestion(currQuestion);
-
-
-                //MenuItem currQuestion =  new MenuItem(question, time, result, options);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -624,9 +599,6 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
                     .appendQueryParameter("api_key", "01189998819991197253")
                     .appendQueryParameter("format", "json")
                     .build().toString();
-
-            Log.e(TAG, "found url: " + urlString);
-
             try
             {
                 url = new URL(urlString);
@@ -636,19 +608,15 @@ public class TakeTest extends AppCompatActivity implements QuestionButtons.Quest
 
                 if(conn.getResponseCode() != HttpURLConnection.HTTP_OK)
                 {
-                    Log.e(TAG, "Can't not access requrested website");
+                    Toast.makeText(TakeTest.this, "Can't access website", Toast.LENGTH_LONG ).show();
                 }
             } catch (GeneralSecurityException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             } catch (MalformedURLException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
             }
         }
-
     }
 }

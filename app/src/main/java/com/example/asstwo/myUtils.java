@@ -1,8 +1,3 @@
-/*
-TODO:
-    - you will need to add code her for validating all your passwords, to make sure that the
-    right passwords were set
- */
 package com.example.asstwo;
 
 import android.content.ContentValues;
@@ -26,53 +21,7 @@ import java.util.Set;
 //public final class myUtils
 public class myUtils extends AppCompatActivity
 {
-    private static final String TAG = "myUtils.";
-
     //a look up table which we can use to find what the file code is for the current flag
-    public static final HashMap<String, String> countryLookUp = new HashMap<String, String>() {{
-        put("ANDORRO", "ad");
-        put("UNITED ARAB EMIRATES", "ae");
-        put("AFGHANISTAN", "af");
-        put("ANTIGUA AND BARBUDA", "ag");
-        put("ANGUILLA", "ai");
-        put("ALBANIA", "al");
-        put("ARMENIA", "am");
-        put("ARGENTINA", "ar");
-        put("AUSTRIA", "at");
-        put("AUSTRALIA", "au");
-        put("AZERBAIJAN", "az");
-        put("BOSNIA AND HERZEGOVINA", "ba");
-        put("BELGIUM", "bd");
-        put("BURKINA FASO", "bf");
-        put("BULGARIA", "bg");
-        put("BRAZIL", "br");
-        put("CANADA", "ca");
-        put("SWITZERLAND", "ch");
-        put("CHINA", "cn");
-        put("CZECK REPUBLIC", "cz");
-        put("GERMANY", "de");
-        put("DENMARK", "dk");
-        put("SPAIN", "es");
-        put("FRANCE", "fr");
-        put("GREAT BRITAIN", "gb");
-        put("GEORGIA", "ge");
-        put("GREECE", "gr");
-        put("HONG KONG", "hk");
-        put("ITALY", "it");
-        put("JAPAN", "jp");
-        put("LITHUANIA", "lt");
-        put("MEXICO", "mx");
-        put("MALAYSIA", "my");
-        put("NEEHTERLANDS", "nl");
-        put("POLLAND", "pl");
-        put("QATAR", "qa");
-        put("RUSSIA", "ru");
-        put("UNITED KINGDOM", "uk");
-        put("USA", "us");
-        put("VIET NAM", "vn");
-        put("BANGLADESH", "bd");
-        put("BELGIUM", "be");
-    }};
 
     private SQLiteDatabase db;
 
@@ -97,27 +46,12 @@ public class myUtils extends AppCompatActivity
         }
         catch (FileNotFoundException e)
         {
-            Log.e(TAG, "File Not found: " + e.getMessage());
             e.printStackTrace();
         }
 
         return image;
     }
 
-    public static String[] getCountryNames()
-    {
-        int amountNames = countryLookUp.size();
-        String [] retCountrys = new String[amountNames];
-
-        Set<String> keySet =  countryLookUp.keySet();
-        int ii = 0;
-        for(String currCountry: keySet)
-        {
-            retCountrys[ii] = currCountry;
-            ii++;
-        }
-        return retCountrys;
-    }
     //look up table for the country name which correspond to which country ID
     public static String cleanString(String inString)
     {
@@ -127,14 +61,6 @@ public class myUtils extends AppCompatActivity
         return inString;
     }
 
-    public static String getCountryCode(String country)
-    {
-        country = cleanString(country);
-        String retString = countryLookUp.get(country);
-        validateRetrival(retString, country);
-        return retString;
-
-    }
 
     public static char getType(String currUserName, Graph inGraph)
     {

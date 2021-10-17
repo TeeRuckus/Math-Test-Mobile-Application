@@ -14,7 +14,6 @@ public class Student extends User implements Serializable
 {
     //the classfield which are going to be unique to the student
     private String currInstructor;
-    private static final String TAG = "Student.";
 
     public Student()
     {

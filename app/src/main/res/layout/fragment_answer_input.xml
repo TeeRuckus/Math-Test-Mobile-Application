@@ -16,6 +16,7 @@
             android:layout_marginLeft="10dp"
             android:background="@color/dark_second"
             android:gravity="center"
+            android:inputType="number"
             android:layout_height="wrap_content"
             android:hint="Enter your answer"
             android:textColor="@color/paleNight_white"

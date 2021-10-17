@@ -35,7 +35,6 @@ import java.util.Collections;
  */
 public class ItemViewRecycler extends Fragment implements StudentViewing.emailListener {
 
-    private static final String TAG = "ItemViewRecycler";
     //the places where we're going to store the data which we have read into the programme
     private ArrayList<Graph.Vertex> students;
     private ArrayList<String> phoneNumbers;
@@ -48,7 +47,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
     private ArrayList<TestHistory> tempTests;
     private ArrayList<TestHistory> sortedTests;
     private ArrayList<MenuItem> testInformation;
-    private static final int REQUEST_EMAIL = 1234;
+    private final int REQUEST_EMAIL = 1234;
 
     private onClickRowListener listener;
 
@@ -78,7 +77,6 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
 
     @Override
     public void emailTo(String name) {
-        Log.e(TAG, "I am going to send an email to the following person");
 
         //getting the person which we should be sending the results too
         User student = mathTestGraph.getVertex(currUser).getValue();
@@ -168,41 +166,6 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
         void onListSelected(CharSequence currTitle);
     }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // checking if the current activity which we're attaching ourselves is going to
-        // implement this interface
-
-        if (context instanceof onClickRowListener)
-        {
-            listener = (onClickRowListener) context;
-        }
-        else
-        {
-            // if the user has forgotten to implmenet the listener, we should complai
-
-            throw new RuntimeException(context.toString() +
-                    " must implement onClickRowListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        //removing the listener when it has being detached
-        listener = null;
-    }*/
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public ItemViewRecycler() {
         // Required empty public constructor
     }
@@ -219,9 +182,6 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
     public static ItemViewRecycler newInstance(String param1, String param2) {
         ItemViewRecycler fragment = new ItemViewRecycler();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -229,6 +189,8 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
     public void onDestroy() {
         super.onDestroy();
         mathTestGraph.save(getActivity());
+        //make sure that the static variables in this code are going to be deleted after operation
+        currMode = null;
     }
 
     @Override
@@ -276,7 +238,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 }
                 else
                 {
-                    Log.e(TAG, "can't load student contact emails at the moment");
+                    Toast.makeText(getActivity(), "Can't find student", Toast.LENGTH_LONG).show();
                 }
                 break;
 
@@ -301,7 +263,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
                 }
                 else
                 {
-                    Log.e(TAG, "Have not received the test name properly");
+                    Toast.makeText(getActivity(), "Can't find test", Toast.LENGTH_LONG).show();
                 }
                 break;
         }
@@ -436,7 +398,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
 
     private class ItemViewHolder extends RecyclerView.ViewHolder
     {
-        private static final String TAG = "ItemViewHolder";
+        private final String TAG = "ItemViewHolder";
         private ImageView studentAvatar;
         private EditText studentName;
         private TextView studentScore;
@@ -461,6 +423,7 @@ public class ItemViewRecycler extends Fragment implements StudentViewing.emailLi
             switch(currMode)
             {
                 case users:
+                    studentScore.setVisibility(View.GONE);
                     viewStudent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

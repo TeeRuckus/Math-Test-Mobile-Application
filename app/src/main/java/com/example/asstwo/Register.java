@@ -43,7 +43,6 @@ import java.util.ArrayList;
 public class Register extends AppCompatActivity {
 
 
-    private static final String TAG = "Register.";
     private final int REQUEST_READ_CONTACT_PERMISSION = 4;
     private final int REQUEST_CONTACT = 7000;
     private ImageButton studentPicture;
@@ -71,12 +70,24 @@ public class Register extends AppCompatActivity {
     //switches activities
     private static String firstNameSave;
     private static String lastNameSave;
-    //private static String phNumSave;
     private static ArrayList<String> phNumSave;
     private static ArrayList<String> emailSave;
 
     private static int emailSaveIndex;
     private static int phNumSaveIndex;
+
+    public static void clear()
+    {
+        //a function which is going to be used to clear all the static variables to ensur no
+        //memory leaks
+        firstNameSave = null;
+        lastNameSave = null;
+        phNumSave = null;
+        emailSave = null;
+        emailSaveIndex = 0;
+        phNumSaveIndex = 0;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -159,7 +170,6 @@ public class Register extends AppCompatActivity {
 
         if (imagePath != null)
         {
-            Log.e(TAG, "the path I received: " + imagePath);
             //put the  image on the image Button
             currUserImage = myUtils.getImageStorage(imagePath);
             studentPicture.setImageBitmap(currUserImage);
@@ -167,7 +177,6 @@ public class Register extends AppCompatActivity {
             //studentPicture.setBackground(dImage);
         }
 
-        Log.i(TAG, "Current Graph Object: " + mathTestGraph);
         currStdnt = new Student();
         //importCheck = 0;
 
@@ -297,7 +306,6 @@ public class Register extends AppCompatActivity {
                     }
                     catch(IllegalArgumentException e)
                     {
-                        Log.e(TAG, e.getMessage());
                         // the user already exists in the system
                         studentFirstNameError.setText("User already Exists");
                         studentLastNameError.setText("User already Exists");
@@ -320,12 +328,11 @@ public class Register extends AppCompatActivity {
                 }
                 catch(IllegalArgumentException err)
                 {
-                    Log.e(TAG, err.getMessage());
                     emailError.setText("Invalid email format");
                 }
                 catch(IndexOutOfBoundsException err)
                 {
-                    Log.e(TAG, err.getMessage());
+                    emailInput.setText("");
                     emailError.setText("maxium of 10 emails reached");
                 }
 
@@ -347,12 +354,11 @@ public class Register extends AppCompatActivity {
                 }
                 catch (IllegalArgumentException err)
                 {
-                    Log.e(TAG, err.getMessage());
                     phoneNumError.setText("Invalid Number format");
                 }
                 catch (IndexOutOfBoundsException err)
                 {
-                    Log.e(TAG, "Maximum of 10 numbers reached");
+                    phNumInput.setText("");
                     phoneNumError.setText("maximum of 10 numbers reached");
                 }
             }
@@ -538,13 +544,7 @@ public class Register extends AppCompatActivity {
                 {
                     importFromContactsBttn.setVisibility(View.VISIBLE);
                     importFromContactsBttn.setClickable(true);
-                    Log.e(TAG, "found contact ID: " + contactId);
                 }
-
-                //@SuppressLint("Range") String display = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
-
-                Log.i(TAG, "GIVEN NAME: " + given);
-                Log.i(TAG, "FAMILY NAME: " + family);
             }while(c.moveToNext());
         }
         finally
@@ -608,7 +608,6 @@ public class Register extends AppCompatActivity {
             do
             {
                 String emailAddress = c.getString(0);
-                Log.e(TAG, "current email address: "+emailAddress);
                 result = result + emailAddress + " ";
             }
             while (c.moveToNext());
@@ -637,7 +636,6 @@ public class Register extends AppCompatActivity {
         }
         catch (IllegalArgumentException err)
         {
-            Log.e(TAG, err.getMessage());
             studentFirstNameError.setText("Student first name can't be blank");
         }
 
@@ -650,7 +648,6 @@ public class Register extends AppCompatActivity {
         }
         catch (IllegalArgumentException err)
         {
-            Log.e(TAG, err.getMessage());
             studentLastNameError.setText("Student Last name can't be blank");
         }
 
@@ -665,7 +662,6 @@ public class Register extends AppCompatActivity {
         }
         catch (IllegalArgumentException err)
         {
-            Log.e(TAG, err.getMessage());
 
             //checking if they have more than one phone number available because everything will be fine
             if(inUser.checkPhoneNumbers())
@@ -679,7 +675,6 @@ public class Register extends AppCompatActivity {
         }
         catch (IndexOutOfBoundsException err)
         {
-            Log.e(TAG, err.getMessage());
             //do nothing as they have reached the maximum amount of numbers
         }
 
@@ -694,7 +689,6 @@ public class Register extends AppCompatActivity {
         }
         catch (IllegalArgumentException err)
         {
-            Log.e(TAG, err.getMessage());
             if(inUser.checkEmailAddresses())
             {
                 checks++;
@@ -706,7 +700,6 @@ public class Register extends AppCompatActivity {
         }
         catch(IndexOutOfBoundsException err)
         {
-            Log.e(TAG, err.getMessage());
             //do nothing as they have reached the maximum amount of emails
         }
 
@@ -719,7 +712,6 @@ public class Register extends AppCompatActivity {
     }
     public void loadGraph()
     {
-        Log.i(TAG, "YOU HAVE CREATED ME YOUR LORD");
         mathTestGraph = new Graph();
         mathTestGraph = mathTestGraph.load(Register.this);
     }
@@ -753,19 +745,21 @@ public class Register extends AppCompatActivity {
         studentPicture.setImageBitmap(null);
         studentPicture.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));
         studentPicture.setForeground(getResources().getDrawable(R.drawable.ic_launcher_foreground));
+
+        //clearing the errors which would have being on the screen
+        emailError.setText("");
+        phoneNumError.setText("");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "YOU HAVE DESTROYED ME");
         mathTestGraph.save(Register.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "YOU HAVE STOPPED ME");
         mathTestGraph.save(Register.this);
     }
 }

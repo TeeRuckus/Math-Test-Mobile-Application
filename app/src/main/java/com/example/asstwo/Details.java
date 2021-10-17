@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class Details extends AppCompatActivity implements ItemViewRecycler.onClickRowListener {
 
-    private static final String TAG = "Details.";
     private Graph mathTestGraph;
     private static String name;
 
@@ -64,7 +63,6 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
             //Toast.makeText(Details.this, name, Toast.LENGTH_LONG).show();
             Graph.Vertex currUser = mathTestGraph.getVertex(name);
             User student = currUser.getValue();
-            Log.e(TAG, "The number of tests taken: " + student.getHistory().size());
 
             loadUI();
 
@@ -122,7 +120,6 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
                     FragmentManager fm = getSupportFragmentManager();
                     ItemViewRecycler fragNew = (ItemViewRecycler)  fm.findFragmentById(R.id.framePhoneNumbers);
 
-                    Log.e(TAG, "The current text of the button: " + currentButton);
                     if (currentButton.equals("EMAIL"))
                     {
                         emailNumberBanner.setText("Email Addresses");
@@ -254,11 +251,9 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
             });
 
             imagePath = getIntent().getStringExtra("imagePath");
-            Log.e(TAG, "the current path: " + imagePath);
 
             if (imagePath != null)
             {
-                Log.e(TAG, "the path I received: " + imagePath);
                 //put the  image on the image Button
                 currUserImage = myUtils.getImageStorage(imagePath);
                 studentPicture.setImageBitmap(currUserImage);
@@ -295,6 +290,8 @@ public class Details extends AppCompatActivity implements ItemViewRecycler.onCli
     protected void onDestroy() {
         super.onDestroy();
         mathTestGraph.save(Details.this);
+        //ensuring static variables are going to be staged for garbage collection with the programme
+        name = null;
     }
 
     @Override

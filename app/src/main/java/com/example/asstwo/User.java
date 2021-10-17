@@ -24,8 +24,6 @@ public abstract class User implements Serializable {
     protected ArrayList<TestHistory> history;
     private Avatar avatar;
 
-    private static final String TAG = "user.";
-
     public User() {
         firstName = "John";
         lastName = "Doe";
@@ -104,7 +102,6 @@ public abstract class User implements Serializable {
 
 
     public void addHistoryEntry(TestHistory inEntry) {
-        Log.e(TAG, "History has being added: " + inEntry.getScore());
         this.history.add(inEntry);
     }
 

@@ -21,7 +21,6 @@ import java.util.Set;
 
 public class TestHistory implements Serializable, Comparable
 {
-    private final String TAG = "TestHistory";
     private String testName;
     private ArrayList<MenuItem> questions;
 
